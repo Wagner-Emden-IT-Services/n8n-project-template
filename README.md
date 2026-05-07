@@ -23,13 +23,25 @@ Wiederverwendbares Repo-Template fuer n8n-Workflow-Projekte mit Hybrid-Naming, C
 
 ## Schnellstart
 
+### 1. Eigenes Repo aus Template anlegen
+
+**Empfohlener Pfad:** Auf der Template-Repo-Seite oben rechts **"Use this template" → "Create a new repository"** klicken. GitHub legt dir ein frisches Repo unter deinem Account/deiner Org an, mit eigener Git-Historie und ohne Verbindung zum Template. Anschliessend dein neues Repo lokal klonen:
+
 ```bash
-# 1. Repo klonen / Template forken
-git clone <dein-repo>.git mein-n8n-projekt
+git clone https://github.com/<dein-account>/<dein-repo>.git mein-n8n-projekt
 cd mein-n8n-projekt
+```
+
+**Alternative (nur fuer Probelaeufe):** klassisches `git clone` direkt vom Template-Repo. Dabei zeigt `origin` aber auf das Template — vor dem ersten Push den Remote umbiegen.
+
+```bash
 # Falls als ZIP heruntergeladen statt geklont:
 #   git init && git add . && git commit -m "initial"
+```
 
+### 2. Setup-Schritte
+
+```bash
 # 2. Env-Datei aus Vorlage
 cp .env.example .env
 # Werte ausfuellen — mindestens N8N_ACTIVE_* (Default: dev/localhost:5678)
@@ -46,7 +58,11 @@ npm install
 # Windows:  winget install gitleaks
 # macOS:    brew install gitleaks
 # Linux:    siehe https://github.com/gitleaks/gitleaks#installing
+```
 
+> **Windows-Hinweis:** Nach `winget install` musst du die aktuelle Shell schliessen und neu oeffnen, sonst findet der Pre-Commit-Hook `gitleaks` nicht im PATH. Verifizieren mit `gitleaks version` in einer frischen Shell.
+
+```bash
 # 6. Pre-Commit-Hook installieren
 # Linux/macOS/Git-Bash:
 cp hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
@@ -56,9 +72,10 @@ cp hooks/pre-push   .git/hooks/pre-push   && chmod +x .git/hooks/pre-push
 Copy-Item hooks\pre-commit .git\hooks\pre-commit
 Copy-Item hooks\pre-push   .git\hooks\pre-push
 
-# 7. Smoke-Test
-node scripts/n8n-cli.mjs --help
-node scripts/n8n-cli.mjs validate workflows
+# 7. Smoke-Test (alle drei sollten gruen sein)
+node scripts/n8n-cli.mjs --help              # CLI laedt
+node scripts/n8n-cli.mjs validate workflows  # 2 Workflows valide
+npm test                                     # 41 Unit + Integration Tests gruen
 
 # 8. Branch-Protection aktivieren (Pflicht — ohne ist der PR-Pfad nur Konvention)
 # Vorab: Initial-Commit pushen, damit die Branches existieren.
