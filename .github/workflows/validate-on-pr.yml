@@ -1,0 +1,53 @@
+name: Validate Workflows on PR
+
+on:
+  pull_request:
+    branches: [main, staging]
+    paths:
+      - 'workflows/**/*.json'
+      - 'schemas/**/*.json'
+      - 'scripts/**/*.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/validate-on-pr.yml'
+      - '.gitleaks.toml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit & Integration Tests
+        run: npm test
+
+      - name: Schema + Naming Validation
+        run: node scripts/n8n-cli.mjs validate workflows
+
+      - name: Normalize-Check (deterministische Diffs)
+        run: node scripts/n8n-cli.mjs normalize workflows --check
+
+      - name: Gitleaks Secret Scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+
+      - name: Idempotency Heuristic (warning only)
+        # Heuristik ist false-positive-anfaellig; daher nur Warnung,
+        # echter Check via /check-idempotency lokal vor jedem Deploy.
+        continue-on-error: true
+        run: |
+          if grep -rl --include="*.json" -i 'insert into' workflows/ | xargs grep -L -i 'on conflict\|upsert' 2>/dev/null | grep -q .; then
+            echo "::warning::Moeglicherweise INSERT ohne ON CONFLICT/UPSERT — manuelle Pruefung empfohlen"
+          fi

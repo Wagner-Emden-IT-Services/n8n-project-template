@@ -1,0 +1,37 @@
+{
+  "name": "n8n-project-template",
+  "version": "0.2.0",
+  "private": true,
+  "description": "n8n-Workflow-Automation-Template mit Node-CLI fuer Deploy/Backup/Export/Validate/Normalize/Drift-Check.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "cli": "node scripts/n8n-cli.mjs",
+    "validate": "node scripts/n8n-cli.mjs validate workflows",
+    "normalize": "node scripts/n8n-cli.mjs normalize",
+    "deploy": "node scripts/n8n-cli.mjs deploy",
+    "backup": "node scripts/n8n-cli.mjs backup",
+    "export": "node scripts/n8n-cli.mjs export",
+    "drift": "node scripts/n8n-cli.mjs drift-check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
+    "axios": "1.7.9",
+    "chalk": "5.3.0",
+    "commander": "12.1.0",
+    "dotenv": "16.4.7",
+    "js-yaml": "4.1.0"
+  },
+  "devDependencies": {
+    "nock": "13.5.6",
+    "prettier": "3.4.2",
+    "vitest": "2.1.8"
+  }
+}

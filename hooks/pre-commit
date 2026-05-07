@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# Pre-Commit-Hook fuer n8n-Projekte.
+# Installation: cp hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+#
+# Pruefungen:
+# 1. gitleaks Secret-Scan auf staged-Files (blockiert bei Fund)
+# 2. Workflow-JSON-Validation via Node-CLI (Schema + Naming)
+# 3. Workflow-Normalize-Check + Auto-Re-Stage (saubere Diffs)
+
+set -e
+
+ERRORS=0
+
+# 1. gitleaks
+if command -v gitleaks >/dev/null 2>&1; then
+  if ! gitleaks protect --staged --redact --config .gitleaks.toml 2>&1; then
+    echo
+    echo "✗ gitleaks hat moegliche Secrets gefunden — siehe oben."
+    ERRORS=$((ERRORS+1))
+  fi
+else
+  echo "⚠ gitleaks nicht installiert — Secret-Scan uebersprungen. Installation: https://github.com/gitleaks/gitleaks"
+fi
+
+# 2. + 3. Workflow-Validation und Normalize (nur wenn workflow-Files staged sind)
+STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep -E '^workflows/.*\.json$' || true)
+if [ -n "$STAGED" ]; then
+  if ! command -v node >/dev/null 2>&1; then
+    echo "⚠ node nicht verfuegbar — Workflow-Checks uebersprungen"
+  else
+    if [ ! -d node_modules ]; then
+      echo "Installiere npm-Dependencies fuer Pre-Commit-Checks..."
+      npm install --silent --no-audit --no-fund
+    fi
+
+    # Validate
+    for f in $STAGED; do
+      if ! node scripts/n8n-cli.mjs validate "$f" >/dev/null 2>&1; then
+        echo "✗ Workflow-Validation fehlgeschlagen: $f"
+        node scripts/n8n-cli.mjs validate "$f" 2>&1 | head -10
+        ERRORS=$((ERRORS+1))
+      fi
+    done
+
+    # Normalize-Auto-Fix: schreibt zurueck, re-stagt
+    CHANGED=0
+    for f in $STAGED; do
+      BEFORE=$(git hash-object "$f")
+      node scripts/n8n-cli.mjs normalize "$f" >/dev/null 2>&1 || true
+      AFTER=$(git hash-object "$f")
+      if [ "$BEFORE" != "$AFTER" ]; then
+        git add "$f"
+        echo "~ normalized + re-staged: $f"
+        CHANGED=$((CHANGED+1))
+      fi
+    done
+    [ $CHANGED -gt 0 ] && echo "✓ $CHANGED Workflow(s) normalized"
+  fi
+fi
+
+if [ $ERRORS -gt 0 ]; then
+  echo
+  echo "Pre-Commit fehlgeschlagen — $ERRORS Fehler. --no-verify NUR mit Begruendung."
+  exit 1
+fi
+
+echo "✓ Pre-Commit OK"

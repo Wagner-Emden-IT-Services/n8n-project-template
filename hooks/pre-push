@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Pre-Push-Hook — Final-Validation vor Push.
+# Branch-Schutz (kein direkt-Push auf main/staging) gehoert in GitHub-Branch-Protection-Rules,
+# nicht in einen Hook (--no-verify-bypassbar = false security).
+
+set -e
+
+if command -v node >/dev/null 2>&1 && [ -d workflows ]; then
+  if [ ! -d node_modules ]; then
+    npm install --silent --no-audit --no-fund
+  fi
+  node scripts/n8n-cli.mjs validate workflows
+fi
+
+echo "✓ Pre-Push OK"

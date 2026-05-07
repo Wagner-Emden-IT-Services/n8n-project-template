@@ -1,0 +1,12 @@
+{
+  "_format": "n8n Pin-Daten — Map von Node-Name zu Array-of-{json: {...}}",
+  "_usage": "Wird vom offiziellen MCP-Server bei test_workflow als Pin-Input genutzt. Schluessel = Node-Name (case-sensitive, exakt wie im Workflow).",
+  "Manual Start": [
+    {
+      "json": {
+        "trigger": "manual",
+        "user": "tester"
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+# Secrets — niemals committen
+.env
+.env.local
+.env.*.local
+credentials/*.json
+!credentials/*.example.json
+!credentials/secrets-vault-map.yaml.example
+
+# n8n CLI exports mit decrypted credentials
+*.decrypted.json
+
+# Backups (sollen separat gespeichert werden, nicht im Repo)
+backups/
+n8n-workflows/backups/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+!.vscode/settings.json.example
+.idea/
+*.swp
+*.swo
+
+# Node / Tooling
+node_modules/
+*.log
+.cache/
+
+# Drift-Check-Reports (von CI in workdir geschrieben)
+drift-report.md
+
+# Claude Code lokal
+.claude/settings.local.json
+.claude/cache/
+
+# Test-Outputs
+tests/output/
+*.test.local.json

@@ -1,0 +1,17 @@
+# Workflow-JSONs gehoeren dem Normalize-Step, nicht Prettier
+workflows/**/*.json
+tests/pins/**/*.json
+
+# Build-Artefakte / Drittanbieter
+node_modules/
+backups/
+package-lock.json
+
+# Doku-Snapshot-Files
+CHANGELOG.md
+
+# Claude-Code-Skills sind aus Upstream-Quellen geforked — Drift vermeiden
+.claude/skills/
+
+# Vendor-Hooks — bleiben so wie ausgeliefert (Bash-Quoting-empfindlich)
+hooks/

@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/schemas/n8n-workflow.json",
+  "title": "n8n Workflow Schema (vereinfacht)",
+  "description": "Minimal-Schema fuer lokale Validierung exportierter n8n-Workflow-JSONs. Vollstaendigere Schemas: bei Bedarf vom n8n-MCP Community-Server holen (validate_workflow). Dieses File ist als Skelett gedacht — bei Bedarf erweitern.",
+  "type": "object",
+  "required": ["name", "nodes", "connections"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Workflow-Name. Kebab-case, lowercase, kein Env-Prefix (Env wird via config/env-mapping.yaml zugeordnet). Beispiele: 'exchange-sync', 'invoice-export'.",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type", "typeVersion"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": {
+            "type": "string",
+            "description": "Klartext-Knotenname. Generische Default-Namen wie 'If', 'Function', 'HTTP Request', 'Set', 'Merge', 'Switch', 'Code' (auch mit Suffix-Nummer oder Klammer-Variante) sind verboten — beschreibend benennen.",
+            "not": {
+              "pattern": "^(If|Function|Code|HTTP Request|Set|Merge|Switch)( ?[0-9]+| \\(.+\\))?$"
+            }
+          },
+          "type": { "type": "string" },
+          "typeVersion": { "type": ["number", "integer"] },
+          "position": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "parameters": { "type": "object" },
+          "credentials": { "type": "object" },
+          "retryOnFail": { "type": "boolean" },
+          "maxTries": { "type": "integer" },
+          "waitBetweenTries": { "type": "integer" }
+        }
+      }
+    },
+    "connections": { "type": "object" },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "errorWorkflow": {
+          "description": "ID oder {id, name}-Objekt des Error-Workflows. SOLLTE fuer Production-Workflows gesetzt sein. n8n speichert das je nach Version als String oder Objekt — beides akzeptiert.",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "required": ["id"],
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" }
+              }
+            }
+          ]
+        },
+        "executionTimeout": { "type": "integer" },
+        "saveExecutionProgress": { "type": "boolean" },
+        "saveDataSuccessExecution": { "type": "string" }
+      }
+    },
+    "staticData": { "type": ["object", "null"] },
+    "tags": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  }
+}

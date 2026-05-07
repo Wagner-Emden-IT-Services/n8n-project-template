@@ -1,0 +1,50 @@
+# Gitleaks-Custom-Rules fuer n8n-Projekte.
+# Scan: `gitleaks protect --staged` (lokal) bzw. `gitleaks detect --source .` (CI).
+# Default-Rules von gitleaks bleiben aktiv (extend = default rules).
+
+title = "n8n-template gitleaks config"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "n8n-encryption-key"
+description = "n8n encryption key in .env oder code"
+regex = '''(?i)N8N_ENCRYPTION_KEY\s*[:=]\s*["']?([A-Za-z0-9+/=_\-]{16,})["']?'''
+tags = ["key", "n8n"]
+
+[[rules]]
+id = "n8n-api-key"
+description = "n8n API-Key (Plaintext im Repo)"
+regex = '''(?i)(n8n[_-]?api[_-]?key|X-N8N-API-KEY)\s*[:=]\s*["']?([A-Za-z0-9._\-]{20,})["']?'''
+tags = ["key", "n8n"]
+
+[[rules]]
+id = "slack-webhook"
+description = "Slack-Incoming-Webhook-URL"
+regex = '''https://hooks\.slack\.com/services/T[A-Z0-9]+/B[A-Z0-9]+/[A-Za-z0-9]{20,}'''
+tags = ["webhook", "slack"]
+
+[[rules]]
+id = "generic-bearer-token"
+description = "Bearer-Token in Headers"
+regex = '''(?i)(authorization|bearer)\s*[:=]\s*["']?bearer\s+([A-Za-z0-9._\-]{30,})["']?'''
+tags = ["token"]
+
+[[rules]]
+id = "jwt-token"
+description = "JSON-Web-Token (eyJ...)"
+regex = '''eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}'''
+tags = ["jwt"]
+
+[allowlist]
+description = "Erlaubte Pfade ohne Secret-Scan"
+paths = [
+  '''(?i).*\.example$''',
+  '''(?i).*\.example\..*''',
+  '''(?i)\.gitleaks\.toml$''',
+  '''(?i)docs/.*\.md$''',
+  '''(?i)CHANGELOG\.md$''',
+  '''(?i)README\.md$''',
+  '''(?i)CLAUDE\.md$''',
+]

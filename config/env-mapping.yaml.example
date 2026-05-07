@@ -1,0 +1,37 @@
+# Env-Mapping fuer Workflows.
+# Pro Workflow-Name (entspricht .name in der JSON) ein Block mit dev/staging/prod.
+# Beim Deploy via `node scripts/n8n-cli.mjs deploy <file> --env=<env>` wird das
+# Mapping VOR dem PUT auf den Workflow angewendet — Source-File bleibt env-agnostisch.
+#
+# Mapping-Felder:
+#   credentials:
+#     <logischer-name oder credType>: { id: "<n8n-cred-id>", name: "<n8n-cred-name>" }
+#   webhook_path_suffix: "-dev"   # haengt an webhook/formTrigger-paths an
+#
+# Tags werden NICHT via Mapping gesetzt — n8n akzeptiert sie nicht im Workflow-PUT.
+# Pro-Env-Tags manuell in der UI oder via separater /tags-API setzen.
+#
+# Diese Datei nach config/env-mapping.yaml kopieren und mit echten IDs befuellen.
+
+hello-world:
+  dev: {}
+  staging: {}
+  prod: {}
+
+# Beispiel mit Credentials und Webhook-Suffix:
+#
+# exchange-sync:
+#   dev:
+#     credentials:
+#       slackApi: { id: "abc123", name: "slack-api-dev" }
+#       microsoftOAuth2Api: { id: "ms-dev", name: "microsoft-oauth-dev" }
+#     webhook_path_suffix: "-dev"
+#   staging:
+#     credentials:
+#       slackApi: { id: "def456", name: "slack-api-staging" }
+#       microsoftOAuth2Api: { id: "ms-stg", name: "microsoft-oauth-staging" }
+#     webhook_path_suffix: "-staging"
+#   prod:
+#     credentials:
+#       slackApi: { id: "ghi789", name: "slack-api-prod" }
+#       microsoftOAuth2Api: { id: "ms-prd", name: "microsoft-oauth-prod" }

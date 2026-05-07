@@ -1,0 +1,96 @@
+{
+  "active": false,
+  "connections": {
+    "Build Error Payload": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Log Error",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "On Error": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Build Error Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "name": "shared-error-handler",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "On Error",
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1
+    },
+    {
+      "id": "2",
+      "name": "Build Error Payload",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "workflowId",
+              "type": "string",
+              "value": "={{ $json.workflow?.id }}"
+            },
+            {
+              "id": "e2",
+              "name": "workflowName",
+              "type": "string",
+              "value": "={{ $json.workflow?.name }}"
+            },
+            {
+              "id": "e3",
+              "name": "executionId",
+              "type": "string",
+              "value": "={{ $json.execution?.id }}"
+            },
+            {
+              "id": "e4",
+              "name": "errorMessage",
+              "type": "string",
+              "value": "={{ $json.execution?.error?.message }}"
+            },
+            {
+              "id": "e5",
+              "name": "errorNodeName",
+              "type": "string",
+              "value": "={{ $json.execution?.lastNodeExecuted }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4
+    },
+    {
+      "id": "3",
+      "name": "Log Error",
+      "parameters": {
+        "jsCode": "// Stub: in echtem Setup hier Slack-/Email-/Sentry-Notification.\n// DSGVO-Hinweis: keine personenbezogenen Daten ins Log; nur IDs + Workflow-Name + Error-Message.\nconst items = $input.all();\nfor (const item of items) {\n  console.log('[error-handler]', JSON.stringify(item.json));\n}\nreturn items;",
+        "language": "javaScript",
+        "mode": "runOnceForAllItems"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    }
+  ],
+  "settings": {
+    "executionTimeout": 60,
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true
+  }
+}

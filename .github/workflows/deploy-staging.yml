@@ -1,0 +1,48 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [staging]
+    paths:
+      - 'workflows/**/*.json'
+      - 'config/env-mapping.yaml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy each changed workflow
+        env:
+          N8N_STAGING_API_URL: ${{ secrets.N8N_STAGING_API_URL }}
+          N8N_STAGING_API_KEY: ${{ secrets.N8N_STAGING_API_KEY }}
+          N8N_ACTIVE_ENV: staging
+        run: |
+          set -e
+          CHANGED=$(git diff --name-only HEAD^ HEAD | grep -E '^workflows/.*\.json$' | grep -Ev '^workflows/(dev|staging|prod)/' || true)
+          [ -z "$CHANGED" ] && echo "Nichts zu deployen" && exit 0
+          for f in $CHANGED; do
+            node scripts/n8n-cli.mjs deploy "$f" --env=staging --auto-rollback
+          done
+
+      - name: Notify Slack
+        if: always() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          STATUS="${{ job.status }}"
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"[STAGING] Deploy: $STATUS — ${{ github.sha }}\"}" \
+            "$SLACK_WEBHOOK_URL"

@@ -1,0 +1,79 @@
+{
+  "active": false,
+  "connections": {
+    "Build Greeting": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Format Output",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Manual Start": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Build Greeting",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "name": "hello-world",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Manual Start",
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1
+    },
+    {
+      "id": "2",
+      "name": "Build Greeting",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "message",
+              "type": "string",
+              "value": "Hello from hello-world"
+            },
+            {
+              "id": "a2",
+              "name": "timestamp",
+              "type": "string",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4
+    },
+    {
+      "id": "3",
+      "name": "Format Output",
+      "parameters": {
+        "jsCode": "const items = $input.all();\nreturn items.map(item => ({\n  json: {\n    greeting: item.json.message,\n    sentAt: item.json.timestamp,\n    source: 'hello-world'\n  }\n}));",
+        "language": "javaScript",
+        "mode": "runOnceForAllItems"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    }
+  ],
+  "settings": {
+    "errorWorkflow": "shared-error-handler",
+    "executionTimeout": 60,
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true
+  }
+}
