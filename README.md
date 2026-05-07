@@ -174,7 +174,7 @@ exchange-sync:
 Zwei MCP-Server parallel in `.mcp.json`:
 
 1. **`n8n`** — Built-in MCP-Server seit n8n 2.x ("Instance-level MCP"). Deploy, Execute, Test, Activate. Default-Endpoint `<base>/mcp-server/http`, Token aus `Settings → Instance-level MCP → Connection details → Access Token`.
-2. **`n8n-mcp`** — [czlonkowski/n8n-mcp](https://github.com/czlonkowski/n8n-mcp) (MIT). Composition, Validation, surgical Partial-Updates (`n8n_update_partial_workflow`), AutoFix, Node-Doku, 2.700+ Templates. Laeuft als Docker-Container im stdio-Mode, gepinnt auf Version 2.51.1 (Dependabot haelt aktuell).
+2. **`n8n-mcp`** — [czlonkowski/n8n-mcp](https://github.com/czlonkowski/n8n-mcp) (MIT). Composition, Validation, surgical Partial-Updates (`n8n_update_partial_workflow`), AutoFix, Node-Doku, 2.700+ Templates. Laeuft als Docker-Container im stdio-Mode mit Tag `:latest` — immer aktuell, dafuer keine Reproduzierbarkeit. Bei Breaking Change upstream kann auf konkrete Version gepinnt werden.
 
 > **Pflicht-Setup:** Ohne `.env` (mindestens `N8N_ACTIVE_MCP_URL` + `N8N_ACTIVE_MCP_TOKEN` + `N8N_ACTIVE_API_URL` + `N8N_ACTIVE_API_KEY`) startet keiner der beiden MCP-Server. **Vor erstem Claude-Code-Start:** `cp .env.example .env`, Werte fuellen.
 

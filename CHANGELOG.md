@@ -4,6 +4,11 @@ Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionie
 
 ## [Unreleased] — OSS-Release-Ready
 
+### Changed (latest)
+
+- **`.mcp.json` Image-Tag auf `:latest`** umgestellt (von `:2.51.1`). Bewusste Wahl: Komfort > Reproduzierbarkeit. Bei Breaking Change upstream kann der Tag wieder auf eine konkrete Version gepinnt werden — der `_comment`-Eintrag in `.mcp.json` dokumentiert das.
+- **`dependabot.yml` Docker-Block entfernt** — ohne Pin nichts zu tracken.
+
 ### Changed (Template-Repo-Hardening)
 
 - **Job-Level `if`-Guard** auf `deploy-prod.yml`, `deploy-staging.yml` und `drift-check.yml`: `if: github.repository != 'Wagner-Emden-IT-Services/n8n-project-template'`. Im Template-Repo selbst laufen die Deploy-/Drift-Jobs nicht mehr (keine echte n8n-Instanz dahinter). Beim Use-Template/Fork aendert sich `github.repository` automatisch — Jobs werden in Konsumenten-Repos sofort aktiv.

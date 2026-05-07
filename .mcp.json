@@ -23,7 +23,7 @@
         "N8N_API_URL",
         "-e",
         "N8N_API_KEY",
-        "ghcr.io/czlonkowski/n8n-mcp:2.51.1"
+        "ghcr.io/czlonkowski/n8n-mcp:latest"
       ],
       "env": {
         "MCP_MODE": "stdio",
@@ -31,7 +31,7 @@
         "N8N_API_URL": "${N8N_ACTIVE_API_URL}",
         "N8N_API_KEY": "${N8N_ACTIVE_API_KEY}"
       },
-      "_comment": "czlonkowski/n8n-mcp (https://github.com/czlonkowski/n8n-mcp, MIT). Composition, Validation, surgical Partial-Updates (n8n_update_partial_workflow), AutoFix, Node-Doku (1.084 Nodes), 2.700+ Templates. Image-Pin: 2.51.1 — Dependabot 'docker' haelt aktuell. Settings nach Empfehlung des Repos: MCP_MODE=stdio, LOG_LEVEL=info."
+      "_comment": "czlonkowski/n8n-mcp (https://github.com/czlonkowski/n8n-mcp, MIT). Composition, Validation, surgical Partial-Updates (n8n_update_partial_workflow), AutoFix, Node-Doku (1.084 Nodes), 2.700+ Templates. Image-Tag: latest — bewusste Wahl fuer Komfort (immer aktuelle Features), Reproduzierbarkeit dafuer geringer. Falls Breaking Change upstream: Tag auf konkrete Version pinnen (z.B. ':2.51.1'). Settings nach Empfehlung des Repos: MCP_MODE=stdio, LOG_LEVEL=info."
     }
   }
 }

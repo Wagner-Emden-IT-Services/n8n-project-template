@@ -22,11 +22,7 @@ updates:
     labels:
       - dependencies
       - github-actions
-
-  - package-ecosystem: docker
-    directory: /
-    schedule:
-      interval: monthly
-    labels:
-      - dependencies
-      - docker
+# Hinweis: Kein docker-Block. .mcp.json nutzt ghcr.io/czlonkowski/n8n-mcp:latest
+# (bewusste Wahl, kein Pin → Dependabot kann nicht tracken). Falls auf konkrete
+# Version umgestellt wird, hier wieder einen `package-ecosystem: docker`-Block
+# hinzufuegen.
