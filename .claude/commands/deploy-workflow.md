@@ -31,13 +31,16 @@ Wenn IRGENDEIN Check rot ist: STOPP, User informieren, **nicht** deployen.
    - Workflow vorhanden? → `update_workflow(id, code)`
    - Neu? → `create_workflow(code)`
 2. **Fallback Node-CLI:**
+
    ```bash
    node scripts/n8n-cli.mjs deploy <pfad> --env=<env> [--auto-rollback]
    ```
+
    - Sanitiziert read-only Felder (Liste in `docs/sanitize-fields.md`)
    - Wendet `config/env-mapping.yaml` auf den Workflow an (Credentials, Webhook-Suffix, Tags)
    - Pre-Deploy-Backup unter `backups/<env>/pre-deploy-<ts>/<id>.json`
    - Cursor-paginierter Name-Lookup (n8n-API hat kein Server-Filter `?name=`)
+
 3. **Test-Run:** `test_workflow(id)` mit Pin-Daten aus `tests/pins/<workflow-name>.json` falls vorhanden.
 
 ## Rollback
