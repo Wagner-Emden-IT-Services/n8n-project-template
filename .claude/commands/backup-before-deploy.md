@@ -15,7 +15,7 @@ Sichert die aktuell laufende Version eines Workflows BEVOR du ihn änderst. **IM
 ## Schritte
 
 1. Lese `.env` für API-URL/Key der gewünschten Umgebung.
-2. Bevorzugt: nutze offiziellen MCP-Server (`n8n-mcp-official`) → `get_workflow_details(id)`. Fallback: `node scripts/n8n-cli.mjs backup --env=<env>` (sichert paginiert alle Workflows der Instanz).
+2. Bevorzugt: nutze Built-in MCP-Server (`n8n`) → `get_workflow_details(id)`. Fallback: `node scripts/n8n-cli.mjs backup --env=<env>` (sichert paginiert alle Workflows der Instanz).
 3. Bei Single-Workflow-Backup landet die Datei automatisch unter `backups/<env>/pre-deploy-<YYYY-MM-DD-HHMM>/<id>.json` (vom `deploy`-Subcommand erzeugt).
 4. **Worklog-Eintrag** generieren:
    - Datei: `backups/<env>/pre-deploy-<YYYY-MM-DD-HHMM>/REASON.md`

@@ -4,6 +4,13 @@ Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionie
 
 ## [Unreleased] — OSS-Release-Ready
 
+### Changed (post-initial-push)
+
+- **MCP-Server-Keys umbenannt** auf Original-Naming: `n8n-mcp-official` → `n8n` (Built-in seit n8n 2.x), `n8n-mcp-community` → `n8n-mcp` (entspricht dem [czlonkowski/n8n-mcp](https://github.com/czlonkowski/n8n-mcp)-Repo-Namen). Aktualisiert in `.mcp.json`, `README.md`, `CLAUDE.md`, `docs/architecture.md` und betroffenen Slash-Commands.
+- **`.mcp.json` Settings nach Repo-Empfehlung** des czlonkowski-MCP: `MCP_MODE=stdio` und `LOG_LEVEL=info` als ENV-Vars statt Docker-Args. Image-Pin bleibt `:2.51.1`.
+- **`.env.example` mit Default-MCP-URL-Pattern** dokumentiert (`<base>/mcp-server/http`) — vorher musste der User den vollstaendigen Endpoint aus der UI raten/kopieren.
+- **README** mit Pflicht-Hinweis zur `.env`-Anlage vor erstem Claude-Code-Start (ohne `.env` startet kein MCP-Server).
+
 ### Added
 
 - **OSS-Pflichtfiles** fuer GitHub-Public-Release: `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1, deutsch), `SECURITY.md` (private Disclosure-Pfad), `.github/ISSUE_TEMPLATE/{bug-report,feature-request,config}.yml`, `.github/pull_request_template.md`, `.github/dependabot.yml` (npm + github-actions + docker, gruppiert).

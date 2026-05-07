@@ -1,14 +1,14 @@
 {
   "mcpServers": {
-    "n8n-mcp-official": {
+    "n8n": {
       "type": "http",
       "url": "${N8N_ACTIVE_MCP_URL}",
       "headers": {
         "Authorization": "Bearer ${N8N_ACTIVE_MCP_TOKEN}"
       },
-      "_comment": "Offizieller n8n MCP-Server (built-in seit n8n 2.x). N8N_ACTIVE_MCP_URL MUSS der vollstaendige Endpoint sein, den n8n nach 'Settings -> Instance-level MCP -> Aktivieren' anzeigt — der genaue Pfad ist instanz-spezifisch und NICHT zu raten. Vor jedem Switch nach staging/prod: .env anpassen UND Claude Code neu starten."
+      "_comment": "Built-in n8n-MCP-Server (Instance-level MCP, seit n8n 2.x). Default-Endpoint ist <base>/mcp-server/http — bei Bedarf in der n8n-UI verifizieren (Settings -> Instance-level MCP -> Connection details -> Access Token). Token ebenfalls dort generieren. Vor jedem Switch nach staging/prod: .env anpassen UND Claude Code neu starten."
     },
-    "n8n-mcp-community": {
+    "n8n-mcp": {
       "type": "stdio",
       "command": "docker",
       "args": [
@@ -16,7 +16,9 @@
         "--rm",
         "-i",
         "-e",
-        "MCP_MODE=stdio",
+        "MCP_MODE",
+        "-e",
+        "LOG_LEVEL",
         "-e",
         "N8N_API_URL",
         "-e",
@@ -24,10 +26,12 @@
         "ghcr.io/czlonkowski/n8n-mcp:2.51.1"
       ],
       "env": {
+        "MCP_MODE": "stdio",
+        "LOG_LEVEL": "info",
         "N8N_API_URL": "${N8N_ACTIVE_API_URL}",
         "N8N_API_KEY": "${N8N_ACTIVE_API_KEY}"
       },
-      "_comment": "Community-MCP-Server (czlonkowski). Repo: https://github.com/czlonkowski/n8n-mcp. Lizenz: MIT. Composition, Validation, surgical Partial-Updates (n8n_update_partial_workflow), AutoFix, Node-Doku (1.084 Nodes), 2.709 Templates. Nutzt ebenfalls die ACTIVE-Env-Vars."
+      "_comment": "czlonkowski/n8n-mcp (https://github.com/czlonkowski/n8n-mcp, MIT). Composition, Validation, surgical Partial-Updates (n8n_update_partial_workflow), AutoFix, Node-Doku (1.084 Nodes), 2.700+ Templates. Image-Pin: 2.51.1 — Dependabot 'docker' haelt aktuell. Settings nach Empfehlung des Repos: MCP_MODE=stdio, LOG_LEVEL=info."
     }
   }
 }

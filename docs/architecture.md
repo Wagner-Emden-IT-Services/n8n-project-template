@@ -68,10 +68,10 @@ Zusaetzlich GitHub Environment `production` mit Required Reviewers konfigurieren
 
 Zwei MCP-Server in `.mcp.json`:
 
-| Server              | Transport      | Wann                                                          |
-| ------------------- | -------------- | ------------------------------------------------------------- |
-| `n8n-mcp-official`  | HTTP           | Live-Operationen: Deploy, Execute, Test, Activate             |
-| `n8n-mcp-community` | stdio (Docker) | Composition: Validation, Surgical Updates, AutoFix, Node-Doku |
+| Server    | Transport      | Wann                                                          |
+| --------- | -------------- | ------------------------------------------------------------- |
+| `n8n`     | HTTP           | Live-Operationen: Deploy, Execute, Test, Activate             |
+| `n8n-mcp` | stdio (Docker) | Composition: Validation, Surgical Updates, AutoFix, Node-Doku |
 
 Beide laufen parallel und ergaenzen sich. Beide routen auf das in `.env` aktive Environment via `N8N_ACTIVE_*`-Variablen — Default `dev`. Nach jedem Wechsel: Claude Code neu starten.
 

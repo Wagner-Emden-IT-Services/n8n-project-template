@@ -53,10 +53,10 @@ Verboten: `Workflow 1`, `URGENT-FIX-DO-NOT-TOUCH`, generische Default-Knotenname
 
 In `.mcp.json` sind zwei n8n-MCP-Server konfiguriert:
 
-| Server              | Zweck                                                                    | Wann                               |
-| ------------------- | ------------------------------------------------------------------------ | ---------------------------------- |
-| `n8n-mcp-official`  | Deploy, Execute, Test, Activate, Pin-Data-Tests                          | Live-Operationen gegen die Instanz |
-| `n8n-mcp-community` | Composition, Validation, surgical Updates, AutoFix, Node-Doku, Templates | Während du den Workflow baust      |
+| Server    | Zweck                                                                    | Wann                                                                                          |
+| --------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `n8n`     | Deploy, Execute, Test, Activate, Pin-Data-Tests                          | Live-Operationen gegen die Instanz (Built-in seit n8n 2.x)                                    |
+| `n8n-mcp` | Composition, Validation, surgical Updates, AutoFix, Node-Doku, Templates | Während du den Workflow baust ([czlonkowski/n8n-mcp](https://github.com/czlonkowski/n8n-mcp)) |
 
 **Workflow für jede Änderung:** 0. **Templates First** — `search_templates` (4 Modi: by_metadata, by_task, by_nodes, keyword). Nur wenn nichts passt: weiter zu Schritt 1
 
