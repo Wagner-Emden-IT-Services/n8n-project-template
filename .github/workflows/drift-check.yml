@@ -16,6 +16,9 @@ on:
 
 jobs:
   drift:
+    # Template-Guard: im Template-Repo selbst NICHT pruefen (keine echte n8n-Instanz).
+    # Beim Fork/Use-Template aendert sich github.repository automatisch -> Job laeuft.
+    if: github.repository != 'Wagner-Emden-IT-Services/n8n-project-template'
     runs-on: ubuntu-latest
     permissions:
       issues: write

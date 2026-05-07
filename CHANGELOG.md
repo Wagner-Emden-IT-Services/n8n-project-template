@@ -4,6 +4,14 @@ Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionie
 
 ## [Unreleased] — OSS-Release-Ready
 
+### Changed (Template-Repo-Hardening)
+
+- **Job-Level `if`-Guard** auf `deploy-prod.yml`, `deploy-staging.yml` und `drift-check.yml`: `if: github.repository != 'Wagner-Emden-IT-Services/n8n-project-template'`. Im Template-Repo selbst laufen die Deploy-/Drift-Jobs nicht mehr (keine echte n8n-Instanz dahinter). Beim Use-Template/Fork aendert sich `github.repository` automatisch — Jobs werden in Konsumenten-Repos sofort aktiv.
+- **GitHub Repository Template-Toggle aktiviert** (`is_template: true`). "Use this template"-Button erscheint auf der Repo-Seite.
+- **gitleaks-Action durch direkten CLI-Aufruf ersetzt** in `validate-on-pr.yml`. `gitleaks-action@v2` verlangt seit Mid-2024 eine bezahlte Lizenz fuer Org-Repos; das CLI (MIT) deckt die Funktionalitaet kostenlos ab.
+- **Commit-Convention auf [Conventional Commits](https://www.conventionalcommits.org)** umgestellt fuer das Template-Repo. `[ENV] [ACTION]:` bleibt als optionale Variante in geforkten Workflow-Repos dokumentiert (Audit-Trail wer, wann, welches Env). `CLAUDE.md` §10, `CONTRIBUTING.md` und `pull_request_template.md` angepasst.
+- **README** um "Template benutzen"-Section erweitert: Use-Template-Pfad, automatische Guard-Aktivierung im neuen Repo, einmalige Anpassungen nach Use (LICENSE, config.yml, Secrets, Branch-Protection).
+
 ### Changed (post-initial-push)
 
 - **MCP-Server-Keys umbenannt** auf Original-Naming: `n8n-mcp-official` → `n8n` (Built-in seit n8n 2.x), `n8n-mcp-community` → `n8n-mcp` (entspricht dem [czlonkowski/n8n-mcp](https://github.com/czlonkowski/n8n-mcp)-Repo-Namen). Aktualisiert in `.mcp.json`, `README.md`, `CLAUDE.md`, `docs/architecture.md` und betroffenen Slash-Commands.

@@ -224,9 +224,27 @@ Siehe **[docs/disaster-recovery.md](docs/disaster-recovery.md)** — Praevention
 
 **Pflicht-Lektion:** Encryption-Key in 3 Locations. Ohne Key sind alle gespeicherten Credentials wertlos.
 
+## Template benutzen (in deinem Projekt)
+
+Dieses Repo ist als **GitHub Repository Template** markiert. Auf der Repo-Seite oben rechts auf **"Use this template" → "Create a new repository"** klicken — GitHub legt dir einen frischen Git-Verlauf in deinem Account/deiner Org an. Alternativ klassisch klonen oder forken.
+
+**Was nach dem Use-Template automatisch passiert:**
+
+- Die Deploy- und Drift-Check-Workflows (`deploy-prod.yml`, `deploy-staging.yml`, `drift-check.yml`) tragen einen Repo-Guard `if: github.repository != 'Wagner-Emden-IT-Services/n8n-project-template'`. In deinem neuen Repo aendert sich `github.repository` automatisch — die Workflows werden aktiv.
+- `validate-on-pr.yml` (Tests + Schema-Validation + gitleaks) laeuft sofort und ohne Secrets — auch im Template selbst, damit Code-Bugs gefangen werden.
+
+**Was du nach dem Use-Template einmalig anpassen musst:**
+
+1. `LICENSE` Copyright-Halter ggf. anpassen (steht aktuell auf Wagner-Emden IT Services).
+2. `.github/ISSUE_TEMPLATE/config.yml` — `Wagner-Emden-IT-Services/n8n-project-template` durch deinen Org/Repo-Pfad ersetzen.
+3. `cp .env.example .env` und Werte ausfuellen (mind. `N8N_ACTIVE_*`).
+4. `cp config/env-mapping.yaml.example config/env-mapping.yaml` und Credentials/Suffixe pro Workflow eintragen.
+5. **GitHub Secrets** anlegen fuer CI: `N8N_PROD_API_URL`, `N8N_PROD_API_KEY`, `N8N_STAGING_API_URL`, `N8N_STAGING_API_KEY`, optional `SLACK_WEBHOOK_URL`. Settings → Secrets and variables → Actions.
+6. Branch-Protection + GitHub Environment `production` aktivieren (Block Section 8 oben).
+
 ## Beitragen
 
-Issues und PRs sind willkommen — siehe [CONTRIBUTING.md](CONTRIBUTING.md). Fuer Sicherheits-Themen bitte den Pfad in [SECURITY.md](SECURITY.md) nutzen.
+Issues und PRs sind willkommen — siehe [CONTRIBUTING.md](CONTRIBUTING.md). Wir nutzen [Conventional Commits](https://www.conventionalcommits.org) (`feat:`, `fix:`, `docs:`, ...). Fuer Sicherheits-Themen bitte den Pfad in [SECURITY.md](SECURITY.md) nutzen.
 
 ## Lizenz
 

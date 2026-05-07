@@ -37,11 +37,16 @@ jobs:
       - name: Normalize-Check (deterministische Diffs)
         run: node scripts/n8n-cli.mjs normalize workflows --check
 
+      - name: Install gitleaks
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
+            | sudo tar -xz -C /usr/local/bin gitleaks
+          gitleaks version
+
       - name: Gitleaks Secret Scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_CONFIG: .gitleaks.toml
+        # Direkter CLI-Aufruf statt gitleaks-action — letztere braucht seit Mid-2024
+        # eine bezahlte Lizenz fuer Org-Repos. CLI ist MIT, kostenlos.
+        run: gitleaks detect --source . --config .gitleaks.toml --redact --verbose --no-banner
 
       - name: Idempotency Heuristic (warning only)
         # Heuristik ist false-positive-anfaellig; daher nur Warnung,

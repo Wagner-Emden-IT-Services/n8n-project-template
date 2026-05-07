@@ -53,21 +53,29 @@ Direkter Push auf `main` oder `staging` ist durch Branch-Protection gesperrt —
 
 ## Commit-Messages
 
-Format aus [CLAUDE.md §10](CLAUDE.md):
+Wir nutzen **[Conventional Commits](https://www.conventionalcommits.org)** im Template-Repo. Format:
 
 ```
-[ENV] [ACTION]: kurze Beschreibung
+<type>(<scope>): <description>
 
-- Detail 1
-- Detail 2
+<optional body>
+
+<optional footer>
 ```
 
-`ACTION` = `DEPLOY` | `UPDATE` | `FIX` | `REFACTOR` | `BACKUP` | `EXPERIMENT`
+Types: `feat` | `fix` | `docs` | `chore` | `refactor` | `test` | `ci` | `perf` | `style` | `build`. Description im Imperativ, klein, ohne Punkt.
 
 Beispiele:
 
-- `[STAGING] FIX: Pagination-Bug in exchange-sync (.first → .all)`
-- `[REPO] REFACTOR: env-mapper Tags-Comment klarstellen`
+- `feat(cli): add --smoke-test flag to deploy command`
+- `fix(api): handle 429 rate-limit responses with retry`
+- `docs(readme): clarify MCP setup`
+- `chore(deps): bump vitest to 2.2.0`
+- `test(api): cover pagination edge cases`
+
+Breaking Changes mit `!` markieren: `feat(api)!: rename listAllWorkflows to listWorkflows` oder via Footer `BREAKING CHANGE: <description>`.
+
+> **In geforkten Workflow-Repos** (die echte n8n-Instanzen deployen) ist optional auch `[ENV] [ACTION]:` erlaubt — siehe [CLAUDE.md §10](CLAUDE.md). In diesem Template-Repo bleibt es bei Conventional Commits.
 
 ## Workflow-PRs
 

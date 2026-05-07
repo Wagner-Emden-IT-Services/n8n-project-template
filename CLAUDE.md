@@ -235,17 +235,38 @@ HTTP-Source (25 items) ─┘
 
 ## 10. Git Commit Convention
 
+Hybrid-Pfad: **Conventional Commits** im Template-Repo selbst (OSS-Standard, Tooling-faehig), `[ENV] [ACTION]:` als optionales Format in geforkten Workflow-Repos (wenn Commits direkt zu Deploys mappen und Audit-Trail wichtig ist).
+
+### Im Template-Repo (und allen Repos, die Code/Doku/Tests aendern): Conventional Commits
+
+Format `<type>(<scope>): <description>` — Spec: <https://www.conventionalcommits.org>.
+
 ```
-[ENV] [ACTION]: kurze Beschreibung
-
-- Detail 1
-- Detail 2
-
-Workflow-IDs: <id1>, <id2>
-Backup: backups/<workflow>-2026-05-07-1423.json
+feat(cli): add --smoke-test flag to deploy command
+fix(api): handle 429 rate-limit responses with retry
+docs: clarify MCP setup in README
+chore(deps): bump vitest to 2.2.0
+refactor(env-mapper): consolidate credential lookup logic
+test(api): add nock mocks for activate/deactivate endpoints
+ci: add npm test step to validate-on-pr workflow
 ```
 
-ACTION = `DEPLOY` | `UPDATE` | `FIX` | `REFACTOR` | `BACKUP` | `EXPERIMENT`
+Types: `feat` | `fix` | `docs` | `chore` | `refactor` | `test` | `ci` | `perf` | `style` | `build`. Description im Imperativ, klein, ohne Punkt am Ende.
+
+Breaking Changes: `feat!: ...` oder Footer `BREAKING CHANGE: ...`.
+
+### In geforkten Workflow-Repos (optional): `[ENV] [ACTION]:`
+
+Wenn das geforkte Projekt n8n-Workflows gegen echte Instanzen deployt und Audit-Trail (wer, wann, welches Env) wichtig ist:
+
+```
+[STAGING] FIX: Pagination-Bug in exchange-sync (.first → .all)
+
+- Workflow-IDs: <id1>, <id2>
+- Backup: backups/<workflow>-2026-05-07-1423.json
+```
+
+ACTION = `DEPLOY` | `UPDATE` | `FIX` | `REFACTOR` | `BACKUP` | `EXPERIMENT`. Diese Variante traegt Env-Info, ist aber **nicht** OSS-Standard und nicht von Release-Tooling unterstuetzt — daher nur bewusst und nur in Workflow-Repos.
 
 ## 11. Slash-Commands
 

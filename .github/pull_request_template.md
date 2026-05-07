@@ -4,10 +4,16 @@
 
 ## Type of Change
 
-- [ ] Bug-Fix (Aenderung, die ein Problem behebt, ohne andere Funktionalitaet zu brechen)
-- [ ] Neues Feature (rueckwaertskompatibel)
-- [ ] Breaking Change (bricht bestehende Workflows oder API)
-- [ ] Doku / Refactoring / Tooling (kein User-sichtbarer Effekt)
+<!-- Eines ankreuzen — sollte mit dem Conventional-Commit-Type des PR-Titels uebereinstimmen. -->
+
+- [ ] `feat` — neues Feature (rueckwaertskompatibel)
+- [ ] `fix` — Bug-Fix
+- [ ] `docs` — nur Doku
+- [ ] `refactor` — Code-Umbau ohne User-sichtbaren Effekt
+- [ ] `test` — Tests hinzu/geaendert
+- [ ] `chore` — Wartung, Deps, Build-Tools
+- [ ] `ci` — CI/CD-Konfig
+- [ ] **Breaking Change** (zusaetzlich `!` im Commit-Type oder Footer `BREAKING CHANGE:`)
 
 ## Betroffene Workflows
 
@@ -22,13 +28,14 @@
 - [ ] `npm test` lokal gruen
 - [ ] `npm run validate` lokal gruen
 - [ ] `npm run normalize -- workflows --check` keine Drift
+- [ ] `npm run format:check` lokal gruen
 - [ ] (bei Workflow-Aenderungen) Pin-Daten unter `tests/pins/<name>.json` aktualisiert
 - [ ] (bei Code-Aenderungen) neue Test-Cases fuer den geaenderten Pfad
 
 ## Checkliste
 
 - [ ] Branch zweigt von `main` ab und zielt auf `staging`
-- [ ] Commit-Messages folgen `[ENV] [ACTION]: ...`-Format
+- [ ] PR-Titel und Commit-Messages folgen [Conventional Commits](https://www.conventionalcommits.org)
 - [ ] CHANGELOG.md `[Unreleased]` aktualisiert (sofern User-sichtbarer Effekt)
 - [ ] Keine Secrets / API-Keys / Tokens committet (gitleaks-Pre-Commit lokal gruen)
 - [ ] Bei Breaking Change: Migrationspfad in der PR-Description erklaert
