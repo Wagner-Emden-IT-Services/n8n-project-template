@@ -36,7 +36,7 @@ jobs:
         run: node scripts/n8n-cli.mjs backup --env=prod
 
       - name: Upload Backup Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: pre-deploy-backup-${{ github.sha }}
           path: backups/
