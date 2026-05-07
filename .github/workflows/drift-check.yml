@@ -47,7 +47,7 @@ jobs:
 
       - name: Open Issue on Drift
         if: failure()
-        uses: peter-evans/create-issue-from-file@v5
+        uses: peter-evans/create-issue-from-file@v6
         with:
           title: "Drift erkannt zwischen Repo und ${{ github.event.inputs.env || 'prod' }}-Instanz"
           content-filepath: drift-report.md
