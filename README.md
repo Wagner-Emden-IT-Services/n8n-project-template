@@ -15,11 +15,17 @@ Wiederverwendbares Repo-Template fuer n8n-Workflow-Projekte mit Hybrid-Naming, C
 - **Drift-Detection** als nightly GitHub-Action — oeffnet Issue bei Repo↔Live-Drift
 - **gitleaks** Secret-Scanning im Pre-Commit + CI (n8n-spezifische Custom-Rules)
 - **Disaster-Recovery-Runbook** (`docs/disaster-recovery.md`) mit 4 Szenarien + Drill-Checklist
-- Pre-built **Claude-Code Slash-Commands** fuer n8n (Validation, Backup, Deploy, Idempotenz, Pagination, Error-Handling)
+- Pre-built **Claude-Code Slash-Commands** fuer n8n (Validation, Backup, Deploy, Idempotenz, Pagination, Error-Handling, **Security-Review**)
 - `.mcp.json` fuer **beide n8n-MCP-Server** (offiziell + Community parallel)
 - GitHub Actions: Validate-on-PR, Deploy-Staging, Deploy-Prod, Drift-Check
 - Pre-Commit + Pre-Push-Hooks
 - Beispiel-Workflow `hello-world` zum Testen aller Slash-Commands
+
+### Optional: Multi-Agent-Pipeline (seit v0.3.0)
+
+- **6 Sub-Agents** unter `.claude/agents/` — analyst, architect, developer, qa, security-reviewer, deployment-engineer. Aktivierbar fuer Greenfield-Workflows mit Spec→Build→Test→Deploy-Gates.
+- **WF-X Spec-System** unter `docs/specs/` — Workflow-Specs als versioniertes Markdown mit Lifecycle-Tracking. Optional, empfohlen ab 3+ Nodes oder Webhook/Schedule-Trigger.
+- **M365-Pattern-Library** unter `docs/integrations/m365/` — Auth-Flows, Service-Patterns (Teams/SP/Outlook/OneDrive/Excel/Planner), Error-Handling (Rate-Limits/Pagination/Delta), 5 Reference-Architekturen. Opt-in fuer Microsoft-365-Workflows.
 
 ## Schnellstart
 

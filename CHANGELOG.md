@@ -2,6 +2,20 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-05-08 — v0.3.0 (MAWS-Merge)
+
+### Added
+
+- **6 n8n Sub-Agents** unter `.claude/agents/` — `n8n-workflow-analyst`, `n8n-integration-architect`, `n8n-workflow-developer`, `n8n-qa-engineer`, `n8n-security-reviewer`, `n8n-deployment-engineer`. Aktivieren eine optionale Multi-Agent-Pipeline (Spec→Architektur→Pre-Security→Build→Test→Final-Security→Deploy) mit Gates zwischen den Phasen. Nutzen die existierenden lokalen Skills unter `.claude/skills/` und beide MCP-Server (offiziell + Community).
+- **WF-X Spec-System** unter `docs/specs/` — `README.md` (Lifecycle, Konventionen, Wer-schreibt-was) + `spec-template.md` (Kopier-Vorlage mit allen Phasen-Sections). Optional fuer triviale Workflows, empfohlen ab 3+ Nodes oder Webhook/Schedule.
+- **M365-Pattern-Library** unter `docs/integrations/m365/` — 5 Files: `README.md`, `auth-patterns.md` (OAuth-Flows, Scopes), `service-patterns.md` (Teams/SP/Outlook/OneDrive/Excel/Planner), `error-handling.md` (Rate-Limits, Pagination, Delta-Queries, Webhook-Renewal), `architectures.md` (5 Reference-Architekturen). Opt-in fuer M365-Workflows, von `n8n-integration-architect` automatisch geladen wenn relevant.
+- **`/security-review-workflow` Slash-Command** unter `.claude/commands/` — Audit eines Workflow-JSONs gegen Credentials / Permissions / Webhook / Rate-Limits / Logging-Hygiene / Repo-Hygiene. Komplementaer zur `n8n-security-reviewer` Sub-Agent-Rolle: schnellerer ad-hoc-Check ohne Pipeline-Setup.
+- **README-Section "Optional: Multi-Agent-Pipeline"** verweist auf die neuen Komponenten.
+
+### Source
+
+Merge aus `template-own-n8n-workflow-starter` (cc-ecosystem), das nach diesem Merge dort archiviert wurde (`status: archived`, `superseded_by: template-own-n8n-project`). Sub-Agent-Frontmatter wurde auf Anthropic-Spec konvertiert (name/description/tools/model). Skill-Pfade zeigen jetzt auf `.claude/skills/`. WORKFLOW_CONTEXT.md-Verweise wurden durch `docs/specs/spec-template.md` ersetzt.
+
 ## [Unreleased] — OSS-Release-Ready
 
 ### Changed (latest)
