@@ -98,4 +98,4 @@ Aenderungen mit User-sichtbarem Effekt (neue Features, Breaking Changes, Bug-Fix
 
 ## Fragen?
 
-Issue oeffnen, oder direkt an den Maintainer: [SECURITY.md](SECURITY.md) hat den Email-Kontakt fuer security-relevantes, fuer alles andere reicht ein Issue.
+Issue oeffnen, oder direkt an den Maintainer: [SECURITY.md](SECURITY.md) hat den Kontakt-Pfad fuer security-relevantes (ueber <https://www.wagner-emden.com>), fuer alles andere reicht ein Issue.

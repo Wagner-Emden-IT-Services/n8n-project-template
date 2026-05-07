@@ -36,9 +36,9 @@ Dieser Verhaltenskodex gilt in allen Gemeinschaftsraeumen und auch dann, wenn ei
 
 ## Durchsetzung
 
-Faelle von missbraeuchlichem, belaestigendem oder anderweitig inakzeptablem Verhalten koennen den fuer die Durchsetzung verantwortlichen Maintainern unter folgender Adresse gemeldet werden:
+Faelle von missbraeuchlichem, belaestigendem oder anderweitig inakzeptablem Verhalten koennen den fuer die Durchsetzung verantwortlichen Maintainern ueber den Kontakt-Pfad auf der Maintainer-Webseite gemeldet werden:
 
-**soeren.wagneremden@gmail.com**
+**<https://www.wagner-emden.com>**
 
 Alle Beschwerden werden zeitnah und fair geprueft und untersucht.
 

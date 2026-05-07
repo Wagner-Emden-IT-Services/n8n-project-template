@@ -17,7 +17,7 @@ Schwachstellen in **n8n selbst** gehen nicht hierher, sondern an n8n.io: <https:
 
 **Bitte keine Public-GitHub-Issues fuer Security-Themen.** Stattdessen:
 
-- **Email:** `soeren.wagneremden@gmail.com` mit Betreff `[SECURITY] n8n-project-template — <Kurzbeschreibung>`
+- **Maintainer-Webseite:** <https://www.wagner-emden.com> — Kontakt-Pfad mit Betreff `[SECURITY] n8n-project-template — <Kurzbeschreibung>`
 - Alternativ ueber GitHub Private Vulnerability Reporting (Security-Tab des Repos), falls aktiviert.
 
 Bitte enthalte:

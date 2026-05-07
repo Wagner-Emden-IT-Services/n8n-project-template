@@ -3,14 +3,9 @@ name: Validate Workflows on PR
 on:
   pull_request:
     branches: [main, staging]
-    paths:
-      - 'workflows/**/*.json'
-      - 'schemas/**/*.json'
-      - 'scripts/**/*.mjs'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/validate-on-pr.yml'
-      - '.gitleaks.toml'
+  # Kein paths-Filter: validate laeuft auf jedem PR (auch fuer md-only-Changes).
+  # Branch-Protection requirt 'validate' als Status-Check; ohne Trigger auf md-Files
+  # wuerde der Check nie laufen → md-only-PRs waeren nicht mergbar.
 
 jobs:
   validate:
