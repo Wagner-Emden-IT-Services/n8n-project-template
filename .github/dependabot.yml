@@ -22,7 +22,9 @@ updates:
     labels:
       - dependencies
       - github-actions
-# Hinweis: Kein docker-Block. .mcp.json nutzt ghcr.io/czlonkowski/n8n-mcp:latest
-# (bewusste Wahl, kein Pin → Dependabot kann nicht tracken). Falls auf konkrete
-# Version umgestellt wird, hier wieder einen `package-ecosystem: docker`-Block
-# hinzufuegen.
+# Hinweis: Kein docker-Block. Seit v0.4.0 nutzt .mcp.json `npx n8n-mcp@latest`
+# statt des Docker-Images. Updates der n8n-mcp-Library greifen automatisch beim
+# naechsten `npx`-Start (durch '@latest'). Falls Version-Pinning gewuenscht ist
+# (z.B. 'n8n-mcp@2.51.1'), kann Dependabot den npm-Block automatisch tracken —
+# `npx`-Aufrufe sind aber NICHT in package.json gelistet, daher derzeit
+# Dependabot-untrackbar (bewusste Wahl: Komfort > Reproduzierbarkeit).

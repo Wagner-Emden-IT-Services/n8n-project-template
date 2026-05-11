@@ -2,6 +2,22 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-05-11 — v0.4.0 (Community-MCP: docker → npx)
+
+### Changed
+
+- **`.mcp.json`** Community-MCP-Server (`n8n-mcp`, czlonkowski) auf `npx n8n-mcp@latest` umgestellt (vorher `ghcr.io/czlonkowski/n8n-mcp:latest` via Docker stdio). Vorteile: schnellerer Start ohne Container-Overhead, keine Docker-Dependency mehr, Node-only Setup reicht. ENV-Vars (`MCP_MODE`, `LOG_LEVEL`, `N8N_API_URL`, `N8N_API_KEY`) bleiben strukturell unveraendert.
+- **`.github/dependabot.yml`** Docker-Kommentar aktualisiert — verweist nun auf npx-Pfad. npx-Aufrufe sind nicht in `package.json` und damit Dependabot-untrackbar (bewusste Wahl: Komfort > Reproduzierbarkeit). Bei Bedarf konkret pinnen: `n8n-mcp@2.51.1`.
+
+### Unchanged
+
+- **Offizieller MCP-Server (`n8n`)** bleibt unveraendert: HTTP-Type, Bearer-Auth-Header, `${N8N_ACTIVE_MCP_URL}`/`${N8N_ACTIVE_MCP_TOKEN}` Env-Vars fuer Portabilitaet im Template (nicht hardcoded).
+- **Naming-Konvention** weiterhin `n8n` = offiziell (Instance-level), `n8n-mcp` = Community (czlonkowski-Repo-Name). Saemtliche Sub-Agents, Slash-Commands und Skills im Template referenzieren diese Naming-Convention.
+
+### Voraussetzungen-Aenderung
+
+- **Docker nicht mehr noetig** fuer den Community-MCP-Server. Node ≥ 20 reicht (war ohnehin Pflicht fuer die n8n-CLI).
+
 ## 2026-05-08 — v0.3.0 (MAWS-Merge)
 
 ### Added
