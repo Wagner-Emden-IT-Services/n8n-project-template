@@ -2,6 +2,16 @@
 
 Dies ist ein n8n-Workflow-Automation-Projekt mit Naming-Convention und eingebetteten Best-Practices fuer Claude Code als Development-Assistent.
 
+## 0. Vor jeder Arbeit (Pflicht ab v0.5.0)
+
+In einem Customer-Repo (geklont via "Use this template"):
+
+1. **`.template-version.json` muss existieren** — wird vom `/onboard`-Wizard angelegt. Wenn die Datei fehlt: `/onboard` zuerst durchlaufen. Hard-Gate-Details: `.claude/rules/onboard-required.md`.
+2. **Ab v1.0.0 zusaetzlich:** `docs/PRD.md` mit `Status: APPROVED`. Sub-Agents und `/deploy-workflow` brechen sonst ab. Bis v1.0.0 verfuegbar ist: `docs/PRD.template.md` manuell ausfuellen.
+3. **Pro Workflow (>= 3 Nodes oder Webhook/Schedule):** WF-X-Spec in `docs/specs/` anlegen, siehe `docs/specs/spec-template.md`.
+
+Im Template-Repo selbst (Wagner-Emden-IT-Services/n8n-project-template) sind diese Gates kosmetisch — produktive Slash-Commands werden hier nie ausgefuehrt (GitHub-Actions sind via Template-Guard `if: github.repository != ...` blockiert).
+
 ## 1. Projekt-Übersicht
 
 - **Tech-Stack:** n8n (self-hosted), JSON-Workflows als Code, GitHub Actions CI/CD
@@ -270,15 +280,25 @@ ACTION = `DEPLOY` | `UPDATE` | `FIX` | `REFACTOR` | `BACKUP` | `EXPERIMENT`. Die
 
 ## 11. Slash-Commands
 
-In `.claude/commands/` liegen 7 Commands:
+In `.claude/commands/`:
+
+**Setup / Lifecycle (ab v0.5.0):**
+
+- `/onboard [beschreibung]` — 8-Phasen-Wizard, **Pflicht** in jedem neuen Customer-Repo. Erzeugt `.template-version.json`, Staging-Profil, `.env`, Credentials-Plan, optional GitHub-Repo. Details: `docs/ONBOARDING.md`.
+
+**Workflow-Quality-Lints (read-only, keine Onboard-Pflicht):**
 
 - `/validate-workflow <pfad>` — Schema, Verbindungen, Credential-Refs (`node scripts/n8n-cli.mjs validate`)
 - `/check-naming <pfad>` — Naming-Convention, generische Knotennamen
-- `/backup-before-deploy <workflow-id>` — REST-API-Backup (`node scripts/n8n-cli.mjs backup`)
-- `/deploy-workflow <pfad> [env]` — Sanitize + Env-Mapping + verifiziertes Auto-Rollback
 - `/check-idempotency <pfad>` — INSERT/POST-Idempotenz
 - `/check-pagination <pfad>` — `.all()`, Done-Output-Trap, Cursor-Logik
 - `/audit-error-handling <pfad>` — Error-Workflow + Retry-Settings
+- `/security-review-workflow [pfad]` — Credentials/Webhook/Rate-Limits/Logging-Audit
+
+**Deployment (Onboard-Pflicht ab v0.5.0):**
+
+- `/backup-before-deploy <workflow-id>` — REST-API-Backup
+- `/deploy-workflow <pfad> [env]` — Sanitize + Env-Mapping + verifiziertes Auto-Rollback
 
 ## 12. n8n CLI Cheatsheet
 

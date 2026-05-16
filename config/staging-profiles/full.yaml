@@ -1,0 +1,36 @@
+# Staging-Profil "full" — Lokales Dev + Staging + Prod.
+#
+# Verwendung: Wird vom /onboard-Wizard nach config/env-mapping.yaml kopiert,
+# wenn der User in Phase 1 Option C (Full, Empfohlen) waehlt. Das ist der
+# bestehende Standard des n8n-project-template Repositories.
+#
+# Branch-Strategie: feature/* -> staging -> main.
+# Instanzen: Dev (lokal) + Staging + Prod.
+# CI-Workflows: validate-on-pr.yml + drift-check.yml + deploy-staging.yml +
+#               deploy-prod.yml (alle aus dem Standard-Layout unveraendert).
+#
+# Naming-Konvention fuer Credentials (Pflicht): `{Service} - {Environment}`
+# z.B. "Slack API - Staging", "Microsoft Graph - Production".
+
+hello-world:
+  dev: {}
+  staging: {}
+  prod: {}
+
+# Beispiel mit Credentials und Webhook-Suffix:
+#
+# exchange-sync:
+#   dev:
+#     credentials:
+#       slackApi: { id: "abc123", name: "Slack API - Dev" }
+#       microsoftOAuth2Api: { id: "ms-dev", name: "Microsoft Graph - Dev" }
+#     webhook_path_suffix: "-dev"
+#   staging:
+#     credentials:
+#       slackApi: { id: "def456", name: "Slack API - Staging" }
+#       microsoftOAuth2Api: { id: "ms-stg", name: "Microsoft Graph - Staging" }
+#     webhook_path_suffix: "-staging"
+#   prod:
+#     credentials:
+#       slackApi: { id: "ghi789", name: "Slack API - Production" }
+#       microsoftOAuth2Api: { id: "ms-prd", name: "Microsoft Graph - Production" }

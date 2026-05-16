@@ -27,9 +27,22 @@ Wiederverwendbares Repo-Template fuer n8n-Workflow-Projekte mit Hybrid-Naming, C
 - **WF-X Spec-System** unter `docs/specs/` — Workflow-Specs als versioniertes Markdown mit Lifecycle-Tracking. Optional, empfohlen ab 3+ Nodes oder Webhook/Schedule-Trigger.
 - **M365-Pattern-Library** unter `docs/integrations/m365/` — Auth-Flows, Service-Patterns (Teams/SP/Outlook/OneDrive/Excel/Planner), Error-Handling (Rate-Limits/Pagination/Delta), 5 Reference-Architekturen. Opt-in fuer Microsoft-365-Workflows.
 
-## Schnellstart
+## Schnellstart (ab v0.5.0 — empfohlener Pfad)
 
-### 1. Eigenes Repo aus Template anlegen
+1. **Repo via Template anlegen** — auf der Template-Repo-Seite oben rechts **"Use this template" → "Create a new repository"** klicken. GitHub legt einen frischen Repo unter deiner Org an.
+2. **Lokal klonen** — `git clone https://github.com/<dein-account>/<dein-repo>.git mein-n8n-projekt && cd mein-n8n-projekt`
+3. **Claude Code starten** — `claude`
+4. **`/onboard` aufrufen** — der 8-Phasen-Wizard fuehrt durch Project-Identity, Staging-Auswahl (none/simple/full/custom), GitHub-Integration, n8n-Hosting, Credentials, Optionen, Erzeugung und PRD-Skeleton. Details: [docs/ONBOARDING.md](docs/ONBOARDING.md).
+5. **PRD ausfuellen** — `docs/PRD.md` befuellen, Status auf `APPROVED` setzen (ab v1.0.0 via `/prd-generate`).
+6. **Workflow bauen + deployen** — `/validate-workflow`, dann `/deploy-workflow workflows/<name>.json --env=<env>`.
+
+> Voraussetzungen: Node.js 20+, `gh` CLI authentifiziert (fuer GitHub-Schritte), gitleaks (Pre-Commit-Hook).
+
+### Manueller Setup (Fallback ohne `/onboard`)
+
+Wer den Wizard nicht nutzen will (z.B. Probelauf, Air-gapped), kann das Setup auch klassisch nach folgenden Schritten machen:
+
+#### 1. Eigenes Repo aus Template anlegen
 
 **Empfohlener Pfad:** Auf der Template-Repo-Seite oben rechts **"Use this template" → "Create a new repository"** klicken. GitHub legt dir ein frisches Repo unter deinem Account/deiner Org an, mit eigener Git-Historie und ohne Verbindung zum Template. Anschliessend dein neues Repo lokal klonen:
 
@@ -45,7 +58,7 @@ cd mein-n8n-projekt
 #   git init && git add . && git commit -m "initial"
 ```
 
-### 2. Setup-Schritte
+#### 2. Setup-Schritte
 
 ```bash
 # 2. Env-Datei aus Vorlage

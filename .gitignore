@@ -34,6 +34,12 @@ drift-report.md
 .claude/settings.local.json
 .claude/cache/
 
+# DSGVO: Customer-Identitaet inkl. Kontaktdaten — niemals committen
+.claude/customer.json
+
+# Backup-Snapshots vor /template-update (ab v0.6.0)
+.template-backup/
+
 # Test-Outputs
 tests/output/
 *.test.local.json

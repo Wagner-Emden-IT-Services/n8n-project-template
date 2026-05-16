@@ -2,6 +2,37 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-05-16 — v0.5.0 (Onboard-Wizard)
+
+### Added
+
+- **`/onboard` Slash-Command** — 8-Phasen-Wizard, der ein frisch via "Use this template" geklontes Projekt in einen produktionsfaehigen Zustand bringt. Project Identity, Staging-Auswahl, GitHub-Integration, n8n-Hosting, Credentials, Optionen, Erzeugung, PRD-Pflicht. Jede Phase mit Bestaetigungs-Gate; Phase 6 zeigt vollstaendigen Plan vor jeder Datei-Aenderung. Re-run-sicher, idempotent, mit Backup-bei-Konflikt.
+- **`.template-version.json` Schema 1.1** — Stempel pro Projekt-Instanz mit `customer_slug`, `project_slug`, `staging_profile`, `hosting`, `options.*`. Voraussetzung fuer `/template-check` und `/template-update` ab v0.6.0.
+- **Staging-Profile** unter `config/staging-profiles/{none,simple,full}.yaml` — drei vordefinierte env-mapping-Varianten:
+  - `none`: Single-Env (nur Prod)
+  - `simple`: `feature/* -> main`, Dev (lokal) + Prod
+  - `full`: `feature/* -> staging -> main`, Dev + Staging + Prod (bisheriger Default)
+- **Workflow-Template** `.github/workflow-templates/deploy-simple.yml` — Variante fuer Profil "simple" (Trigger direkt auf `main`, kein staging-Layer).
+- **`docs/PRD.template.md`** — Pflicht-PRD-Skeleton mit 12 Sektionen (n8n-erweitert um Workflow-Inventur, Deployment-Strategie, DR-Bezug). Status: NOT_STARTED bis User-Approval.
+- **`docs/ONBOARDING.md`** und **`docs/ONBOARD_LOG.md`** — User-Doku des Wizards + append-only Audit-Trail des Onboarding-Verlaufs.
+- **`.claude/rules/onboard-required.md`** — Hard-Gate: `/deploy-workflow`, `/backup-before-deploy` und 6 Sub-Agents brechen ab, wenn `.template-version.json` fehlt oder Placeholder enthaelt. Ausnahmen: read-only-Lints und `/onboard` / `/template-migrate` selbst.
+- **`.claude/rules/template-version-pinning.md`** — definiert drei Datei-Klassen (Protected / Always-Overwrite / Diff-Check) als Vorbereitung fuer den Update-Mechanismus in v0.6.0.
+- **`.github/secrets-required.md`** — Liste der manuell zu setzenden GitHub-Repo-Secrets, vom Wizard pro Service ergaenzt.
+- **`config/secrets-vault-map.json.example`** — Mapping-Doku Service -> Vault-Slot (ohne Werte).
+
+### Changed
+
+- **`.env.example`** — Hinweis ergaenzt, dass die Datei normalerweise vom `/onboard`-Wizard gepflegt wird.
+- **`config/env-mapping.yaml.example`** — Hinweis ergaenzt, dass die Datei vom Wizard aus dem gewaehlten Staging-Profil generiert wird. Naming-Konvention `{Service} - {Environment}` dokumentiert.
+- **`.gitignore`** — `.claude/customer.json` (DSGVO: Kontaktdaten lokal-only) und `.template-backup/` (fuer den Update-Mechanismus ab v0.6.0) ergaenzt.
+
+### Notes
+
+- **Stub-Pattern bleibt:** Source-Repo ist `Wagner-Emden-IT-Services/n8n-project-template`. Im cc-ecosystem-MPC-Manager existiert nur `TEMPLATE.md` + `.git-source.json` als Stub.
+- **Update-Mechanismus (`/template-check`, `/template-update`, `/template-migrate`)** kommt in v0.6.0.
+- **PRD-Generator (`/prd-generate`)** und Hard-Gate `prd-required` kommen in v1.0.0 — bis dahin manuell ueber `docs/PRD.template.md`.
+- **Best-Practice-Quellen (Perplexity Deep-Research, Mai 2026):** 3-Tier-Staging als Default empfohlen; Branch-pro-Env mit n8n Source Control ist die Marktempfehlung, aber Source Control braucht n8n Business-Lizenz (~667 EUR/mo) — Workaround via JSON-Repo-Pattern bleibt fuer Community-Edition-User die pragmatische Wahl.
+
 ## 2026-05-11 — v0.4.0 (Community-MCP: docker → npx)
 
 ### Changed

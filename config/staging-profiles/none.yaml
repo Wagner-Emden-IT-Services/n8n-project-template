@@ -1,0 +1,22 @@
+# Staging-Profil "none" — Single-Env-Setup ohne Trennung.
+#
+# Verwendung: Wird vom /onboard-Wizard nach config/env-mapping.yaml kopiert,
+# wenn der User in Phase 1 Option A (kein Staging) waehlt.
+#
+# Branch-Strategie: nur `main`.
+# Instanzen: nur Prod.
+# CI-Workflows: validate-on-pr.yml + drift-check.yml. deploy-*.yml werden geloescht.
+#
+# Beim Deploy via `node scripts/n8n-cli.mjs deploy <file> --env=prod` wird
+# das prod-Mapping angewendet. Source-File bleibt env-agnostisch.
+
+hello-world:
+  prod: {}
+
+# Beispiel mit Credentials und Webhook-Suffix:
+#
+# exchange-sync:
+#   prod:
+#     credentials:
+#       slackApi: { id: "abc123", name: "Slack API - Production" }
+#       microsoftOAuth2Api: { id: "ms-prd", name: "Microsoft Graph - Production" }

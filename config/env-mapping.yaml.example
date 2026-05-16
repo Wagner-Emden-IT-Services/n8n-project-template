@@ -1,5 +1,7 @@
 # Env-Mapping fuer Workflows.
-# Pro Workflow-Name (entspricht .name in der JSON) ein Block mit dev/staging/prod.
+# Pro Workflow-Name (entspricht .name in der JSON) ein Block mit den
+# fuer das gewaehlte Staging-Profil relevanten Envs.
+#
 # Beim Deploy via `node scripts/n8n-cli.mjs deploy <file> --env=<env>` wird das
 # Mapping VOR dem PUT auf den Workflow angewendet — Source-File bleibt env-agnostisch.
 #
@@ -11,7 +13,13 @@
 # Tags werden NICHT via Mapping gesetzt — n8n akzeptiert sie nicht im Workflow-PUT.
 # Pro-Env-Tags manuell in der UI oder via separater /tags-API setzen.
 #
-# Diese Datei nach config/env-mapping.yaml kopieren und mit echten IDs befuellen.
+# Naming-Konvention fuer n8n-Credentials (Pflicht): `{Service} - {Environment}`
+# z.B. "Slack API - Production", "Microsoft Graph - Staging".
+#
+# Diese Datei wird normalerweise vom /onboard-Wizard (Phase 1) aus
+# config/staging-profiles/{none,simple,full}.yaml generiert.
+# Manuell befuellen nur, wenn ohne Wizard aufgesetzt wird.
+# Default-Variante zeigt full-Profil (dev/staging/prod).
 
 hello-world:
   dev: {}

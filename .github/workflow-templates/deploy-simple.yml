@@ -1,0 +1,71 @@
+name: Deploy to Production
+
+# Wird vom /onboard-Wizard nach .github/workflows/deploy-prod.yml kopiert,
+# wenn Staging-Profil "simple" (Phase 1 Option B) gewaehlt wurde. Variante
+# zum normalen deploy-prod.yml: triggert direkt auf main (kein staging-Layer).
+#
+# Wer kein simple-Profil hat: dieses Template ignorieren. Profil "full" nutzt
+# die Standard-Files .github/workflows/deploy-{staging,prod}.yml unveraendert.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'workflows/**/*.json'
+      - 'config/env-mapping.yaml'
+
+jobs:
+  deploy:
+    # Template-Guard: im Template-Repo selbst NICHT deployen.
+    if: github.repository != 'Wagner-Emden-IT-Services/n8n-project-template'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Pre-Deploy Backup (full instance, paginiert)
+        env:
+          N8N_PROD_API_URL: ${{ secrets.N8N_PROD_API_URL }}
+          N8N_PROD_API_KEY: ${{ secrets.N8N_PROD_API_KEY }}
+          BACKUP_PATH: ./backups
+        run: node scripts/n8n-cli.mjs backup --env=prod
+
+      - name: Upload Backup Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: pre-deploy-backup-${{ github.sha }}
+          path: backups/
+          retention-days: 90
+
+      - name: Deploy each changed workflow
+        env:
+          N8N_PROD_API_URL: ${{ secrets.N8N_PROD_API_URL }}
+          N8N_PROD_API_KEY: ${{ secrets.N8N_PROD_API_KEY }}
+          N8N_ACTIVE_ENV: prod
+        run: |
+          set -e
+          CHANGED=$(git diff --name-only HEAD^ HEAD | grep -E '^workflows/.*\.json$' | grep -Ev '^workflows/(dev|staging|prod)/' || true)
+          [ -z "$CHANGED" ] && echo "Nichts zu deployen" && exit 0
+          for f in $CHANGED; do
+            node scripts/n8n-cli.mjs deploy "$f" --env=prod --auto-rollback
+          done
+
+      - name: Notify Slack
+        if: always() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          STATUS="${{ job.status }}"
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"[PROD] Deploy: $STATUS — ${{ github.sha }} — ${{ github.actor }}\"}" \
+            "$SLACK_WEBHOOK_URL"
