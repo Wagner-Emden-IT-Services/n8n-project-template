@@ -1,0 +1,60 @@
+# Issue-Triage — n8n-template v1.7.0
+#
+# Auto-Label fuer neue Issues nach Title-Pattern. Stub-Komplexitaet —
+# darf vom User erweitert werden (UPDATABLE-WITH-DIFF im Manifest).
+
+name: Issue Triage
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+
+jobs:
+  auto-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Title-Pattern → Labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title || '';
+            const body = issue.body || '';
+            const currentLabels = issue.labels.map(l => l.name);
+
+            const labelsToAdd = new Set();
+
+            // Title-Pattern
+            if (/^\[BUG\]/i.test(title)) labelsToAdd.add('bug');
+            if (/^\[FEAT\]|^\[FEATURE\]/i.test(title)) labelsToAdd.add('feature');
+            if (/^\[QA\]/i.test(title)) labelsToAdd.add('workflow-bug');
+            if (/^\[TEMPLATE-BUG\]/i.test(title)) labelsToAdd.add('template-bug');
+            if (/^\[ENH\]|^\[ENHANCEMENT\]/i.test(title)) labelsToAdd.add('enhancement');
+
+            // Body-Pattern fuer Severity
+            const sevMatch = body.match(/Severity[:\s]*([Pp][0-3])/);
+            if (sevMatch) labelsToAdd.add(`priority:${sevMatch[1].toUpperCase()}`);
+
+            // Default: needs-triage wenn keine source:*-Label gesetzt
+            const hasSource = currentLabels.some(l => l.startsWith('source:'));
+            if (!hasSource && labelsToAdd.size === 0) {
+              labelsToAdd.add('needs-triage');
+            }
+
+            // Filter: nicht doppelt setzen
+            const newLabels = [...labelsToAdd].filter(l => !currentLabels.includes(l));
+
+            if (newLabels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: newLabels
+              });
+              console.log(`Auto-labeled #${issue.number}: ${newLabels.join(', ')}`);
+            } else {
+              console.log(`#${issue.number}: nichts hinzuzufuegen.`);
+            }

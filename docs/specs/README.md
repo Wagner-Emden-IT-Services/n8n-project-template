@@ -1,5 +1,29 @@
 # Workflow-Specs (WF-X System)
 
+## ABGRENZUNG: Workflow-Specs vs. Bugs (verbindlich seit n8n-template v0.6.0)
+
+**WF-X-Specs dokumentieren WORKFLOWS, NICHT Bugs.**
+
+| Was | Wohin |
+|---|---|
+| Neuer Workflow | `docs/specs/WF-X-*.md` Spec |
+| Workflow-Aenderung (Scope-Erweiterung) | bestehende WF-X-Spec ergaenzen |
+| **Bug** (Funktionsfehler, Workflow-Failure, falsche Daten) | **GitHub-Issue** im Project-Repo (Label `bug` oder `workflow-bug`) |
+| QA-Failure aus `/qa-workflow` | **GitHub-Issue** (Label `workflow-bug, source:ai-qa`, Auto-File durch /qa-workflow) |
+| Template-Bug (Skill/Hook/Command in `.n8n-template/` etc.) | **GitHub-Issue im n8n-project-template Source-Repo** via `/template-bugreport` |
+
+**Verbotene Anti-Patterns** in WF-X-Specs:
+- Sektion "Known Bugs", "Bekannte Fehler", "Open Issues"
+- Bullet-Liste "TODO: Fix X", "BUG: Y funktioniert nicht"
+
+Wenn ein Workflow einen offenen Bug hat, gehoert das so dokumentiert:
+- Sektion "QA Test Results" mit FAIL-Marker + `See #N` (Issue-Link)
+- Sektion "Implementation Notes" mit `Bug-Fix: #N (PR #M, <datum>, Branch fix/issue-N-...)` als Cross-Reference
+
+Bei Migration v0.5.0 → v0.6.0: `/template-update` scant automatisch nach diesen Anti-Pattern-Sektionen und schlaegt Issue-Migration vor (Schritt 1b-v06).
+
+---
+
 ## Was sind Workflow-Specs?
 
 Workflow-Specs sind das Pendant zu Feature-Specs in klassischer Software-

@@ -1,0 +1,82 @@
+name: Workflow Bug (Auto-File) (Auto-File)
+description: Bug aus einem /qa-workflow-Skill-Run. Wird typischerweise vom Agent ausgefuellt, kann aber auch manuell genutzt werden.
+title: "[WF-X] "
+labels: ["bug", "workflow-bug", "source:ai-qa", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issue stammt aus einem QA-Run. Felder werden vom `/qa`-Skill automatisch befuellt — bei manueller Nutzung selbst eintragen.
+
+  - type: input
+    id: feature_id
+    attributes:
+      label: Feature-ID (WF-X)
+      description: Welche Workflow-Spec ist betroffen?
+      placeholder: "WF-42"
+    validations:
+      required: true
+
+  - type: input
+    id: failed_ac
+    attributes:
+      label: Fehlgeschlagener AC
+      description: Welcher Acceptance Criterion ist gerissen? (Spec-AC-Liste referenzieren)
+      placeholder: "AC-3: WHEN Member ohne Abo Buchungs-API aufruft THEN 403"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity (Heuristik)
+      description: |
+        Wird vom /qa-workflow-Skill heuristisch vorgeschlagen — bei manueller Eingabe selbst klassifizieren.
+      options:
+        - P0 Critical
+        - P1 High
+        - P2 Medium
+        - P3 Low
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduktion
+      description: Schritte oder Test-Befehl
+      placeholder: |
+        1. npm run test:e2e -- mitglieder.spec.ts
+        2. Test "should reject non-member booking" failed
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Erwartet
+      placeholder: AC-Definition oder Sollwert aus der Spec
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Tatsaechlich
+      placeholder: Konkretes Test-Output, Fehlermeldung, Screenshot-Hinweis
+    validations:
+      required: true
+
+  - type: input
+    id: qa_session_ref
+    attributes:
+      label: QA-Session-Referenz (optional)
+      description: Pfad zur Session-Datei oder Plan-Dokument
+      placeholder: "prompts/sessions/2026-05-18-qa-mitglieder.md"
+
+  - type: checkboxes
+    id: routing
+    attributes:
+      label: Routing-Hinweis
+      options:
+        - label: "Bug stammt aus golden-dev-Template (z.B. Skill-Bug, Hook-Bug). → Zusaetzlich Label `origin:template`."

@@ -1,13 +1,8 @@
-# Beim Fork: <ORG>/<REPO> in den URLs unten durch deinen GitHub-Pfad ersetzen,
-# damit Discussions- und SECURITY.md-Links zielgenau zeigen.
 blank_issues_enabled: false
 contact_links:
-  - name: Security-Themen (NICHT als Public-Issue)
-    url: https://github.com/Wagner-Emden-IT-Services/n8n-project-template/blob/main/SECURITY.md
-    about: Sicherheitsrelevantes bitte privat per Email — siehe SECURITY.md.
-  - name: n8n-Schwachstellen (Upstream)
-    url: https://github.com/n8n-io/n8n/security/policy
-    about: Bugs in n8n selbst gehen an n8n.io, nicht an dieses Template.
-  - name: Frage zur Nutzung
-    url: https://github.com/Wagner-Emden-IT-Services/n8n-project-template/discussions
-    about: Fragen ohne konkreten Bug-Report bitte als Discussion.
+  - name: Template-Bug (n8n-template)
+    url: https://github.com/Wagner-Emden-IT-Services/n8n-project-template/issues/new?template=03-template-bug.yml
+    about: Bug im n8n-template-Template selbst — nutze stattdessen /template-bugreport im Projekt (sanitisiert + Privacy-Gate).
+  - name: n8n-template Documentation
+    url: https://github.com/Wagner-Emden-IT-Services/n8n-project-template/blob/main/UPDATING.md
+    about: Update / Migration / Marker-Konvention

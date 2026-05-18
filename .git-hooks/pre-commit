@@ -1,0 +1,39 @@
+#!/bin/bash
+# n8n-template pre-commit normalize hook (v0.6.0)
+#
+# Normalisiert alle gestageten workflows/*.json vor dem Commit, damit
+# volatile Felder (Position, VersionId, InstanceId, updatedAt etc.) nicht
+# committed werden. Saubere Diffs, Drift-Detection funktioniert.
+#
+# Installation: cp .git-hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+# (Wird von /onboard Phase 7 automatisch gemacht.)
+
+set -e
+
+# Nur gestagete workflow-JSON-Files normalisieren
+WORKFLOWS=$(git diff --cached --name-only --diff-filter=ACM | grep '^workflows/.*\.json$' || true)
+
+if [ -z "$WORKFLOWS" ]; then
+  exit 0
+fi
+
+echo "[pre-commit-normalize] Normalisiere $(echo "$WORKFLOWS" | wc -l) Workflow(s) vor Commit..."
+
+# Pruefe ob scripts/n8n-cli.mjs verfuegbar
+if [ ! -f "scripts/n8n-cli.mjs" ]; then
+  echo "[pre-commit-normalize] WARNUNG: scripts/n8n-cli.mjs nicht gefunden — skippe Normalisierung."
+  echo "[pre-commit-normalize] Onboard nachholen damit der Hook funktioniert: /onboard"
+  exit 0
+fi
+
+for wf in $WORKFLOWS; do
+  if [ ! -f "$wf" ]; then
+    continue
+  fi
+  echo "  normalize $wf"
+  node scripts/n8n-cli.mjs normalize --in "$wf" --out "$wf"
+  git add "$wf"
+done
+
+echo "[pre-commit-normalize] OK — Workflow(s) normalisiert und re-staged."
+exit 0
