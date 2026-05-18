@@ -1,0 +1,27 @@
+# Staging-Profil "simple" — Lokales Dev + eine Prod-Instanz.
+#
+# Verwendung: Wird vom /onboard-Wizard nach config/env-mapping.yaml kopiert,
+# wenn der User in Phase 1 Option B (Simple) waehlt.
+#
+# Branch-Strategie: feature/* -> main.
+# Instanzen: Dev (lokal) + Prod.
+# CI-Workflows: validate-on-pr.yml + drift-check.yml + deploy-prod.yml (aus
+#               .github/workflow-templates/deploy-simple.yml gerendert).
+#               deploy-staging.yml wird vom Wizard geloescht.
+
+hello-world:
+  dev: {}
+  prod: {}
+
+# Beispiel mit Credentials und Webhook-Suffix:
+#
+# exchange-sync:
+#   dev:
+#     credentials:
+#       slackApi: { id: "abc123", name: "Slack API - Dev" }
+#       microsoftOAuth2Api: { id: "ms-dev", name: "Microsoft Graph - Dev" }
+#     webhook_path_suffix: "-dev"
+#   prod:
+#     credentials:
+#       slackApi: { id: "ghi789", name: "Slack API - Production" }
+#       microsoftOAuth2Api: { id: "ms-prd", name: "Microsoft Graph - Production" }

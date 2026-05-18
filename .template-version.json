@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.1",
+  "template": "n8n-project",
+  "version": "0.5.0",
+  "installed_at": "{{INSTALLED_AT}}",
+  "source_repo": "https://github.com/Wagner-Emden-IT-Services/n8n-project-template",
+  "target_repo": "{{TARGET_REPO}}",
+  "customer_slug": "{{CUSTOMER_SLUG}}",
+  "project_slug": "{{PROJECT_SLUG}}",
+  "staging_profile": "{{STAGING_PROFILE}}",
+  "hosting": "{{HOSTING}}",
+  "options": {
+    "multi_agent_pipeline": false,
+    "m365_module": false,
+    "hello_world_example": true,
+    "nightly_backup": false,
+    "health_check_workflow": false,
+    "logging_level": "standard",
+    "smoke_test_passed": false
+  }
+}
