@@ -375,3 +375,37 @@ Define success criteria. Loop until verified.
 - "Add validation" → "Tests für invalid inputs schreiben, dann grün"
 - "Fix the bug" → "Test schreiben der ihn reproduziert, dann grün"
 - Multi-Step: Plan mit Verify-Step pro Schritt
+
+
+<!-- N8N-TEMPLATE:START id="bug-tracking" version="0.6.0" -->
+## Bug-Tracking (verbindlich seit n8n-template v0.6.0)
+
+**Bugs werden AUSSCHLIESSLICH als GitHub-Issues im Project-Repo gepflegt** — NICHT in WF-X-Specs, NICHT in docs/, NICHT in workflows/*.json-Beschreibungen.
+
+- **Repo:** {{TARGET_REPO_URL}}/issues
+- **Templates:** `01-bug.yml` (Mensch), `02-workflow-bug.yml` (Auto-File durch /qa-workflow), `03-template-bug.yml` (im n8n-project-template Source-Repo via `/template-bugreport`)
+- **Workflow Single-Issue:** `/change-workflow --issue <N>` → Branch `fix/issue-N-<slug>` → PR mit `Closes #N` → Auto-Close beim Merge
+- **Workflow Multi-Issue/Multi-Workflow:** `/change-workflow --issues [--priority P0,P1] [--milestone <name>]` oder `/change-workflow --workflows WF-1,WF-2` → Multi-Agent-Teams via TeamCreate (max 2-3 parallel, Konflikt-Detection bei shared Credentials)
+- **Template-Bug:** `/template-bugreport` (sanitisiert + Privacy-Hard-Gate ins n8n-project-template Source-Repo)
+- **"Was soll ich als naechstes machen?":** `/next-recommend` (GSD-Style mit Priorisierungs-Heuristik)
+- **Hilfe:** `/help-workflow` (kontextabhaengig)
+
+Details: `.claude/rules/general.md` Sektion "Bug-Tracking-Konvention".
+<!-- N8N-TEMPLATE:END id="bug-tracking" -->
+
+<!-- N8N-TEMPLATE:START id="n8n-pipeline" version="0.6.0" -->
+## n8n-Pipeline (Sub-Agents je Phase)
+
+| Phase | Sub-Agent (`.claude/agents/`) | Auto-loaded Skills |
+|---|---|---|
+| Spec | `n8n-workflow-analyst` | `n8n-prd-generator` |
+| Architecture | `n8n-integration-architect` | `n8n-workflow-patterns`, `n8n-mcp-tools-expert` |
+| Build | `n8n-workflow-developer` | `n8n-mcp-tools-expert`, `n8n-node-configuration`, `n8n-code-javascript`, `n8n-code-python`, `n8n-expression-syntax` |
+| Test | `n8n-qa-engineer` | `n8n-validation-expert`, `n8n-mcp-tools-expert` |
+| Security | `n8n-security-reviewer` | (`/security-review-workflow` Hard-Gate) |
+| Deploy | `n8n-deployment-engineer` | `n8n-mcp-tools-expert` |
+
+Hard-Gates vor Deploy: `onboard-required`, `wf-x-spec-required`, `security-audit-required`, `normalize-on-commit`. Bypass nur via expliziter `--bypass-<gate>`-Flag mit Audit-Log.
+
+Orchestrator: `/change-workflow` (Hybrid Pipeline + Issue-Mode + Multi-Workflow-Batch).
+<!-- N8N-TEMPLATE:END id="n8n-pipeline" -->

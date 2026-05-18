@@ -1,0 +1,39 @@
+# Workflow-JSON Validation — n8n-template v0.6.0
+#
+# Validiert alle workflows/*.json gegen n8n-Schema via scripts/n8n-cli.mjs validate.
+# Pflicht-CI auf PRs gegen main/staging.
+
+name: Validate Workflows
+
+on:
+  pull_request:
+    branches: [main, staging]
+    paths:
+      - 'workflows/**.json'
+      - 'scripts/n8n-cli.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate alle Workflows
+        run: |
+          for wf in workflows/*.json; do
+            [ -e "$wf" ] || continue
+            echo "Validating $wf"
+            node scripts/n8n-cli.mjs validate --in "$wf"
+          done

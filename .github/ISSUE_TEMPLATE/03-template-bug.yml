@@ -1,0 +1,80 @@
+name: Template Bug (n8n-template internal)
+description: Bug im n8n-template-Template selbst (Skill, Hook, Command, Update-Mechanik). Sollte sanitiert per /template-bugreport gefiled werden.
+title: "[TEMPLATE-BUG] "
+labels: ["template-bug", "needs-triage", "source:ai-change"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Achtung:** Dieses Template gehoert ins `cc-template-n8n-template`-Source-Repo, nicht in Customer-Project-Repos.
+        Im Customer-Projekt: Nutze `/template-bugreport` — der Workflow sanitisiert Customer-Identifier und filed den Issue dort.
+        Direkter Submit ohne Sanitization-Check ist Privacy-Risiko (Customer-Code/-Slug kann hier nicht hin).
+
+  - type: dropdown
+    id: affected_component
+    attributes:
+      label: Betroffene Komponente
+      options:
+        - "Skill (.claude/skills/)"
+        - "Hook (.claude/hooks/)"
+        - "Command (.claude/commands/)"
+        - "Rule (.claude/rules/)"
+        - "Update-Mechanik (.n8n-template/)"
+        - "Onboarding-Phase / Sub-Agent / Workflow-Spec"
+        - "Template-Files (CLAUDE.md / docs/-Stubs)"
+        - "CI-Workflow (.github/workflows/)"
+        - "Other"
+    validations:
+      required: true
+
+  - type: input
+    id: version_seen
+    attributes:
+      label: Template-Version
+      description: Aus .template-version.json → version
+      placeholder: "1.7.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro_minimal
+    attributes:
+      label: Minimal-Repro
+      description: Wie minimal koennen wir das reproduzieren? Sanitisiert — keine Customer-Identifier.
+      placeholder: |
+        1. /change in einem v1.7.0-Projekt aufrufen mit "..."
+        2. Beobachte: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Erwartet
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Tatsaechlich
+    validations:
+      required: true
+
+  - type: dropdown
+    id: discovered_in_project_type
+    attributes:
+      label: Im welchem Projekt-Typ entdeckt
+      description: KEIN Customer-Name. Nur Typ.
+      options:
+        - Customer-Project
+        - Internal-Project
+        - Template-Selbst-Test
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Workaround (optional)
+      description: Falls bereits eine Umgehung bekannt ist

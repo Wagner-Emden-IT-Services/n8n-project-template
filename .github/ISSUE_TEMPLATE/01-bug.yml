@@ -1,0 +1,90 @@
+name: Bug Report
+description: Funktionsfehler, Regression oder unerwartetes Verhalten im Project-Code melden.
+title: "[BUG] "
+labels: ["bug", "needs-triage", "source:human"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke fuer den Bug-Report. Fuelle die Felder so konkret wie moeglich.
+        Tipp: Wenn du den Bug aus einem `/qa`-Run kennst, nutze stattdessen `02-qa-finding.yml`.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Kurz-Beschreibung
+      description: Eine Zeile. Was ist kaputt?
+      placeholder: "z.B. Login-Button reagiert nicht auf Klick im Safari Mobile"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: |
+        - **P0 Critical**: Auth-Bypass, Datenverlust, Payment-Failure, Production-500, Security-CVE
+        - **P1 High**: Funktionaler Showstopper, Crash, Datenkonsistenz-Issue
+        - **P2 Medium**: UX-Verschlechterung, Workaround verfuegbar, Edge-Case
+        - **P3 Low**: Cosmetic, kein Funktionsverlust
+      options:
+        - P0 Critical
+        - P1 High
+        - P2 Medium
+        - P3 Low
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduktion (Schritt-fuer-Schritt)
+      description: Wie kann jemand den Bug reproduzieren?
+      placeholder: |
+        1. Oeffne /mitglieder im Safari Mobile (iOS 17+)
+        2. Klicke auf "Login"
+        3. Beobachte ...
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Erwartet
+      placeholder: Was sollte passieren?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Tatsaechlich
+      placeholder: Was passiert stattdessen?
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Stack-/Browser-/OS-Info, Build-Hash falls relevant
+      placeholder: "Next.js 16, Chrome 130, macOS 15.1, Build a1b2c3d"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Stack-Trace (optional)
+      render: shell
+
+  - type: checkboxes
+    id: routing
+    attributes:
+      label: Routing-Hinweis
+      options:
+        - label: "Dieser Bug stammt aus dem golden-dev-Template (nicht aus Project-Code). → Setze auch das Label `origin:template`."

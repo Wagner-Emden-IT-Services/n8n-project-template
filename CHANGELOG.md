@@ -2,6 +2,63 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-05-18 — v0.6.0 (Big-Bang: Update-Mechanik + /change-workflow + GitHub-Issues + GSD-Style Help)
+
+Hash-Manifest-Update-System portiert aus golden-dev v1.7.0 mit n8n-Adaptionen. `/change-workflow` als Hybrid (Pipeline-Default + Issue-Mode + Multi-Workflow-Batch). `/qa-workflow` mit Severity-Heuristik + Auto-File P0/P1. GitHub-Issue-Integration als first-class Bug-Tracker. `/help-workflow` (Template-Erklaerer) + `/next-recommend` (GSD-Style "Was als naechstes?") + `docs/STATE.md` (Living-State, GSD-Pattern). Pre-Commit-Hook fuer Workflow-Normalisierung (Hard-Gate `normalize-on-commit`).
+
+### Added
+
+- **`.n8n-template/`-Verzeichnis** (analog `.golden-dev/` aus golden-dev v1.7.0):
+  - `manifest.json` (Hash-Manifest, SHA-256 + 4-Tier-Schutz, 106 Files erfasst)
+  - `protection-rules.json` (77 Glob-Regeln, n8n-Pfade inkl. `workflows/`, `docs/specs/`, `config/staging-profiles/`)
+  - `Generate-Manifest.ps1` (1:1 portiert; TODO v0.6.1: Workflow-JSON-Normalize-Hook vor Hash)
+  - `Compute-Update-Plan.ps1` (1:1 portiert, 3-Wege-Diff BASE/LOCAL/REMOTE)
+  - `Apply-Update.ps1` (1:1 portiert, Backup-Strategie `.bak.<ts>`)
+  - `Deploy-Labels.ps1` (1:1 + n8n-Labels `workflow-bug`, `n8n-version-issue`)
+  - `Scan-Workflow-Bugs-In-Project.ps1` (n8n-adaptiert: scant `docs/specs/WF-*.md`)
+  - `README.md` (Doku der Update-Mechanik)
+- **4 Slash-Commands** unter `.claude/commands/`: `template-check.md`, `template-update.md`, `template-migrate.md`, `template-bugreport.md`
+- **`/change-workflow`-Command** (NEU, n8n-spezifisch): Hybrid Pipeline + Issue-Mode, 6 Sub-Agents + 8 Skills je Phase auto-geladen, Multi-Workflow-Batch via TeamCreate (max 2-3 parallel mit Credentials-Konflikt-Detection), Hard-Gate-Checks vor Deploy
+- **`/qa-workflow` Skill** (NEU): Severity-Heuristik P0-P3, Auto-File via `gh issue create --template 02-workflow-bug.yml`, User-Choice P2/P3
+- **`/help-workflow`-Command** (NEU): Template-Erklaerer kontextabhaengig — Standard-Cheatsheet + Modi `--command`, `--phase`, `--skill`, `--concept`, `--first-steps`
+- **`/next-recommend`-Command** (NEU, GSD-Style, inspiriert von https://github.com/gsd-build/get-shit-done): 10-stufige Priorisierungs-Heuristik, empfiehlt eine konkrete Aktion mit Begruendung
+- **`docs/STATE.md`** (NEU, USER-GENERATED): Living-State mit Position, Workflow-Pipeline, Open Loops, Last Session Summary
+- **Pre-Commit-Hook** `.git-hooks/pre-commit`: normalisiert `workflows/*.json` vor jedem Commit
+- **4 ISSUE_TEMPLATEs**: `01-bug.yml`, `02-workflow-bug.yml`, `03-template-bug.yml`, `config.yml`
+- **2 CI-Workflows neu**: `validate-workflows.yml` (n8n-Schema-Validierung), `normalize-check.yml` (Pre-Merge-Check). Plus portierte `issue-triage.yml`, `pr-issue-link-check.yml`
+- **`.claude/rules/general.md`** (NEU): Stack-agnostische Konventionen, Bug-Tracking-Konvention v0.6.0, Hard-Gates-Uebersicht
+- **`UPDATING.md`** (NEU): Template-Lebenszyklus (Install, Update, Migrate, Marker-Konvention, Konflikt-Aufloesung)
+
+### Changed
+
+- **`.template-version.json`** Schema 1.1 → 1.2 (neue Felder `installed_via`, `manifest_path`, `last_update_at`, `last_update_from_version`); version 0.5.0 → 0.6.0
+- **`CLAUDE.md`**: Zwei MARKER-Bloecke ergaenzt (`bug-tracking`, `n8n-pipeline`). Bestehender Inhalt unangetastet.
+- **`docs/specs/README.md`**: Sektion "ABGRENZUNG: Workflow-Specs vs. Bugs" am Anfang ergaenzt.
+
+### Bug-Tracking-Konvention (HARD-RULE seit v0.6.0)
+
+Bugs werden AUSSCHLIESSLICH als GitHub-Issues im Project-Repo gepflegt. Keine Bug-Sektionen in WF-X-Specs, keine TODO-Listen in docs/. Specs dokumentieren Workflows; Bugs sind Issues.
+
+### Migration v0.5.x → v0.6.0
+
+`/template-update` ist self-bootstrapping:
+1. Erkennt Schema 1.1 → Auto-Upgrade auf 1.2.
+2. NEUER Schritt 1b-v06: scant Legacy-Bug-Pflegestellen, User-Choice, `gh issue create`, `(See #N)`-Cross-References.
+3. Normaler 3-Wege-Diff zieht die ~30 neuen Files als CREATE-Aktionen.
+
+### Bewusst NICHT in v0.6.0 (kommt in v0.6.1 / v1.0.0)
+
+- **`/onboard` Phase 5.7.5b/5.7.5c/5.7.5d** (Hart-Pflicht, Labels-Deploy, Bug-Tracking-Banner) — `/onboard` ist gross + komplex, gezielter Refactor in v0.6.1
+- **`/onboard` Phase 7.8** (STATE.md-Init) — manuell anlegen reicht (Template kommt mit STATE.md-Placeholder)
+- **Workflow-JSON-Normalize-Hook im Generate-Manifest.ps1** — aktuell wird JSON roh gehasht; kommt in v0.6.1
+- **PRD-Generator `/prd-generate`** + Hard-Gate `prd-required` — v1.0.0
+
+### Verifikation
+
+- Generate-Manifest.ps1: 106 Files erfasst (31 FROZEN, 14 UPDATABLE-WITH-DIFF, 1 MARKER-AWARE, 60 USER-GENERATED, 45 SKIPPED — letztere sind nicht-template-verwaltete Repo-Files wie package.json, node_modules etc.)
+- Compute-Update-Plan.ps1 Self-Test: 46 NO-OP + 60 KEEP-LOCAL = 106 Total, 0 Drift
+- PowerShell-Syntax-Check fuer alle 5 Skripte: OK
+
 ## 2026-05-16 — v0.5.0 (Onboard-Wizard)
 
 ### Added
