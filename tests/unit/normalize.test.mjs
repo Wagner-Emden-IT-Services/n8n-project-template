@@ -45,7 +45,15 @@ describe('normalizeWorkflow', () => {
   });
 
   it('strippt instanceId und templateCredsSetupCompleted aus meta', () => {
-    const out = normalizeWorkflow(fixture());
+    // Self-contained fixture: garantiert ein nicht-volatiles meta-Feld,
+    // damit der Test nicht vom shared fixture()-Default abhaengt (siehe #23).
+    const wf = fixture();
+    wf.meta = {
+      instanceId: 'inst-A',
+      templateCredsSetupCompleted: true,
+      customField: 'keep',
+    };
+    const out = normalizeWorkflow(wf);
     expect(out.meta).toBeDefined();
     expect(out.meta).not.toHaveProperty('instanceId');
     expect(out.meta).not.toHaveProperty('templateCredsSetupCompleted');

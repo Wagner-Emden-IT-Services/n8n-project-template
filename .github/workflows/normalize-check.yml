@@ -1,4 +1,4 @@
-# Workflow-JSON Normalize-Check — n8n-template v0.6.0
+# Workflow-JSON Normalize-Check — n8n-template v0.6.1+
 #
 # Pre-Merge-Check: scheitert wenn workflows/*.json nicht normalisiert ist
 # (z.B. position-Felder, versionId, instanceId noch drin).
@@ -31,24 +31,10 @@ jobs:
 
       - name: Pruefe Normalize-Status
         run: |
-          set -e
-          NEEDS_NORMALIZE=()
-          for wf in workflows/*.json; do
-            [ -e "$wf" ] || continue
-            # Normalize in temp-file und vergleiche
-            TMP=$(mktemp)
-            node scripts/n8n-cli.mjs normalize --in "$wf" --out "$TMP"
-            if ! cmp -s "$wf" "$TMP"; then
-              NEEDS_NORMALIZE+=("$wf")
-            fi
-            rm -f "$TMP"
-          done
-          if [ ${#NEEDS_NORMALIZE[@]} -gt 0 ]; then
-            echo "❌ Folgende Workflows sind nicht normalisiert:"
-            printf '  - %s\n' "${NEEDS_NORMALIZE[@]}"
+          if ! node scripts/n8n-cli.mjs normalize workflows --check; then
             echo ""
-            echo "Lokal fixen: node scripts/n8n-cli.mjs normalize --in <file> --out <file>"
+            echo "Lokal fixen: node scripts/n8n-cli.mjs normalize workflows"
             echo "Pre-Commit-Hook sollte das automatisch tun (siehe .git-hooks/pre-commit)."
             exit 1
           fi
-          echo "✅ Alle Workflows sind normalisiert."
+          echo "Alle Workflows sind normalisiert."
