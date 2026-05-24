@@ -2,6 +2,34 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-05-24 — v0.6.1 (CI-Hotfix + Test-Haerten + CLI-Reference)
+
+Behebt zwei CI-Bugs in v0.6.0 die jeden PR in Konsumenten-Projekten blockierten. Plus praeventive CLI-Doku, damit sich der Fehler-Typ nicht wiederholt.
+
+### Fixed
+
+- **`normalize-check.yml` + `validate-workflows.yml`** riefen die CLI mit `--in`/`--out` Flags auf, die `scripts/n8n-cli.mjs` nicht kennt (positional `<target>` + `--check`). Jeder PR in v0.6.0-Konsumenten-Projekten failte mit `error: unknown option '--in'`. **Fix #22** (HIGH): File-Loops ersetzt durch direkten Verzeichnis-Call — `node scripts/n8n-cli.mjs normalize workflows --check` bzw. `validate workflows`. Entdeckt im Konsumenten-Repo `monatliche-azure-abrechnung` PR #1.
+- **`tests/unit/normalize.test.mjs` Test A** war implizit von der `fixture()`-Default-Form abhaengig (musste `customField:'keep'` enthalten, sonst kollidierten Test A und Test B). **Fix #23** (MEDIUM): Test A schreibt jetzt seine eigene `meta`-Fixture mit `customField:'keep'` explizit, statt auf den Shared-Default zu vertrauen. Test ist damit selbstisolierend, kann nicht durch Aenderungen an `fixture()` brechen.
+
+### Added
+
+- **`docs/cli-reference.md`** — Single Source of Truth fuer alle `scripts/n8n-cli.mjs`-Sub-Commands mit Signaturen (deploy/backup/export/validate/normalize/drift-check). Cross-Check-Empfehlung fuer PRs die CI-Workflows aendern. **Fix #24** (LOW, praeventiv).
+- **`package.json` version** auf `0.6.1` synchronisiert (war seit v0.4.0 nicht mit-bumped).
+
+### Why
+
+- Issue #22 hat alle Konsumenten-Projekte beim CI-Check gebrochen, Severity HIGH — kann nicht auf v0.7.0 warten.
+- Issue #23 hatte im Source-Repo selbst keinen sichtbaren Effekt (Tag v0.6.0 hatte bereits `customField:'keep'`), aber das Konsumenten-Projekt scheint einen aelteren Zwischenstand der Test-Datei zu haben. Test-Haertung verhindert kuenftige Drift.
+- Issue #24 verhindert die Wiederholung von #22: jede CI-Workflow-Aenderung muss gegen `docs/cli-reference.md` gepruefft werden.
+
+### Out-of-Scope (geplant fuer v0.7.0)
+
+- Lint-Skript `npm run cli:doc-check` (statische Verifikation Workflow-YAML <-> CLI-Reference)
+- Auto-Generation der CLI-Reference aus `commander --help`
+
+Konsumenten-Projekte sollten v0.6.1 via `/template-update` ziehen.
+
+
 ## 2026-05-18 — v0.6.0 (Big-Bang: Update-Mechanik + /change-workflow + GitHub-Issues + GSD-Style Help)
 
 Hash-Manifest-Update-System portiert aus golden-dev v1.7.0 mit n8n-Adaptionen. `/change-workflow` als Hybrid (Pipeline-Default + Issue-Mode + Multi-Workflow-Batch). `/qa-workflow` mit Severity-Heuristik + Auto-File P0/P1. GitHub-Issue-Integration als first-class Bug-Tracker. `/help-workflow` (Template-Erklaerer) + `/next-recommend` (GSD-Style "Was als naechstes?") + `docs/STATE.md` (Living-State, GSD-Pattern). Pre-Commit-Hook fuer Workflow-Normalisierung (Hard-Gate `normalize-on-commit`).
