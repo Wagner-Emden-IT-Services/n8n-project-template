@@ -72,11 +72,12 @@ In `.mcp.json` sind zwei n8n-MCP-Server konfiguriert:
 
 1. Frage Community-MCP nach passenden Nodes / hole Template
 2. Baue/ändere Workflow lokal als JSON in `workflows/<funktion>.json` (env-agnostisch)
-3. Validiere über Community-MCP (`validate_workflow`, ggf. `n8n_autofix_workflow`) — und lokal `node scripts/n8n-cli.mjs validate <pfad>`
-4. Backup der laufenden Version via `/backup-before-deploy` (offizieller MCP) bzw. `node scripts/n8n-cli.mjs backup --env=<env>`
-5. Deploy via offiziellen MCP (`update_workflow` oder `create_workflow`) — Fallback `node scripts/n8n-cli.mjs deploy <file> --env=<env> --auto-rollback`
-6. Test-Run mit Pin-Daten via offiziellen MCP (`test_workflow`)
-7. Erst dann: `activate_workflow`
+3. **Review (Pflicht nach jedem Build/Edit)** — Skill `n8n-workflow-reviewer` über den gebauten/geänderten Workflow laufen lassen (5-Kategorien-Audit: Errors, Error-Handling, Performance, Struktur, Score). Blocker vor Schritt 4 beheben. Statischer Review VOR der Test-Ausführung — Details siehe `.claude/rules/general.md` "Post-Build-Review".
+4. Validiere über Community-MCP (`validate_workflow`, ggf. `n8n_autofix_workflow`) — und lokal `node scripts/n8n-cli.mjs validate <pfad>`
+5. Backup der laufenden Version via `/backup-before-deploy` (offizieller MCP) bzw. `node scripts/n8n-cli.mjs backup --env=<env>`
+6. Deploy via offiziellen MCP (`update_workflow` oder `create_workflow`) — Fallback `node scripts/n8n-cli.mjs deploy <file> --env=<env> --auto-rollback`
+7. Test-Run mit Pin-Daten via offiziellen MCP (`test_workflow`)
+8. Erst dann: `activate_workflow`
 
 ## 4a. Operating Mode für n8n-MCP
 
@@ -400,7 +401,7 @@ Details: `.claude/rules/general.md` Sektion "Bug-Tracking-Konvention".
 |---|---|---|
 | Spec | `n8n-workflow-analyst` | `n8n-prd-generator` |
 | Architecture | `n8n-integration-architect` | `n8n-workflow-patterns`, `n8n-mcp-tools-expert` |
-| Build | `n8n-workflow-developer` | `n8n-mcp-tools-expert`, `n8n-node-configuration`, `n8n-code-javascript`, `n8n-code-python`, `n8n-expression-syntax` |
+| Build | `n8n-workflow-developer` | `n8n-mcp-tools-expert`, `n8n-node-configuration`, `n8n-code-javascript`, `n8n-code-python`, `n8n-expression-syntax`, `n8n-workflow-reviewer` (Post-Build-Review) |
 | Test | `n8n-qa-engineer` | `n8n-validation-expert`, `n8n-mcp-tools-expert` |
 | Security | `n8n-security-reviewer` | (`/security-review-workflow` Hard-Gate) |
 | Deploy | `n8n-deployment-engineer` | `n8n-mcp-tools-expert` |

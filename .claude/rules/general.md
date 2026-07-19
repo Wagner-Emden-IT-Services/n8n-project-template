@@ -7,6 +7,23 @@
 
 Siehe `.claude/rules/onboard-required.md`. Slash-Commands brechen ab wenn `.template-version.json` fehlt oder Placeholder enthaelt.
 
+## Post-Build-Review (verbindlich seit n8n-template v0.7.0)
+
+**Nach jedem Build/Edit eines Workflow-JSONs (`workflows/*.json`) laeuft der Skill
+`n8n-workflow-reviewer` als statischer Review — VOR `validate_workflow`,
+`/security-review-workflow` und Deploy.**
+
+- **5 Kategorien:** Errors & Breaks, Missing Error Handling, Performance & Efficiency,
+  Structure & Maintainability, Summary + Score.
+- **Blocker** (Errors-&-Breaks-Findings) werden vor dem naechsten Schritt (Validate) behoben.
+- **Abgrenzung zu `qa-workflow`:** Reviewer = statischer Code-Review (billig, kein Test-Run).
+  `qa-workflow` = anschliessende Test-Ausfuehrung + Severity-Heuristik + Auto-File von
+  P0/P1-Issues. Reihenfolge: erst Reviewer, dann QA.
+- **Sticky-Notes / Naming / Struktur** werden von Kategorie 4 mit-geprueft (relates to #19).
+- **Bugs** landen nicht in WF-X-Specs, sondern als GitHub-Issue (siehe Bug-Tracking-Konvention unten).
+- **In der Pipeline (`/change-workflow`):** Reviewer laeuft am Ende der Build-Phase, bevor
+  `n8n-qa-engineer` (Test-Phase) uebernimmt.
+
 ## Bug-Tracking-Konvention (verbindlich seit n8n-template v0.6.0)
 
 **Bugs werden AUSSCHLIESSLICH als GitHub-Issues im Project-Repo gepflegt.**
