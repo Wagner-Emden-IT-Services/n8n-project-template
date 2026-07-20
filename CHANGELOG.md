@@ -2,6 +2,27 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-07-19 — v0.7.0 (Workflow-Reviewer-Skill + Post-Build-Review)
+
+Neuer statischer Review-Skill, der nach jedem Build/Edit eines Workflows laeuft — vor Validate/Deploy.
+
+### Added
+
+- **`.claude/skills/n8n-workflow-reviewer/`** — adoptierter 5-Kategorien-Audit-Skill (Errors & Breaks, Missing Error Handling, Performance & Efficiency, Structure & Maintainability, Summary + Score). Laeuft als Post-Build-Review ueber `workflows/*.json` und ergaenzt `qa-workflow` (statischer Review zuerst, dann Test-Ausfuehrung). Skill-Description um einen Post-Build-Trigger erweitert, damit der Skill nach dem Bauen/Aendern automatisch feuert.
+- **`.claude/rules/general.md`** — neue Sektion "Post-Build-Review": nach jedem Workflow-Build/-Edit ist der Reviewer Pflicht-Schritt vor Validate/Deploy. `relates to #19` (Sticky-Notes-Pflege nach Workflow-Edits wird von Kategorie 4 des Reviewers mit-adressiert).
+
+### Changed
+
+- **`CLAUDE.md`** — "Workflow fuer jede Aenderung" (Section 4) um Schritt 3 "Review" erweitert (Sequenz jetzt 8-stufig). Pipeline-Tabelle: `n8n-workflow-reviewer` in die Build-Phase aufgenommen.
+- **`.claude/commands/change-workflow.md`** — Build-Phase laedt `n8n-workflow-reviewer` als Abschluss-Review vor der Test-Phase.
+- **`package.json` / `.template-version.json`** — Version auf `0.7.0` (letztere war seit v0.4.0 auf `0.5.0` haengen geblieben, jetzt mit-gebumpt).
+
+### Why
+
+- User-Vorgabe: der Reviewer-Skill soll sinnvoll nach dem Bauen/Aendern JEDES n8n-Workflows genutzt werden — verankert in der kanonischen Aenderungssequenz + Pipeline + Rule, statt nur description-getriggert.
+
+Konsumenten-Projekte ziehen v0.7.0 via `/template-update` (der Skill liegt unter `.claude/skills/n8n-*/` → Always-Overwrite-Klasse, kommt automatisch mit).
+
 ## 2026-05-24 — v0.6.1 (CI-Hotfix + Test-Haerten + CLI-Reference)
 
 Behebt zwei CI-Bugs in v0.6.0 die jeden PR in Konsumenten-Projekten blockierten. Plus praeventive CLI-Doku, damit sich der Fehler-Typ nicht wiederholt.

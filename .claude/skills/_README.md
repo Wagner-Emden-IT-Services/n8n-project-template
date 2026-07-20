@@ -12,6 +12,14 @@ Aus [czlonkowski/n8n-skills](https://github.com/czlonkowski/n8n-skills) ins Repo
 - `n8n-validation-expert/` — Validation-Errors interpretieren, False-Positives, Auto-Fix-Loop
 - `n8n-workflow-patterns/` — Architektur-Patterns: Webhook, HTTP-API, DB, AI-Agent, Batch, Scheduled
 
+## Adoptierter Review-Skill (nicht aus czlonkowski)
+
+- `n8n-workflow-reviewer/` — statischer 5-Kategorien-Review-Audit (Errors, Error-Handling,
+  Performance, Struktur, Score). **Laeuft nach jedem Build/Edit** eines Workflows
+  (Post-Build-Review, VOR Validate/Deploy) — verankert in `CLAUDE.md` Section 4 und
+  `.claude/rules/general.md` "Post-Build-Review". Ergaenzt das WE-eigene `qa-workflow/`
+  (Reviewer = statischer Review zuerst, QA = Test-Ausfuehrung danach).
+
 ## Skills triggern automatisch
 
 Du musst Skills nicht explizit aufrufen — Claude Code laedt die Descriptions in jede Session

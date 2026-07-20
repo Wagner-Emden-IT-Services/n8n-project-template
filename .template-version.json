@@ -1,7 +1,7 @@
 {
   "schema_version": "1.1",
   "template": "n8n-project",
-  "version": "0.5.0",
+  "version": "0.7.0",
   "installed_at": "{{INSTALLED_AT}}",
   "source_repo": "https://github.com/Wagner-Emden-IT-Services/n8n-project-template",
   "target_repo": "{{TARGET_REPO}}",

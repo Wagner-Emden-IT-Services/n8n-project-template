@@ -95,7 +95,7 @@ Pro Eingabe (Issue-Body / WF-X-Spec / User-Text) bestimme **Phase**:
 |---|---|---|---|
 | **Spec** | "Neuer Workflow", "Anforderung", noch keine WF-X | `n8n-workflow-analyst` | `n8n-prd-generator` |
 | **Architecture** | WF-X existiert, kein Technical Design | `n8n-integration-architect` | `n8n-workflow-patterns`, `n8n-mcp-tools-expert` |
-| **Build** | WF-X mit Design, kein Workflow-JSON | `n8n-workflow-developer` | `n8n-mcp-tools-expert`, `n8n-node-configuration`, `n8n-code-javascript`, `n8n-code-python`, `n8n-expression-syntax` |
+| **Build** | WF-X mit Design, kein Workflow-JSON | `n8n-workflow-developer` | `n8n-mcp-tools-expert`, `n8n-node-configuration`, `n8n-code-javascript`, `n8n-code-python`, `n8n-expression-syntax`, `n8n-workflow-reviewer` (Post-Build-Review) |
 | **Test** | Workflow-JSON existiert, kein QA-Result | `n8n-qa-engineer` | `n8n-validation-expert`, `n8n-mcp-tools-expert` |
 | **Security** | Vor Production-Deploy | `n8n-security-reviewer` | `/security-review-workflow` |
 | **Deploy** | Security gruen, ready zum Activate | `n8n-deployment-engineer` | `n8n-mcp-tools-expert` |
@@ -104,6 +104,8 @@ Pro Eingabe (Issue-Body / WF-X-Spec / User-Text) bestimme **Phase**:
 Mit `--phase <name>`: direkt zur angegebenen Phase springen.
 
 **Bei Bug-Fix-Phase**: Skip Spec + Architecture wenn der Workflow schon existiert. Direkt zur Build- oder Test-Phase mit Bug-Beschreibung als Context.
+
+**Post-Build-Review**: Am Ende jeder Build-Phase (auch bei Bug-Fix) laeuft `n8n-workflow-reviewer` ueber den gebauten/geaenderten Workflow, bevor die Test-Phase startet — siehe `.claude/rules/general.md` "Post-Build-Review".
 
 ## Schritt 1.7: PR-Linking-Konvention (cross-cutting, ab v0.6.0)
 
