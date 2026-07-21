@@ -33,7 +33,7 @@ Wiederverwendbares Repo-Template fuer n8n-Workflow-Projekte mit Hybrid-Naming, C
 2. **Lokal klonen** — `git clone https://github.com/<dein-account>/<dein-repo>.git mein-n8n-projekt && cd mein-n8n-projekt`
 3. **Claude Code starten** — `claude`
 4. **`/onboard` aufrufen** — der 8-Phasen-Wizard fuehrt durch Project-Identity, Staging-Auswahl (none/simple/full/custom), GitHub-Integration, n8n-Hosting, Credentials, Optionen, Erzeugung und PRD-Skeleton. Details: [docs/ONBOARDING.md](docs/ONBOARDING.md).
-5. **PRD ausfuellen** — `docs/PRD.md` befuellen, Status auf `APPROVED` setzen (ab v1.0.0 via `/prd-generate`).
+5. **PRD erzeugen** — `/prd-generate` ausfuehren (3-Phasen-Interview -> `docs/PRD.md`), nach Review `Status: APPROVED` setzen. Pflicht vor Build/Deploy (Hard-Gate `prd-required`).
 6. **Workflow bauen + deployen** — `/validate-workflow`, dann `/deploy-workflow workflows/<name>.json --env=<env>`.
 
 > Voraussetzungen: Node.js 20+, `gh` CLI authentifiziert (fuer GitHub-Schritte), gitleaks (Pre-Commit-Hook).

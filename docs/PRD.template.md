@@ -1,17 +1,16 @@
 ---
 status: NOT_STARTED
 created: {{INSTALLED_AT}}
-template_version: 0.5.0
+template_version: 1.0.0
 ---
 
 # Product Requirements Document — {{PROJECT_SLUG}}
 
-> Pflicht-Dokument auf Projekt-Ebene. Wird ab `n8n-project-template v1.0.0`
-> via `/prd-generate` halbautomatisch erzeugt (basierend auf
-> `skill-community-n8n-prd-generator`). Bis dahin manuell ausfuellen.
+> Pflicht-Dokument auf Projekt-Ebene. Wird via `/prd-generate` halbautomatisch erzeugt
+> (3-Phasen-Interview aus Skill `n8n-prd-generator`) oder manuell ausgefuellt.
 >
-> Status-Werte: NOT_STARTED -> DRAFT -> APPROVED. Hard-Gate fuer Workflow-Build
-> ab v1.0.0: `Status: APPROVED` erforderlich, und es duerfen keine `{{`-Placeholder
+> Status-Werte: NOT_STARTED -> DRAFT -> APPROVED. Hard-Gate `prd-required` (seit v1.0.0):
+> `Status: APPROVED` erforderlich, und es duerfen keine `{{`-Placeholder
 > mehr im Dokument stehen.
 >
 > Pro Workflow zusaetzlich eine WF-X-Spec in `docs/specs/` anlegen (Pflicht ab

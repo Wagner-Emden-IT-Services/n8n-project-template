@@ -38,6 +38,7 @@ Parse `$ARGUMENTS` auf folgende Flags. Reste werden als freie User-Beschreibung 
 | `--max-parallel <N>` | Default 2, max 3 (n8n Credentials-Konflikt-Risiko) |
 | `--bypass-security` | Skip security-audit-required (Audit-Log-Eintrag) |
 | `--bypass-wfx-spec` | Skip wf-x-spec-required (Audit-Log-Eintrag) |
+| `--bypass-prd` | Skip prd-required (Audit-Log-Eintrag) |
 
 Setze Variablen:
 - `$mode = "single-workflow" | "issue-single" | "multi-issue" | "multi-workflow"`
@@ -46,9 +47,10 @@ Setze Variablen:
 ## Schritt 0: Vorbedingungen
 
 1. **Hard-Gate `onboard-required`**: pruefe `.template-version.json`. Falls fehlt oder Placeholder enthaelt: STOPP "Onboard zuerst durchlaufen: /onboard"
-2. **`gh` CLI**: `gh --version` + `gh auth status` — bei Failure STOPP (Issue-Modes brauchen das)
-3. **`.template-version.json` `target_repo`**: muss gesetzt sein wenn Issue-Mode aktiv
-4. **`git status` sauber**: bei uncommitted Changes — User-Frage (analog golden-dev /change Schritt 0.5)
+2. **Hard-Gate `prd-required`** (greift fuer neue Workflow-Builds): `docs/PRD.md` muss `Status: APPROVED` tragen und frei von `{{`-Placeholdern sein. Sonst STOPP "Run /prd-generate zuerst" — Override `--bypass-prd` (Audit-Log). Ausnahmen (reiner Bug-Fix an bestehendem Workflow etc.): `.claude/rules/prd-required.md`.
+3. **`gh` CLI**: `gh --version` + `gh auth status` — bei Failure STOPP (Issue-Modes brauchen das)
+4. **`.template-version.json` `target_repo`**: muss gesetzt sein wenn Issue-Mode aktiv
+5. **`git status` sauber**: bei uncommitted Changes — User-Frage (analog golden-dev /change Schritt 0.5)
 
 ## Schritt 0.3: Plan-Dokument-Erkennung (Multi-Workflow / Multi-Session)
 
@@ -171,6 +173,7 @@ Vor `n8n_activate_workflow` in Production-Profil:
 2. **`security-audit-required`**: `/security-review-workflow WF-N` ausfuehren. Bei rotem Status: STOPP. `--bypass-security` ueberspringt mit Audit-Log-Eintrag.
 3. **`normalize-on-commit`**: Pre-Commit-Hook ist installiert (`.git/hooks/pre-commit` existiert). Bei Fehlen: Warnung "Onboard Phase 7 nachholen".
 4. **`onboard-required`**: schon in Schritt 0 geprueft, hier nur Verifikation.
+5. **`prd-required`**: `docs/PRD.md` `Status: APPROVED` + keine `{{`-Placeholder (schon in Schritt 0 geprueft, hier Verifikation). `--bypass-prd` ueberspringt mit Audit-Log.
 
 ## Schritt 5: Spec-Update + Commit + PR
 

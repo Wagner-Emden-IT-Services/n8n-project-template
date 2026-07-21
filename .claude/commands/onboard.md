@@ -211,7 +211,7 @@ Bei ja:
 
 AskUserQuestion: "Setup steht. Bevor du Workflows baust, brauchst du ein PRD (Pflicht). Jetzt generieren?"
 
-- **Ja** -> ruft `/prd-generate` direkt auf (sobald in v1.0.0 verfuegbar) ODER, solange `/prd-generate` noch nicht existiert, schreibt `docs/PRD.md` aus `docs/PRD.template.md` mit `Status: NOT_STARTED` und gibt Hinweis: "Wenn `/prd-generate` in einem zukuenftigen Template-Update verfuegbar wird, dort weitermachen. Bis dahin: PRD-Template manuell ausfuellen."
+- **Ja** -> ruft `/prd-generate` direkt auf: erzeugt `docs/PRD.md` via 3-Phasen-Interview (Status DRAFT). Nach Owner-Review `Status: APPROVED` setzen — sonst greift der Hard-Gate `prd-required` beim ersten Workflow-Build.
 - **Spaeter** -> schreibt `docs/PRD.md` mit `Status: NOT_STARTED` und vermerkt im Onboard-Log einen Reminder
 
 Abschluss-Anzeige (analog golden-dev):
