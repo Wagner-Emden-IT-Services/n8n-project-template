@@ -20,6 +20,13 @@ Aus [czlonkowski/n8n-skills](https://github.com/czlonkowski/n8n-skills) ins Repo
   `.claude/rules/general.md` "Post-Build-Review". Ergaenzt das WE-eigene `qa-workflow/`
   (Reviewer = statischer Review zuerst, QA = Test-Ausfuehrung danach).
 
+## Adoptierter PRD-Skill (seit v1.0.0)
+
+- `n8n-prd-generator/` — strukturiertes 3-Phasen-Interview zur PRD-Erstellung (Initial
+  Understanding -> Clarifying Questions -> Generierung). Wird vom Command `/prd-generate`
+  gewrappt (Output: projekt-weite `docs/PRD.md` im 12-Sektionen-Format). **Pflicht vor
+  Build/Deploy** (Hard-Gate `prd-required`, siehe `.claude/rules/prd-required.md`).
+
 ## Skills triggern automatisch
 
 Du musst Skills nicht explizit aufrufen — Claude Code laedt die Descriptions in jede Session

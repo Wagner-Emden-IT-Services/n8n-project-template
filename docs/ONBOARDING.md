@@ -14,7 +14,7 @@ in einen produktionsfaehigen Zustand bringt. Ergebnis:
 - CI/CD-Workflows passend zum gewaehlten Staging-Profil
 - `docs/ONBOARD_LOG.md` mit nachvollziehbarem Audit-Trail
 - `docs/PRD.md` Skeleton (Status: NOT_STARTED) als Pflicht-Schritt fuer
-  spaetere `/prd-generate`-Generierung (ab v1.0.0)
+  die `/prd-generate`-Generierung (seit v1.0.0)
 
 ## Voraussetzungen
 
@@ -31,7 +31,7 @@ in einen produktionsfaehigen Zustand bringt. Ergebnis:
 2. `/onboard` aufrufen (optional mit Kurzbeschreibung: `/onboard Voice-Rezeptionist fuer Kunde X`)
 3. Die 8 Phasen sequenziell beantworten — jede Phase hat ein Bestaetigungs-Gate
 4. In Phase 6 wird ein vollstaendiger Plan angezeigt. Erst nach "Ja" werden Files geschrieben
-5. In Phase 7 entweder direkt PRD generieren (ab v1.0.0) oder spaeter manuell befuellen
+5. In Phase 7 direkt PRD generieren (`/prd-generate`) oder spaeter manuell befuellen
 
 ## Phasen-Uebersicht
 
@@ -85,7 +85,7 @@ werden.
 
 ## Was kommt nach `/onboard`
 
-1. PRD finalisieren (`docs/PRD.md` oder via `/prd-generate` ab v1.0.0)
+1. PRD finalisieren via `/prd-generate` (oder `docs/PRD.md` manuell), Status auf `APPROVED`
 2. Pro Workflow eine WF-X-Spec in `docs/specs/` anlegen (Pflicht ab 3+ Nodes oder Webhook/Schedule)
 3. Workflow bauen (n8n-MCP-Tools + lokale `.claude/skills/`)
 4. Deployment: `/deploy-workflow workflows/<name>.json --env=<env>` (erst nach gruener `/validate-workflow`)

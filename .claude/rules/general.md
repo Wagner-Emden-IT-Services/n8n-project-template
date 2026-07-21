@@ -68,9 +68,10 @@ Details: `.claude/commands/change-workflow.md` (Schritt 0.4 + 1.7) und `.claude/
 ## Hard-Gates (Pflicht-Pruefungen)
 
 1. `onboard-required` — `/onboard` vor jeder Aktion
-2. `wf-x-spec-required` — WF-X-Spec mit Pflichtfeldern (Trigger, Datenfluss, Services, Error-Handling, Edge-Cases, Credentials, Webhook-Paths) vor `n8n_activate_workflow`
-3. `security-audit-required` — `/security-review-workflow` gruener Status vor Production-Deploy
-4. `normalize-on-commit` — Pre-Commit-Hook normalisiert Workflow-JSON automatisch
+2. `prd-required` — `docs/PRD.md` mit `Status: APPROVED` + keine `{{`-Placeholder vor Build/Deploy (via `/prd-generate`). Details: `.claude/rules/prd-required.md`
+3. `wf-x-spec-required` — WF-X-Spec mit Pflichtfeldern (Trigger, Datenfluss, Services, Error-Handling, Edge-Cases, Credentials, Webhook-Paths) vor `n8n_activate_workflow`
+4. `security-audit-required` — `/security-review-workflow` gruener Status vor Production-Deploy
+5. `normalize-on-commit` — Pre-Commit-Hook normalisiert Workflow-JSON automatisch
 
 Bypass nur via expliziter `--bypass-<gate>`-Flag mit Audit-Log-Eintrag.
 

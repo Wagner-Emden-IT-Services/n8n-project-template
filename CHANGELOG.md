@@ -2,6 +2,31 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-07-21 — v1.0.0 (PRD-First: /prd-generate + prd-required Hard-Gate)
+
+Loest das seit v0.5.0 als Roadmap gefuehrte PRD-First-Feature ein. `fixes #30`.
+
+### Added
+
+- **`.claude/skills/n8n-prd-generator/`** — adoptierter 3-Phasen-Interview-Skill (Initial Understanding -> Clarifying Questions -> PRD-Generierung) mit Template-Integrations-Note. Der bisherige Spec-Phasen-Verweis auf `n8n-prd-generator` (Pipeline) war ein Dangling-Reference — jetzt real gebuendelt.
+- **`/prd-generate`** (`.claude/commands/prd-generate.md`) — erzeugt projekt-weit `docs/PRD.md` im 12-Sektionen-Format aus `docs/PRD.template.md`. Wrappt den Skill, mappt Antworten in die Template-Sektionen, context7 fuer Service-/API-Fakten, Status DRAFT -> Owner-Review -> APPROVED. `--update` fuer Refresh.
+- **`.claude/rules/prd-required.md`** — neuer Hard-Gate: `docs/PRD.md` muss `Status: APPROVED` tragen und frei von `{{`-Placeholdern sein, bevor ein Workflow gebaut oder deployt wird. Gated Sub-Agents + `/deploy-workflow` + Build-Phase von `/change-workflow`. Override `--bypass-prd` mit Audit-Log. Ausnahmen: /onboard, /prd-generate, read-only Lints, Template-Lifecycle, Bug-Fix an bestehenden Workflows.
+
+### Changed
+
+- **`CLAUDE.md`** — Section 0 Punkt 2 (PRD jetzt aktiv statt "ab v1.0.0"); Hard-Gates-Liste +`prd-required`; Section 11 +`/prd-generate`.
+- **`.claude/commands/change-workflow.md`** — Schritt 0 Vorbedingungen +`prd-required`; Schritt 4 Hard-Gate-Verifikation +`prd-required`; Flag `--bypass-prd`.
+- **`.claude/rules/general.md`** — Hard-Gates-Liste +`prd-required`.
+- **`.claude/commands/onboard.md`** — Phase 7 ruft `/prd-generate` real auf (statt "sobald in v1.0.0 verfuegbar").
+- **`docs/PRD.template.md`, `README.md`, `docs/ONBOARDING.md`, `docs/ONBOARD_LOG.md`, `.claude/skills/_README.md`** — "ab v1.0.0"-Vermerke auf aktiv umgestellt, Skill dokumentiert.
+- **`package.json` / `.template-version.json`** — Version auf `1.0.0`.
+
+### Breaking
+
+- **Neuer Hard-Gate `prd-required`.** Ab v1.0.0 blockieren Sub-Agents, `/deploy-workflow` und die Build-Phase von `/change-workflow`, solange keine `docs/PRD.md` mit `Status: APPROVED` (und ohne `{{`-Placeholder) existiert. **Bestehende Projekte** ohne approved PRD muessen vor dem naechsten Build `/prd-generate` durchlaufen (oder bewusst `--bypass-prd` mit Audit-Log setzen). Reine Bug-Fixes an bestehenden Live-Workflows sind ausgenommen.
+
+Konsumenten-Projekte ziehen v1.0.0 via `/template-update` (Skill unter `.claude/skills/n8n-*/`, Command + Rule als Always-Overwrite-Klasse).
+
 ## 2026-07-19 — v0.7.0 (Workflow-Reviewer-Skill + Post-Build-Review)
 
 Neuer statischer Review-Skill, der nach jedem Build/Edit eines Workflows laeuft — vor Validate/Deploy.

@@ -84,7 +84,7 @@ _(wird vom Wizard befuellt)_
 _(wird vom Wizard befuellt)_
 
 - PRD-Status: NOT_STARTED | DRAFT | APPROVED
-- `/prd-generate` ausgefuehrt: ja | nein | not_available_in_this_version
+- `/prd-generate` ausgefuehrt: ja | nein
 - Reminder gesetzt: ja | nein
 
 ## Nacharbeiten

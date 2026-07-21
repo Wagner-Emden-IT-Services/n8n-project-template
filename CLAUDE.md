@@ -7,7 +7,7 @@ Dies ist ein n8n-Workflow-Automation-Projekt mit Naming-Convention und eingebett
 In einem Customer-Repo (geklont via "Use this template"):
 
 1. **`.template-version.json` muss existieren** — wird vom `/onboard`-Wizard angelegt. Wenn die Datei fehlt: `/onboard` zuerst durchlaufen. Hard-Gate-Details: `.claude/rules/onboard-required.md`.
-2. **Ab v1.0.0 zusaetzlich:** `docs/PRD.md` mit `Status: APPROVED`. Sub-Agents und `/deploy-workflow` brechen sonst ab. Bis v1.0.0 verfuegbar ist: `docs/PRD.template.md` manuell ausfuellen.
+2. **Zusaetzlich (seit v1.0.0):** `docs/PRD.md` mit `Status: APPROVED` — via `/prd-generate` erzeugt. Sub-Agents und `/deploy-workflow` brechen sonst ab (Hard-Gate `prd-required`, Override `--bypass-prd` mit Audit-Log). Details: `.claude/rules/prd-required.md`.
 3. **Pro Workflow (>= 3 Nodes oder Webhook/Schedule):** WF-X-Spec in `docs/specs/` anlegen, siehe `docs/specs/spec-template.md`.
 
 Im Template-Repo selbst (Wagner-Emden-IT-Services/n8n-project-template) sind diese Gates kosmetisch — produktive Slash-Commands werden hier nie ausgefuehrt (GitHub-Actions sind via Template-Guard `if: github.repository != ...` blockiert).
@@ -286,6 +286,7 @@ In `.claude/commands/`:
 **Setup / Lifecycle (ab v0.5.0):**
 
 - `/onboard [beschreibung]` — 8-Phasen-Wizard, **Pflicht** in jedem neuen Customer-Repo. Erzeugt `.template-version.json`, Staging-Profil, `.env`, Credentials-Plan, optional GitHub-Repo. Details: `docs/ONBOARDING.md`.
+- `/prd-generate [beschreibung]` — erzeugt `docs/PRD.md` (12-Sektionen) via 3-Phasen-Interview (wrappt Skill `n8n-prd-generator`). **Pflicht vor Build/Deploy** (Hard-Gate `prd-required`). Seit v1.0.0.
 
 **Workflow-Quality-Lints (read-only, keine Onboard-Pflicht):**
 
@@ -406,7 +407,7 @@ Details: `.claude/rules/general.md` Sektion "Bug-Tracking-Konvention".
 | Security | `n8n-security-reviewer` | (`/security-review-workflow` Hard-Gate) |
 | Deploy | `n8n-deployment-engineer` | `n8n-mcp-tools-expert` |
 
-Hard-Gates vor Deploy: `onboard-required`, `wf-x-spec-required`, `security-audit-required`, `normalize-on-commit`. Bypass nur via expliziter `--bypass-<gate>`-Flag mit Audit-Log.
+Hard-Gates vor Deploy: `onboard-required`, `prd-required`, `wf-x-spec-required`, `security-audit-required`, `normalize-on-commit`. Bypass nur via expliziter `--bypass-<gate>`-Flag mit Audit-Log.
 
 Orchestrator: `/change-workflow` (Hybrid Pipeline + Issue-Mode + Multi-Workflow-Batch).
 <!-- N8N-TEMPLATE:END id="n8n-pipeline" -->
