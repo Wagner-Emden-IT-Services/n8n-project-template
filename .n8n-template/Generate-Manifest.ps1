@@ -41,6 +41,26 @@ $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
+# Line-ending-agnostic SHA-256: all managed files are text, so decode as
+# UTF-8, normalize CRLF -> LF, and hash the resulting UTF-8 bytes. Raw-byte
+# hashing (Get-FileHash) would yield different hashes for identical content
+# on autocrlf=true (CRLF) vs. LF checkouts -> false conflicts everywhere.
+# Must stay byte-identical to the copy in Compute-Update-Plan.ps1.
+function Get-NormalizedFileHash {
+    param([string]$Path)
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    $text = [System.Text.Encoding]::UTF8.GetString($bytes)
+    $text = $text -replace "`r`n", "`n"
+    $normBytes = [System.Text.Encoding]::UTF8.GetBytes($text)
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $hashBytes = $sha.ComputeHash($normBytes)
+    } finally {
+        $sha.Dispose()
+    }
+    return ([System.BitConverter]::ToString($hashBytes) -replace '-', '').ToLower()
+}
+
 function Convert-GlobToRegex {
     param([string]$Glob)
     $escaped = [regex]::Escape($Glob)
@@ -66,7 +86,9 @@ function Resolve-Protection {
     return $null
 }
 
-$Root = (Resolve-Path $Root).Path
+# GetFullPath kanonisiert 8.3-Kurzpfade (SRENWA~1) auf Langpfade — sonst matchen die
+# per Substring gebildeten Relativpfade keine Regel und das Manifest wird still leer.
+$Root = [System.IO.Path]::GetFullPath((Get-Item (Resolve-Path $Root).Path).FullName)
 if (-not $OutputPath) {
     $OutputPath = Join-Path $Root '.n8n-template/manifest.json'
 }
@@ -130,7 +152,7 @@ foreach ($file in $files) {
         $entry.sha256 = $null
     } else {
         try {
-            $hash = (Get-FileHash -Path $file.FullName -Algorithm SHA256).Hash.ToLower()
+            $hash = Get-NormalizedFileHash -Path $file.FullName
             $entry.sha256 = $hash
         } catch {
             $entry.sha256 = $null
@@ -165,6 +187,10 @@ $manifest = [ordered]@{
         total              = $sortedEntries.Count
     }
     files            = @($sortedEntries)
+}
+
+if ($sortedEntries.Count -eq 0) {
+    throw "No files matched any protection rule (root: $Root). Refusing to write an empty manifest — an update plan against it would orphan every file. Check that -Root is a long path (not 8.3 short form) pointing at the project root."
 }
 
 $json = $manifest | ConvertTo-Json -Depth 8

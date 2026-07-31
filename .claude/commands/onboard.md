@@ -184,7 +184,7 @@ ZU ERZEUGEN / AENDERN / LOESCHEN
 ================================
 + .env (gitignored)
 + .claude/customer.json (gitignored, DSGVO)
-+ .template-version.json (v0.5.0, customer=engel, project=voice-rezeptionist, staging_profile=simple)
++ .template-version.json (v1.2.0, customer=engel, project=voice-rezeptionist, staging_profile=simple)
 + config/env-mapping.yaml (simple-Profil, slug=voice-rezeptionist)
 + config/secrets-vault-map.json
 + docs/integrations/credentials-setup.md
@@ -195,13 +195,20 @@ ZU ERZEUGEN / AENDERN / LOESCHEN
 - .github/workflows/deploy-staging.yml (Phase 1 = simple -> nicht benoetigt)
 ```
 
+**`.template-version.json`-Stempel (Schema 1.2):** Neben den in Phase 0-5 gesammelten Feldern (`customer_slug`, `project_slug`, `staging_profile`, `hosting`, `options.*`) setzt Phase 6 zusaetzlich:
+
+- `installed_via: "onboard"`
+- `manifest_path: ".n8n-template/manifest.json"`
+- `last_update_at: null` (wird von /template-update gepflegt)
+- `last_update_from_version: null` (wird von /template-update gepflegt)
+
 AskUserQuestion: "Plan ausfuehren?" (ja / abbrechen).
 
 Bei ja:
 1. Alle Files schreiben
 2. `npm install`
 3. `git init` (falls neu) oder Remote anlegen (`gh repo create`)
-4. Initial-Commit: `feat: project initialized via n8n-project-template v0.5.0`
+4. Initial-Commit: `feat: project initialized via n8n-project-template v1.2.0`
 5. Push zum Remote
 6. Branch-Protection setzen (Solo-User-Warnung wenn API failt)
 7. `.template-version.json.target_repo` mit der finalen URL befuellen
@@ -244,7 +251,7 @@ Naechste Schritte:
 
 ## Output
 
-- `.template-version.json` mit vollstaendigem Stempel
+- `.template-version.json` mit vollstaendigem Stempel (Schema 1.2, `installed_via: "onboard"`)
 - `.claude/customer.json` (gitignored)
 - `docs/ONBOARD_LOG.md` mit allen Phasen + Zeitstempeln
 - `docs/PRD.md` (Status: NOT_STARTED)

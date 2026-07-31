@@ -4,7 +4,9 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import dotenv from 'dotenv';
-import yaml from 'js-yaml';
+// Named import statt Default: js-yaml v5 entfernt den Default-Export,
+// `load` existiert als Named-Export in v4 und v5 (relates to PR #32).
+import { load as yamlLoad } from 'js-yaml';
 
 const ENV_FILE = resolve(process.cwd(), '.env');
 const MAPPING_FILE = resolve(process.cwd(), 'config/env-mapping.yaml');
@@ -31,7 +33,7 @@ export function resolveEnv(target) {
 export function loadEnvMapping() {
   if (!existsSync(MAPPING_FILE)) return {};
   const raw = readFileSync(MAPPING_FILE, 'utf8');
-  return yaml.load(raw) || {};
+  return yamlLoad(raw) || {};
 }
 
 export function workflowMapping(workflowName, env) {

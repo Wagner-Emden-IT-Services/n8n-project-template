@@ -19,10 +19,25 @@ Siehe `.claude/rules/onboard-required.md`. Slash-Commands brechen ab wenn `.temp
 - **Abgrenzung zu `qa-workflow`:** Reviewer = statischer Code-Review (billig, kein Test-Run).
   `qa-workflow` = anschliessende Test-Ausfuehrung + Severity-Heuristik + Auto-File von
   P0/P1-Issues. Reihenfolge: erst Reviewer, dann QA.
-- **Sticky-Notes / Naming / Struktur** werden von Kategorie 4 mit-geprueft (relates to #19).
+- **Sticky-Notes / Naming / Struktur** werden von Kategorie 4 mit-geprueft (siehe Hard-Rule unten).
 - **Bugs** landen nicht in WF-X-Specs, sondern als GitHub-Issue (siehe Bug-Tracking-Konvention unten).
 - **In der Pipeline (`/change-workflow`):** Reviewer laeuft am Ende der Build-Phase, bevor
   `n8n-qa-engineer` (Test-Phase) uebernimmt.
+
+**Sticky-Notes-Pflege Hard-Rule (#19):** Nach JEDEM Workflow-Edit alle Sticky-Notes des
+Workflows gegen die tatsaechliche Node-Konfiguration verifizieren. Beschreibt eine Sticky
+Verhalten, das nicht (mehr) implementiert ist, MUSS sie im selben Edit korrigiert oder
+entfernt werden — niemals liegen lassen. Sticky-Notes sind embedded und nicht-versioniert,
+sie driften still mit jedem Edit; irrefuehrende Doku ist schlechter als keine. Ausnahme:
+nicht-strukturelle Aenderungen (Cron-Frequenz, einzelne Env-Werte) brauchen keine Sticky-Pflege.
+Sticky-Drift wird im Review als BLOCKER eskaliert (Kategorie 1, ERRORS & BREAKS — siehe
+`n8n-workflow-reviewer`), nicht als kosmetisches Finding.
+
+Operatives 4-Schritt-Verfahren (Issue #19):
+1. Stickys VOR dem Edit extrahieren (`n8n_get_workflow` mode=full).
+2. Nach dem Edit: Position-Proximity-Check der betroffenen Stickys gegen die geaenderten Nodes.
+3. Korrektur via `n8n_update_partial_workflow` (`patchNodeField`).
+4. Bei langen Edit-Sessions: Sammel-Review aller Stickys am Ende.
 
 ## Bug-Tracking-Konvention (verbindlich seit n8n-template v0.6.0)
 

@@ -1,157 +1,157 @@
 {
   "schema_version": "1.0",
   "template": "n8n-project",
-  "template_version": "1.1.0",
-  "frozen_at": "2026-07-31T13:15:48Z",
+  "template_version": "1.2.0",
+  "frozen_at": "2026-07-31T14:32:23Z",
   "rules_source": ".n8n-template/protection-rules.json",
   "counts": {
     "frozen": 44,
-    "updatable_with_diff": 28,
+    "updatable_with_diff": 43,
     "marker_aware": 1,
-    "user_generated": 60,
-    "skipped": 36,
-    "total": 133
+    "user_generated": 63,
+    "skipped": 19,
+    "total": 151
   },
   "files": [
     {
       "path": ".claude/agents/n8n-deployment-engineer.md",
       "protection": "FROZEN",
-      "sha256": "14758d5f026b7a2c2306e86efecb3df4a2b48bc1a910a9174e0e8147fcb82ac2"
+      "sha256": "4237598b2887e298ee0384fa34451cd749abe3684108d7c33db37d63c70d2e5f"
     },
     {
       "path": ".claude/agents/n8n-integration-architect.md",
       "protection": "FROZEN",
-      "sha256": "a46a31781a65abfa8e02b9d716492e208f3e8d257c4832ef076d99f035b27d6f"
+      "sha256": "48cff20ff992e701f717c89b5d6ddfbce5598d618ffa81ac86f6214cdf795884"
     },
     {
       "path": ".claude/agents/n8n-qa-engineer.md",
       "protection": "FROZEN",
-      "sha256": "eef60bc3c8143170e725adae28078226973cb68686a7448c3047432836019799"
+      "sha256": "1883f138ea5493bcc69bee99840cd71cc256f2519ac165e2c930c061f6ebd958"
     },
     {
       "path": ".claude/agents/n8n-security-reviewer.md",
       "protection": "FROZEN",
-      "sha256": "619560e139250da5913bb8e911e9e1252ee4199e7fff030501f15beec0de08d9"
+      "sha256": "5ebd739b1cbcfe35c3f88a4ccb8ad69b879b8bcae9b1c67bb749fab803cdc688"
     },
     {
       "path": ".claude/agents/n8n-workflow-analyst.md",
       "protection": "FROZEN",
-      "sha256": "2837c125d6c3b7c9abe79856931956f499f061b47d8fca85fe5841a4a16e1ca0"
+      "sha256": "79a302895179a4b666e06695120802ec6c6f1c5191613ff0814941c66ba5f873"
     },
     {
       "path": ".claude/agents/n8n-workflow-developer.md",
       "protection": "FROZEN",
-      "sha256": "1ceacbfbff99773c156165a72e8a60e45d9446d9d7f6a534bf21c17d0d51ab13"
+      "sha256": "3a2a48b33a3b3216065d3cb8d33e3936648a3eff0b8d600513e3de8b3a9cbf3d"
     },
     {
       "path": ".claude/commands/audit-error-handling.md",
       "protection": "FROZEN",
-      "sha256": "2bf2f240d61afe564eee5bcaaf48357685b6bf695395429d8dcd2a66b489e0f6"
+      "sha256": "2079bab910cd0a510374b2605726119e52779e39e3b5af9cfd4bfdc36f4919bc"
     },
     {
       "path": ".claude/commands/backup-before-deploy.md",
       "protection": "FROZEN",
-      "sha256": "1e4b9ddc442ec04f08677a56f695937cb82228d1488e8ae99e307f3706ca927b"
+      "sha256": "9bd36d05627a0098d0dc321ed5ad10ded86eab4496e4b31e83b4662cbed1b4e4"
     },
     {
       "path": ".claude/commands/change-workflow.md",
       "protection": "FROZEN",
-      "sha256": "d240cd1ee6437ef77a6a811d1817b9177642955273b8e7fe196e190fecd500f3"
+      "sha256": "dcc5eb6eb6d30874bd650f0ae1c563bc26396407056d22d7952222aaa98f3eee"
     },
     {
       "path": ".claude/commands/check-idempotency.md",
       "protection": "FROZEN",
-      "sha256": "75c4ba733255f67eaa3bb7152d805b5faba9e46d5f01efb0c7d1b3ba52a8be19"
+      "sha256": "8cfe6e42d279b25d5af34afe1f5e0dbfcbcc780b00d4e02a67b73ef0cc7f5098"
     },
     {
       "path": ".claude/commands/check-naming.md",
       "protection": "FROZEN",
-      "sha256": "448c0bb82d2c2550426b577e53341a6256d36573d0d6016f406e74de5e3445ce"
+      "sha256": "e767538d36c4b1fd263f81ad99f6b73d34d83ad1eabff482de0b69f55874d428"
     },
     {
       "path": ".claude/commands/check-pagination.md",
       "protection": "FROZEN",
-      "sha256": "0d6d2e073433a7aef95aa888dff86baaa90d73f02db9f03a953b4e479a86b75a"
+      "sha256": "864303f930829a6094622697af31acdce9abb1b7674ffbbcbdf54a63534b644f"
     },
     {
       "path": ".claude/commands/deploy-workflow.md",
       "protection": "FROZEN",
-      "sha256": "8c57cc9792e86065600b875916b1568ca977a7fd44779d74f1b84fd40d2d9a2f"
+      "sha256": "00adc819482dc880aa761e3aa8886298c06121cff836c46a5b10e84de02a0b11"
     },
     {
       "path": ".claude/commands/help-workflow.md",
       "protection": "FROZEN",
-      "sha256": "99321926335fb19f241d735d5ba8d4551889a554f14b59ced33593676e80a0ec"
+      "sha256": "efc917025423d4bd0897ba9de0a10600e6a223ffc4aebf4383ef76f9a4a3a170"
     },
     {
       "path": ".claude/commands/next-recommend.md",
       "protection": "FROZEN",
-      "sha256": "548409fe9509dda3e3f81ecce78e2033676be81c3995bd125d525c03ada1f57b"
+      "sha256": "7367567b694e4235782579015ec66e2281e84f027d5bb8175a64b9470e267f62"
     },
     {
       "path": ".claude/commands/onboard.md",
       "protection": "FROZEN",
-      "sha256": "bd95c5ea4ce509f4895ad476ef8e27d400f1a0cd042f391bb50103f8dd17af2b"
+      "sha256": "ae2dae90b1f7ba5a8c10d7a7412cf00008491a58b7a315998da5e1fcb2097e4c"
     },
     {
       "path": ".claude/commands/prd-generate.md",
       "protection": "FROZEN",
-      "sha256": "f202e37b1343b7de69f596f458f81aaae18a074edd1aec4041952e1eb3f79ed0"
+      "sha256": "3741445ed50e55cda09cbb5302534f1c4391de39f1a1e991e8a23e5d4623df8c"
     },
     {
       "path": ".claude/commands/security-review-workflow.md",
       "protection": "FROZEN",
-      "sha256": "456b306e3ea21e38a016a3b9ee6ff1c0321438f1acd308375c416973143c9c98"
+      "sha256": "f7a0f9f6b1f2f395a29ca845e7b4e34077734e7036522ee54bf7a3344acd511b"
     },
     {
       "path": ".claude/commands/template-bugreport.md",
       "protection": "FROZEN",
-      "sha256": "26ff4367b0fb795b5cac059c13cfb9aa8f5413406768088e900ff34b38dc5e6e"
+      "sha256": "a8217e0f9efae4c8e5cf8a098b1cad9e1369f881c6bd614f0bbc05c31cb6a088"
     },
     {
       "path": ".claude/commands/template-check.md",
       "protection": "FROZEN",
-      "sha256": "e4be45d33cfe2a6b509cfd2af3e22a895969d77a40138cb25291e42ba612aa0a"
+      "sha256": "86c800ba8e93dfda4e878933d500c6bc8c3939147fe39489d5bbbb74579d59bc"
     },
     {
       "path": ".claude/commands/template-migrate.md",
       "protection": "FROZEN",
-      "sha256": "c60f39c217a1a073ff4ef223fea7c8243c188abded01cdad75a3527da201fabf"
+      "sha256": "451780e8f1520feee36e2e14d06d5ce8fc4eb040c266578ad5b7f8d9a2b96312"
     },
     {
       "path": ".claude/commands/template-update.md",
       "protection": "FROZEN",
-      "sha256": "f8324270edc2de4a3ae488b36c61bcab4c49737ed2954ab26af8b102d783eb1d"
+      "sha256": "de235aa441de7a8120918dcceff0fdad2267da80c89a5a30075bcaa472447002"
     },
     {
       "path": ".claude/commands/validate-workflow.md",
       "protection": "FROZEN",
-      "sha256": "a9b8e0f5951ce165628d4a06c5cc434b7031fff1960e489ad4fde9d025c80d2a"
+      "sha256": "3657e128e69fb08c8be4aa6a79138d7490592f835ff403f14e60e7c791b33f73"
     },
     {
       "path": ".claude/rules/general.md",
       "protection": "FROZEN",
-      "sha256": "9fa51479b5f575e3f4bd08df6c4bb549f795ea019f7e5b4587fdc14c81c0cf20"
+      "sha256": "4059982b46588f2ed393b8d3f687e3e9535a3afee2315cdbbc71e2ec12afe642"
     },
     {
       "path": ".claude/rules/onboard-required.md",
       "protection": "FROZEN",
-      "sha256": "0894cda54b548635cc4eb87c8d9bd20d5821e25e7e10fff772536bb2a508b376"
+      "sha256": "b59bcf36d3aae9119f054e04267673fae38bcdfcba2348e421cec0d1fa38194b"
     },
     {
       "path": ".claude/rules/prd-required.md",
       "protection": "FROZEN",
-      "sha256": "3c07510698ef449d69ac9292ac645b0a2963fe5f6bf9a36fa5ad7995ab9d12a5"
+      "sha256": "61e1d95925629fdc51af42e1ed6c27cb1085814d3602cd13591b429d351a24dd"
     },
     {
       "path": ".claude/rules/template-version-pinning.md",
       "protection": "FROZEN",
-      "sha256": "31224e70932e5929e316d7d9cb7694d81fa93aecb2d47a65198abb77bdee2aa0"
+      "sha256": "bcae49f47a175fea9ecb98080e47b2226d11c6dd8bb26b870bf9d8c731875191"
     },
     {
       "path": ".claude/settings.json",
       "protection": "FROZEN",
-      "sha256": "e3566b3a06430868d71e9287dfd6c6c520a3da027aabea01951d407ee131dc2f"
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     },
     {
       "path": ".claude/skills/_LICENSE-mattpocock.md",
@@ -161,7 +161,7 @@
     {
       "path": ".claude/skills/_README.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "5973a8686ef1590ca05779d62f7fa4469edc8de3eb0bf1fd5da09db13e34b3c9"
+      "sha256": "6da9ebe38078b131e7f2f3005a98ea7ec88095ea7a38e7d9b415367850a56a44"
     },
     {
       "path": ".claude/skills/diagnosing-bugs/scripts/hitl-loop.template.sh",
@@ -236,7 +236,7 @@
     {
       "path": ".claude/skills/n8n-code-javascript/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "a0c5d95ff87150e26559c2b4f7d4aa044f59952e10ddfb7649a41a36fc9f6317"
+      "sha256": "c238ccf78b6137228383f3f3909eb84c0fa23b9d2b1f6b7d4820593de01a798e"
     },
     {
       "path": ".claude/skills/n8n-code-python/COMMON_PATTERNS.md",
@@ -261,7 +261,7 @@
     {
       "path": ".claude/skills/n8n-code-python/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "698e860df32c6dd621996de0c77355c0efa00bcaa6fadafa183697164a1ca431"
+      "sha256": "db7359f954a68168a3d6dfe986814ebd9debb89a1be968bfa53523adb195924c"
     },
     {
       "path": ".claude/skills/n8n-code-python/STANDARD_LIBRARY.md",
@@ -286,7 +286,7 @@
     {
       "path": ".claude/skills/n8n-expression-syntax/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "a3ad181c4f7572667234a560f024bc9ecb60a8f9fe775c4f8023d8d4fb4456df"
+      "sha256": "8f9f534d548596ab7b1622aadebbee78d55a5e5208b22f308aa7b2679c7cba5b"
     },
     {
       "path": ".claude/skills/n8n-mcp-tools-expert/README.md",
@@ -301,7 +301,7 @@
     {
       "path": ".claude/skills/n8n-mcp-tools-expert/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "929a7462c495f6e87f1ecf7b3c766b5e9b1880d7afdcab7117a02cac5c53c14c"
+      "sha256": "7f8faebd60cd9e9274378652bb3f0c30e894281f58e85cd7119c16f62f5c3cb2"
     },
     {
       "path": ".claude/skills/n8n-mcp-tools-expert/VALIDATION_GUIDE.md",
@@ -331,12 +331,12 @@
     {
       "path": ".claude/skills/n8n-node-configuration/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "b733dace2f48f193a11b6a10dac2eb582665ac4a94e7a0a5cee2d7d871b52e5f"
+      "sha256": "ed84a8637e5ca1f0979575c95265e77ac8632157af2077caf20da4af5af77dd5"
     },
     {
       "path": ".claude/skills/n8n-prd-generator/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "337891f32895723ff093c174c741e263d88097b2b0e1f19d2f558f15191b3dc3"
+      "sha256": "e21cf445342c62185b00514e2447a5a6d96c729eb8adec85f5472f04e96ab4d1"
     },
     {
       "path": ".claude/skills/n8n-validation-expert/ERROR_CATALOG.md",
@@ -356,7 +356,7 @@
     {
       "path": ".claude/skills/n8n-validation-expert/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "66641082490f60e28839424bceda030516cd2fc402bab3a3ba439751edee0fde"
+      "sha256": "b530ea60844721aa47d924583257046033b98ffab1b3a7e75dca2cb7c4fa0eb5"
     },
     {
       "path": ".claude/skills/n8n-workflow-patterns/ai_agent_workflow.md",
@@ -386,7 +386,7 @@
     {
       "path": ".claude/skills/n8n-workflow-patterns/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "37f269f26a07d81c3d67f8269bd50271c24c95746fd7aaf5438f615c0d9ae2bc"
+      "sha256": "37de9d46291e2d9844daa9fc5eb7311190a1518183627d23f9f2d3286f020cb7"
     },
     {
       "path": ".claude/skills/n8n-workflow-patterns/webhook_processing.md",
@@ -396,12 +396,12 @@
     {
       "path": ".claude/skills/n8n-workflow-reviewer/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "186b0ae146c844b245dce7b193cdb392790cd059761a5188866b0656e145ac98"
+      "sha256": "09f33c339bf7875fd7776dfd5c8a94ea6bb1ac52827cff9ccea5673e951b27fb"
     },
     {
       "path": ".claude/skills/qa-workflow/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "c86e1bf1db33f0d80af3e9b68bcb7beb0e5ea9dd9ae2fb45604e7f83eb5120b2"
+      "sha256": "d3993cf45115dd8d0aea4ea7327e6fee12fee3f05aa93c1c5c7f1037a5b51e3e"
     },
     {
       "path": ".claude/skills/research/SKILL.md",
@@ -409,9 +409,14 @@
       "sha256": "979986dea39d03b41331886f28074bc9f0fac82943e3ebd205c20ef282d0f02a"
     },
     {
+      "path": ".env.example",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "63b4ed4008830574b0be2a128259b9cc9a3f940980070b29267ddb51c30374d0"
+    },
+    {
       "path": ".git-hooks/pre-commit",
       "protection": "FROZEN",
-      "sha256": "a49e297d972a1513099befffaa99972781fa3f25890bdc24a8bf615646911d2c"
+      "sha256": "c2c97852d4e81de5e8e2d4998f91fac821bba3f37b7825bc045feb8197f8ea2a"
     },
     {
       "path": ".github/dependabot.yml",
@@ -421,7 +426,7 @@
     {
       "path": ".github/ISSUE_TEMPLATE/01-bug.yml",
       "protection": "FROZEN",
-      "sha256": "a09ac5c0b200401bfd1e8c41c7abe75be4f2927fb4e215c5294b4c6059e1f557"
+      "sha256": "e08f59397c098abffdd95417c34888e9882d7bb308e4373b47a32a6b844b20f9"
     },
     {
       "path": ".github/ISSUE_TEMPLATE/02-workflow-bug.yml",
@@ -431,12 +436,12 @@
     {
       "path": ".github/ISSUE_TEMPLATE/03-template-bug.yml",
       "protection": "FROZEN",
-      "sha256": "7b1d9918c6e56f46236632f27610f7df75d3ec405bca75bc566053fe4ec52382"
+      "sha256": "72fe4a854d2461ba489633db296ad84ab200966a20f17d87d01e848318a01ac6"
     },
     {
       "path": ".github/ISSUE_TEMPLATE/config.yml",
       "protection": "FROZEN",
-      "sha256": "9c8ecf3b4b1b198ee836218192a3e593545b4da895cbd1235bf24cf717a0f428"
+      "sha256": "02fcd64f1bf0a3a031ddaee028f746d889e07e808511edf21b512f26e375c6af"
     },
     {
       "path": ".github/pull_request_template.md",
@@ -471,7 +476,7 @@
     {
       "path": ".github/workflows/issue-triage.yml",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "9a7d6114d6fa85cbeaec755a90dfa411b1c93ed642bdbd6acdf7ff5930ac51e5"
+      "sha256": "4873f49c2758185951db0c56cc2e2912518e6b2f1642d358ca5949542b0728c4"
     },
     {
       "path": ".github/workflows/normalize-check.yml",
@@ -481,7 +486,7 @@
     {
       "path": ".github/workflows/pr-issue-link-check.yml",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "46dd094183f5cb4f98bbb8107dcd3b7bc8d668fe93749b98aa946a0890619958"
+      "sha256": "0704771b70dce24bce53cd074eff20f6a7360df275d39c2eb89b75d6b157d4fc"
     },
     {
       "path": ".github/workflows/validate-on-pr.yml",
@@ -496,7 +501,7 @@
     {
       "path": ".gitignore",
       "protection": "FROZEN",
-      "sha256": "4e22ebb771012a893b481dd7a6f073f11a69bacf17250909debd473daba30f67"
+      "sha256": "d3c44cd6f469e94e60e8d32f450b2786b907229561aad923d8dc9075dac0333a"
     },
     {
       "path": ".mcp.json",
@@ -506,48 +511,48 @@
     {
       "path": ".n8n-template/Apply-Update.ps1",
       "protection": "FROZEN",
-      "sha256": "1d445cfb63d1e3a7267b69290c8f54d9e691eb40a31347ace075d7f47d568d9d"
+      "sha256": "a08f04ea7136cea78a5ae3a10e94677cddb757feec83616f003a91ebc32e686f"
     },
     {
       "path": ".n8n-template/Compute-Update-Plan.ps1",
       "protection": "FROZEN",
-      "sha256": "91e2293d661ddd3abd7843995f6cf06904a5303e481bedda68029a46d12b3a83"
+      "sha256": "d426c3b9255673cfe40df445a174d8113ee18f8ccf09992d2f9cf7d68853a287"
     },
     {
       "path": ".n8n-template/Deploy-Labels.ps1",
       "protection": "FROZEN",
-      "sha256": "e5819aa46591b60a6b6cdb7c8c2ed43f445dd880a43845bba6ad4c7b9044e844"
+      "sha256": "6ae261f8f2191fc605d9c9ab71afe80671b7dac06033f205a773a6c4b3e73e2e"
     },
     {
       "path": ".n8n-template/Generate-Manifest.ps1",
       "protection": "FROZEN",
-      "sha256": "ec3495a8e8d1f83ec21803eab189a51b99f676ce4eea326e3d880ac4819e4fd9"
+      "sha256": "ed2b1aaeb4f0443940e9d363defbbcd6c81c2c10f9b8769ba3289d283de240e2"
     },
     {
       "path": ".n8n-template/protection-rules.json",
       "protection": "FROZEN",
-      "sha256": "a6e2f4e34307b64970bf12d4c5b3942052159248ebe3b37d72c78ab68b9c5528"
+      "sha256": "78a6165279ec7bcd690d78579260d106206d05c7ebe4b67688a5cb72060d53bb"
     },
     {
       "path": ".n8n-template/README.md",
       "protection": "FROZEN",
-      "sha256": "e7adb28f43fefbd7e79979c9cea870c4f11a7d6e4358f2ce394abb5c829ce688"
+      "sha256": "39f0cc8177be2608f991656c7130ae42479674e9f21066ff4328cacf38c25ac1"
     },
     {
       "path": ".n8n-template/Scan-Workflow-Bugs-In-Project.ps1",
       "protection": "FROZEN",
-      "sha256": "3eacfbb8062f9d6420a595b39516e5b3ef992bb0eebc24ffda3a5c8fd458e401"
+      "sha256": "2d37303b070b2f0b621db8f2fcf292f145ec82bcf817304be9f34b8c65cd72a2"
     },
     {
       "path": ".template-version.json",
       "protection": "FROZEN",
-      "sha256": "80a1cd6a74c361caa6cd8ddb143c3907b9384508c6082d4b024d0de0f0a4e531",
+      "sha256": "388a07115c833dfa7d79d4fb05bab752231d889e7e173139f422fa7451ca3f81",
       "special": "version-merge"
     },
     {
       "path": "CLAUDE.md",
       "protection": "MARKER-AWARE",
-      "sha256": "1f6d5fd9f5b68d2084e08a560474ad06830402aa751dca4e7bec7437ee6ef0cb",
+      "sha256": "f081fde8a719e28df5b9c546f2ccbb15885bf8424766937673de6aabf786723a",
       "managed_blocks": [
         "bug-tracking",
         "n8n-pipeline"
@@ -556,17 +561,17 @@
     {
       "path": "config/staging-profiles/full.yaml",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "5d08c659c46fbb4d2c6dc5e7236c12de63ba83314316bd5ee37e95d43352efe6"
+      "sha256": "adbdf8181507ebfbdaa6d38b89e81786dfb31f96275cb8e028b205f01bda9885"
     },
     {
       "path": "config/staging-profiles/none.yaml",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "0e1e642d5d6defdba234f95e11941f2bd8fcd29c60ad9b7421bc15c761524766"
+      "sha256": "9c6eb0c56c10a5e214c8b2336fe9e69979324be4734972c1d94dcf2e0f1f5bc9"
     },
     {
       "path": "config/staging-profiles/simple.yaml",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "99b597fe9b7fda17e8c8262db7c70c62c8afb762703f84d037194b69b0a50ff3"
+      "sha256": "3a4ab1454ea012568db851c605f92c7dcf500ef334540fe998c576a4212a7c34"
     },
     {
       "path": "docs/architecture.md",
@@ -609,6 +614,11 @@
       "sha256": null
     },
     {
+      "path": "docs/integrations/n8n-code-node-pitfalls.md",
+      "protection": "USER-GENERATED",
+      "sha256": null
+    },
+    {
       "path": "docs/ONBOARD_LOG.md",
       "protection": "USER-GENERATED",
       "sha256": null
@@ -641,7 +651,7 @@
     {
       "path": "docs/specs/README.md",
       "protection": "FROZEN",
-      "sha256": "e1f999f421de45e8e0fcb9c1f2bdc60b7e7a8bc86382c1df9bfcdb558b66a617"
+      "sha256": "5190194e083e3d76590b2fb6771c96a4fdb10714c8540b9906c5bec142e0f26f"
     },
     {
       "path": "docs/specs/spec-template.md",
@@ -659,19 +669,99 @@
       "sha256": null
     },
     {
+      "path": "package-lock.json",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "c37d77f9baf489357e42f32845bcbd64b01d7d283b48ecdc181a598938ebae1d"
+    },
+    {
+      "path": "package.json",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "7eba458679dc0ed431d14e62a8cfe0eddad553f6bf7edbaa43efe386312d2722"
+    },
+    {
       "path": "README.md",
       "protection": "USER-GENERATED",
       "sha256": null
     },
     {
+      "path": "schemas/workflow-schema.json",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "05c6a7d45080b86cb15eede77d9845bfa334e0c1ff2da855be3f5977cebb7a8d"
+    },
+    {
+      "path": "scripts/lib/api.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "cea9ce04d4daf3f8171179dbfd310f1ece0b5f6832bbd98aa3d588e25c001cb6"
+    },
+    {
+      "path": "scripts/lib/config.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "f06de65d736f378bf46d9720ac62e99a5842072aa8520cb926dd585777e4c850"
+    },
+    {
+      "path": "scripts/lib/env-mapper.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "efb44a6566102c71b9c73dd214fb7ef751adc96e6f50d7ca2d7132e6b5b5beb0"
+    },
+    {
+      "path": "scripts/lib/normalize.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "5a2fd131f8d2746798cf99864c08e668757203ee7ff42cc13e7dee302410bcdc"
+    },
+    {
+      "path": "scripts/lib/sanitize.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "f76b31beb1f57d1aab998a09d5276853bdc2e618f2186b4d1296cedac84f9753"
+    },
+    {
+      "path": "scripts/lib/validate.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "96613a8800193e638f87d5841e85510c6a9e6cd4ab79b1a272e1a2246f24f5e8"
+    },
+    {
       "path": "scripts/n8n-cli.mjs",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "08d1af227a3385a26911e9c7f2b25886a8c425312979e1389b2c26e68c8fff1d"
+      "sha256": "618b2f7d9ed216b7381bcf154ef3a8059e0ec25aa0f1901991435db10fa50753"
+    },
+    {
+      "path": "tests/integration/api.test.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "687e25c9b1dc888e3496753376aa2e5220ebabb0611d019d69e32dceb1466ff7"
+    },
+    {
+      "path": "tests/pins/.gitkeep",
+      "protection": "USER-GENERATED",
+      "sha256": null
+    },
+    {
+      "path": "tests/pins/hello-world.json",
+      "protection": "USER-GENERATED",
+      "sha256": null
+    },
+    {
+      "path": "tests/unit/env-mapper.test.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "52b802c9639ee5e3d2a56de0e92ee170d00d27e71260aa9069ca5593125a1a4b"
+    },
+    {
+      "path": "tests/unit/normalize.test.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "c16d9ab54ca68405ad6c07a28300b442412ed745e32ca4431c024c1cc8800c42"
+    },
+    {
+      "path": "tests/unit/sanitize.test.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "e94771ec8efd1f370a75df5eebff76b1c4816b60130ec4d71ab6c1fcce044651"
+    },
+    {
+      "path": "tests/unit/validate.test.mjs",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "3f181aa0f71bf4244c1aae8f3c46b3a9605715387083bc24f28a5afb6662cb19"
     },
     {
       "path": "UPDATING.md",
       "protection": "FROZEN",
-      "sha256": "04230f0bfbe5e3292fd25d74c532e247c9132dae193c185cdc0b2044b66fbd16"
+      "sha256": "57ea0c802b5c3a421bf2791f56929d382895af0f757b9087339a61ca6d9c9329"
     },
     {
       "path": "workflows/hello-world.json",

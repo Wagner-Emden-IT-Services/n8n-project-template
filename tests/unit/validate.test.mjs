@@ -107,3 +107,136 @@ describe('validateWorkflow', () => {
     expect(formatted).toContain('-');
   });
 });
+
+describe('DataTable Upsert Custom-Check (#16)', () => {
+  // Self-contained fixture: korrekt konfigurierter Upsert-Node,
+  // Testfaelle brechen gezielt einzelne Bedingungen.
+  const upsertNode = () => ({
+    id: '2',
+    name: 'Update Mappings',
+    type: 'n8n-nodes-base.dataTable',
+    typeVersion: 1,
+    parameters: {
+      operation: 'upsert',
+      columns: {
+        matchingColumns: ['exchange_contact_id'],
+        value: {
+          exchange_contact_id: '={{ $json.id }}',
+          display_name: '={{ $json.displayName }}',
+        },
+      },
+      filters: {
+        conditions: [
+          { keyName: 'exchange_contact_id', condition: 'eq', keyValue: '={{ $json.id }}' },
+        ],
+      },
+    },
+  });
+
+  const withUpsert = (mutate) => {
+    const wf = minimalValid();
+    const node = upsertNode();
+    if (mutate) mutate(node);
+    wf.nodes.push(node);
+    return wf;
+  };
+
+  it('akzeptiert korrekt konfigurierten Upsert', () => {
+    const { ok, errors } = validateWorkflow(withUpsert());
+    expect(ok).toBe(true);
+    expect(errors).toEqual([]);
+  });
+
+  it('lehnt leere matchingColumns ab (Silent-Insert-Bloat)', () => {
+    const { ok, errors } = validateWorkflow(
+      withUpsert((n) => {
+        n.parameters.columns.matchingColumns = [];
+      }),
+    );
+    expect(ok).toBe(false);
+    expect(errors.some((e) => e.message.includes('matchingColumns'))).toBe(true);
+    expect(formatErrors(errors)).toContain('Silent-Insert-Bloat');
+  });
+
+  it('lehnt fehlende matchingColumns ab', () => {
+    const { ok } = validateWorkflow(
+      withUpsert((n) => {
+        delete n.parameters.columns.matchingColumns;
+      }),
+    );
+    expect(ok).toBe(false);
+  });
+
+  it('lehnt leeres Objekt als einzige filter-Condition ab', () => {
+    const { ok, errors } = validateWorkflow(
+      withUpsert((n) => {
+        n.parameters.filters = { conditions: [{}] };
+      }),
+    );
+    expect(ok).toBe(false);
+    expect(errors.some((e) => e.message.includes('filters.conditions'))).toBe(true);
+  });
+
+  it('lehnt fehlende filters.conditions ab', () => {
+    const { ok } = validateWorkflow(
+      withUpsert((n) => {
+        delete n.parameters.filters;
+      }),
+    );
+    expect(ok).toBe(false);
+  });
+
+  it('lehnt Upsert ab, dessen key-column nicht im columns.value-Mapping steht', () => {
+    const { ok, errors } = validateWorkflow(
+      withUpsert((n) => {
+        delete n.parameters.columns.value.exchange_contact_id;
+      }),
+    );
+    expect(ok).toBe(false);
+    expect(errors.some((e) => e.message.includes("'exchange_contact_id'"))).toBe(true);
+  });
+
+  it('meldet beide feuerbaren Verstoesse im Original-Fall aus #16 (leeres matchingColumns maskiert den value-Check)', () => {
+    const { ok, errors } = validateWorkflow(
+      withUpsert((n) => {
+        n.parameters.columns.matchingColumns = [];
+        n.parameters.filters = { conditions: [{}] };
+        delete n.parameters.columns.value.exchange_contact_id;
+      }),
+    );
+    expect(ok).toBe(false);
+    expect(errors.length).toBeGreaterThanOrEqual(2);
+    expect(errors.every((e) => e.params?.rule === 'dataTableUpsert')).toBe(true);
+    expect(errors.every((e) => e.message.includes("'Update Mappings'"))).toBe(true);
+  });
+
+  it('akzeptiert autoMapInputData mit leerem columns.value (Laufzeit-Mapping, kein False-Positive)', () => {
+    const { ok, errors } = validateWorkflow(
+      withUpsert((n) => {
+        n.parameters.columns.mappingMode = 'autoMapInputData';
+        n.parameters.columns.value = {};
+      }),
+    );
+    expect(ok).toBe(true);
+    expect(errors).toEqual([]);
+  });
+
+  it('ignoriert dataTable-Nodes mit anderer Operation', () => {
+    const { ok } = validateWorkflow(
+      withUpsert((n) => {
+        n.parameters = { operation: 'insert' };
+      }),
+    );
+    expect(ok).toBe(true);
+  });
+
+  it('ignoriert andere Node-Typen mit operation upsert', () => {
+    const { ok } = validateWorkflow(
+      withUpsert((n) => {
+        n.type = 'n8n-nodes-base.postgres';
+        n.parameters = { operation: 'upsert' };
+      }),
+    );
+    expect(ok).toBe(true);
+  });
+});

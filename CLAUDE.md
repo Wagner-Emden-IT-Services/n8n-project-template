@@ -212,6 +212,27 @@ HTTP-Source (25 items) ─┘
 - Beispiel: 3 Requests / 5s → `batching: { batchSize: 3, batchInterval: 5000 }`
 - IMMER Rate-Limit-Header beobachten (`X-RateLimit-Remaining`, `Retry-After`)
 
+### DataTable dateTime speichert Container-lokal, nicht UTC
+
+- `dateTime`-Columns speichern `Z`-Suffix-Timestamps als Container-Timezone — Offset wandert mit DST (CET -1h / CEST -2h)
+- Folge: Change-Detection `modified > lastKnownModified` ist permanent `true` → jeder Lauf ist ein Full-Update
+- **Lösung:** vor jedem DataTable-Write `new Date(v).toISOString()` — Details + Detection-SQL: `docs/troubleshooting.md`
+
+### DataTable Upsert ohne matchingColumns = Silent Insert
+
+- Leere `matchingColumns` / `filters.conditions` → Upsert fällt still auf Insert zurück, pro Lauf neue Rows (Praxis-Fall: 2.608 → 144.049 Rows in 2 Wochen, 95 MB JSON pro Read, Host-OOM)
+- `n8n_validate_workflow` flaggt das NICHT — der Template-Validator prüft es seit v1.2.0 (`npm run validate`)
+
+### Concurrency: ein langer Workflow killt die Instanz
+
+- Schedule-Intervall kürzer als Laufzeit → parallele Fires stapeln sich (Praxis-Fall: 14 parallel → Host-OOM)
+- `N8N_CONCURRENCY_PRODUCTION_LIMIT=1` setzen (queued FIFO statt Overlap; Default ist unlimited!) — Trigger-Liste: `docs/runbook.md`
+
+### `$('NoOp-Node').all()` liefert leeres Array
+
+- Branch-Sibling-Lookup auf NoOp-/Passthrough-Nodes kann `[]` liefern, obwohl die Branch sichtbar Items ausgab — Audit-Counter zeigen dann 0
+- **Lösung:** Counts per Math-Derivation aus zuverlässigen Nodes ableiten (`total - updated - created = skipped`) — Details: `docs/integrations/n8n-code-node-pitfalls.md`
+
 ## 8. Debugging Techniques
 
 ### Daten fehlen

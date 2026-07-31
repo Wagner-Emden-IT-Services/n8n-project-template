@@ -31,7 +31,9 @@ for wf in $WORKFLOWS; do
     continue
   fi
   echo "  normalize $wf"
-  node scripts/n8n-cli.mjs normalize --in "$wf" --out "$wf"
+  # CLI-Signatur: normalize [options] <target> — normalisiert in-place,
+  # es gibt keine --in/--out Flags (siehe n8n-cli.mjs normalize --help).
+  node scripts/n8n-cli.mjs normalize "$wf"
   git add "$wf"
 done
 

@@ -653,6 +653,15 @@ const allResults = staticData.results || [];
 // Now aggregate across ALL iterations
 ```
 
+### Branch-Sibling Lookup on NoOp Nodes Returns Empty
+
+In an aggregating Code node, `$('NoOp Node').all()` can return `[]` even though the
+NoOp/passthrough node visibly output items — summary counters then report 0 for that
+branch. Reliable lookup targets are DataTable/action nodes AND upstream transform
+nodes in the code node's own execution path. In 3-way routing
+(UPDATE / CREATE / SKIP), derive the count instead: `skipped = total - updated - created`.
+Full pattern: `docs/integrations/n8n-code-node-pitfalls.md`.
+
 ### pairedItem for New Output Items
 
 When creating new items that don't map 1:1 to input items, include `pairedItem` — otherwise downstream Set nodes fail with `paired_item_no_info`:
@@ -668,6 +677,15 @@ for (let i = 0; i < $input.all().length; i++) {
 }
 return results;
 ```
+
+### pairedItem sourceOverwrite for Multi-Input Lookups
+
+When a Code node pulls items via `$('Node').all()` from a node that is NOT wired as a
+direct input, `pairedItem` defaults to the direct input — the source trace breaks
+("View source item", `itemMatching()`). Point at the real source with
+`pairedItem: { item: N, sourceOverwrite: { previousNode: 'Node', previousNodeRun: 0, previousNodeOutput: 0 } }`.
+In practice, keeping the redundant direct connection is usually the better tradeoff.
+All four syntax variants: `docs/integrations/n8n-code-node-pitfalls.md`.
 
 ### Correct Node Reference Syntax
 
