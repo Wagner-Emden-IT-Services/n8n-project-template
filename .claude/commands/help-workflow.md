@@ -103,6 +103,18 @@ Phase-Detail aus `/change-workflow`-Tabelle (Schritt 1.5). Zeige:
 
 Lese die SKILL.md des angegebenen Skills. Bei lokalen Skills: aus `.claude/skills/<name>/SKILL.md`. Bei Ecosystem-Skills (z.B. `n8n-mcp-tools-expert`): Verweis auf Ecosystem-Doku + lokalen Adaption-Hinweis.
 
+**Prozess-Skills** (lokal in `.claude/skills/`, phasen-uebergreifend):
+
+| Skill | Zweck |
+|---|---|
+| `grilling` | grillt den User zu Plan/Entscheidung/Idee, bis geteiltes Verstaendnis erreicht ist |
+| `grill-me` | Kurz-Trigger fuer eine `/grilling`-Session |
+| `grill-with-docs` | `/grilling`-Session, die nebenbei ADRs + Glossar via `/domain-modeling` pflegt |
+| `domain-modeling` | haelt Domaenen-Begriffe und Architektur-Entscheidungen des Projekts fest |
+| `handoff` | kompaktiert den Session-Kontext nach `docs/sessions/` + aktualisiert `docs/STATE.md` |
+| `diagnosing-bugs` | Diagnose-Loop fuer harte Bugs: Feedback-Loop, Repro, gerankte Hypothesen vor dem Fix |
+| `research` | recherchiert eine Frage gegen Primaerquellen, Ergebnis als Markdown im Repo |
+
 ### `--concept <name>`
 
 Konzept-Erklaerungen:
@@ -129,6 +141,10 @@ Tour fuer neue User:
 5. Multi-Workflow-Batch: /change-workflow --workflows WF-1,WF-2 oder /change-workflow --issues --priority P0,P1
 6. Verwirrt was als naechstes? /next-recommend
 7. Template-Update verfuegbar? /template-check, dann /template-update --apply
+8. Prozess-Skills bei Bedarf: /grilling bzw. /grill-me (Plan/Idee stress-testen),
+   /grill-with-docs (Interview + ADRs/Glossar), /domain-modeling (Begriffe + Entscheidungen
+   festhalten), /diagnosing-bugs (Root-Cause vor Bug-Fix), /research (Quellen-Recherche
+   als Markdown im Repo), /handoff (Session-Uebergabe: docs/sessions/ + STATE.md)
 ```
 
 ## Tools

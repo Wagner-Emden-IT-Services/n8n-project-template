@@ -16,6 +16,7 @@ Wiederverwendbares Repo-Template fuer n8n-Workflow-Projekte mit Hybrid-Naming, C
 - **gitleaks** Secret-Scanning im Pre-Commit + CI (n8n-spezifische Custom-Rules)
 - **Disaster-Recovery-Runbook** (`docs/disaster-recovery.md`) mit 4 Szenarien + Drill-Checklist
 - Pre-built **Claude-Code Slash-Commands** fuer n8n (Validation, Backup, Deploy, Idempotenz, Pagination, Error-Handling, **Security-Review**)
+- **Prozess-Skills** (seit v1.1.0, adaptiert aus [mattpocock/skills](https://github.com/mattpocock/skills), MIT) — `/grilling` (Plan-Stress-Test, Standard-Pass vor PRD-Approval), `/grill-with-docs`, `/domain-modeling`, `/research` (belegte API-Fakten), `/diagnosing-bugs` (Pflicht-Diagnose vor Bug-Fixes), `/handoff` (Session-Uebergabe via `docs/sessions/` + STATE.md). Details: `.claude/skills/_README.md`
 - `.mcp.json` fuer **beide n8n-MCP-Server** (offiziell + Community parallel)
 - GitHub Actions: Validate-on-PR, Deploy-Staging, Deploy-Prod, Drift-Check
 - Pre-Commit + Pre-Push-Hooks

@@ -84,6 +84,24 @@ Pruefe und melde:
 
 Bei fehlenden Punkten: nachfragen statt raten.
 
+## Schritt 4.5: Grilling-Pass (Standard vor Approval)
+
+Stress-teste das Draft-PRD via Skill `/grilling` Frage fuer Frage gegen den Owner:
+
+- **Eine Frage pro Turn**, jeweils mit eigener Empfehlung — keine Fragen-Batches.
+- **Fakten** (API-Verhalten, Node-Faehigkeiten, bestehende Doku) schlaegt der Agent
+  selbst nach (context7, `search_nodes`, Repo-Dateien) — **Entscheidungen** liegen
+  beim Owner.
+- Primaeres Material: Annahmen (Section 9), Akzeptanzkriterien (Section 8),
+  Error-Handling (Section 6).
+- Ergebnisse fliessen direkt ins PRD zurueck (Sektionen aktualisieren, Annahmen
+  in Section 9 aufloesen oder als bewusste Entscheidung dokumentieren).
+
+**Ueberspringen nur durch aktive Owner-Entscheidung** (explizit erfragen, kein
+stilles Auslassen). Bei Skip: `Grilling-Pass uebersprungen` im PRD-Header/Changelog
+vermerken. Der Grilling-Pass ist **kein** neues Hard-Gate — `prd-required` bleibt
+unveraendert.
+
 ## Schritt 5: Approval-Uebergabe
 
 - PRD steht auf `Status: DRAFT`. Zeige Zusammenfassung + Approval-Block (Section-Ende).

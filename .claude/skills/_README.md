@@ -27,6 +27,45 @@ Aus [czlonkowski/n8n-skills](https://github.com/czlonkowski/n8n-skills) ins Repo
   gewrappt (Output: projekt-weite `docs/PRD.md` im 12-Sektionen-Format). **Pflicht vor
   Build/Deploy** (Hard-Gate `prd-required`, siehe `.claude/rules/prd-required.md`).
 
+## Adoptierte Prozess-Skills (seit v1.1.0)
+
+Aus [mattpocock/skills](https://github.com/mattpocock/skills) (MIT, Upstream-Commit `2ab9580`
+vom 2026-07-28, Plugin v1.2.0) uebernommen und **fuer dieses Template adaptiert** — Lizenz +
+Provenienz: `_LICENSE-mattpocock.md`:
+
+- `grilling/` — Kern-Primitiv: unerbittliches Interview zu Plan/Entscheidung, eine Frage pro
+  Turn mit Empfehlung; Fakten schlaegt der Agent selbst nach, Entscheidungen beim User.
+  **Standard-Pass in `/prd-generate`** vor `Status: APPROVED`.
+- `grill-me/` — User-Command-Wrapper: startet eine `/grilling`-Session (stateless).
+- `grill-with-docs/` — Grilling + Domain-Modeling: Interview, das nebenbei `CONTEXT.md`/ADRs
+  aufbaut. **Einstieg der Spec-Phase** (n8n-workflow-analyst) bei unklaren Anforderungen.
+  Adaption: model-invoked (upstream user-only), damit die Pipeline sie laden kann.
+- `domain-modeling/` — Ubiquitous Language pflegen: `CONTEXT.md` (Root) + `docs/adr/`;
+  speist WF-X-Specs und PRD mit konsistenter Terminologie.
+- `handoff/` — Session-Uebergabe: kompaktiert die Konversation nach
+  `docs/sessions/<datum>-<kurzname>.md` + aktualisiert `docs/STATE.md` (Write-Then-Verify).
+  Adaption: committete Ablage statt OS-Temp, verschaerfte Secret-/PII-Redaktion (gitleaks),
+  model-invoked (upstream user-only), damit Session-Ende-Check und Phasen-Gates ihn ausfuehren koennen.
+- `diagnosing-bugs/` — 6-Phasen-Diagnose-Loop (Feedback-Loop zuerst, Repro, gerankte
+  Hypothesen, Regression-Test vor Fix). Adaption: n8n-Feedback-Loops (curl-gegen-Webhook,
+  Execution-Replay, Pin-Daten-Testlauf), Post-Mortem als GitHub-Issue statt
+  improve-codebase-architecture. **Pflicht-Phase in `/change-workflow --issue`.**
+- `research/` — belegte Recherche gegen Primaerquellen; Backends Perplexity/Context7-MCP
+  (Fallback WebFetch), Ablage `docs/research/` bzw. `docs/integrations/<service>/`,
+  Zitierpflicht (URL + Datum). **Verankert in der Architecture-Phase.**
+
+**Achtung Doppel-Trigger:** Ist das Plugin `mattpocock-skills` global installiert, existieren
+die Originale zusaetzlich als `mattpocock-skills:<name>`. Die model-invoked Skills (grilling,
+domain-modeling, diagnosing-bugs, research) koennen dann doppelt matchen. In Template-Projekten
+gilt: projekt-lokale (adaptierte) Variante nutzen — Plugin fuer dieses Projekt deaktivieren
+(`/plugin` → disable). "Ignorieren" reicht nicht: die model-invoked Skills (grilling,
+domain-modeling, diagnosing-bugs, research) matchen sonst automatisch doppelt.
+
+**Re-Sync-Warnung:** Anders als die czlonkowski-Skills sind diese Skills ADAPTIERT — ein
+blindes Kopieren einer neuen Upstream-Version ueberschreibt die n8n-Anpassungen. Upstream-Diff
+(github.com/mattpocock/skills, Matt released schnell und mit Breaking-Umbauten) manuell
+sichten und Aenderungen gezielt einpflegen; Quell-Commit in `_LICENSE-mattpocock.md` nachziehen.
+
 ## Skills triggern automatisch
 
 Du musst Skills nicht explizit aufrufen — Claude Code laedt die Descriptions in jede Session
@@ -46,9 +85,10 @@ vorhanden ist, erscheinen alle Skills doppelt — einmal mit Prefix `n8n-mcp-ski
 **Dieses Template setzt auf projekt-lokal.** `.claude/settings.json` aktiviert das Plugin
 nicht. Falls du es global aktiviert hast: `/plugin uninstall n8n-mcp-skills`.
 
-## Update / Re-Sync
+## Update / Re-Sync (nur czlonkowski-Skills)
 
-Wenn upstream eine neue Version draussen ist:
+Wenn upstream eine neue czlonkowski-Version draussen ist (fuer die adaptierten
+Prozess-Skills gilt dieser Blind-Copy-Weg NICHT — siehe Re-Sync-Warnung oben):
 
 ```powershell
 git clone --depth=1 https://github.com/czlonkowski/n8n-skills.git $env:TEMP\n8n-skills
