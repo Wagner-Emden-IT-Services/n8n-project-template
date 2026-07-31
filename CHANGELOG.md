@@ -2,6 +2,42 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-07-31 — v1.2.0 (Issue-Batch: Praxis-Lessons, Sticky-Notes-Hard-Rule, DataTable-Upsert-Validator)
+
+Leert den kompletten Issue-Backlog (fixes #15, #16, #17, #18, #19, #20, #35; relates to #32). Alle Wissens-Items stammen aus dem produktiven Hoheisen-Incident 2026-05-17 (DataTable-Bloat 2.608 -> 144.049 Rows, Host-OOM, TZ-Drift).
+
+### Added
+
+- **DataTable-Upsert-Validator** (#16) — `checkDataTableUpserts()` in `scripts/lib/validate.mjs`: jeder `dataTable`-Node mit `operation: upsert` braucht nicht-leere `matchingColumns`, valide `filters.conditions` (kein leeres Objekt) und die Key-Column im `columns.value`-Mapping (letzterer Check entfaellt bei `mappingMode: autoMapInputData` — dort ist leeres `value` legitim) — sonst Validation-ERROR mit Silent-Insert-Bloat-Hinweis (AJV-Error-Shape, greift in CLI `validate` + CI). 10 neue Vitest-Tests (Suite: 51/51 gruen); CLI-Verhalten manuell gegen eine Fehlkonfigurations-Fixture verifiziert (`node scripts/n8n-cli.mjs validate` → 2 Errors, Exit 1). Dazu Sektion "DataTable Upsert Silent Bloat" in `docs/troubleshooting.md` (Detection-SQL, Cleanup mit Backup-Warnung).
+- **`docs/integrations/n8n-code-node-pitfalls.md`** (#18, #20) — Branch-Sibling-Lookup auf NoOp-Nodes (`$('NoOp').all()` liefert `[]`, Workaround Math-Derivation) + `pairedItem` mit `sourceOverwrite` fuer Multi-Input Code-Nodes. Kurzformen in `.claude/skills/n8n-code-javascript/SKILL.md` (Production Gotchas).
+- **`docs/troubleshooting.md`**: Sektion "DataTable dateTime TZ-Bug" (#15) — Symptom, Detection-SQL, `.toISOString()`-Workaround, Altbestand-Korrektur mit DST-Warnung.
+- **`docs/runbook.md`**: Sektion `N8N_CONCURRENCY_PRODUCTION_LIMIT` (#17) — Wirkweise (FIFO-Queueing, instanz-weit, Default unlimited), 5-Punkte-Trigger-Liste, Docker-Setup. `.env.example` um die Variable (auskommentiert) ergaenzt.
+- **Sticky-Notes-Pflege Hard-Rule** (#19) — `.claude/rules/general.md`: nach jedem Workflow-Edit alle Sticky-Notes gegen die reale Node-Konfiguration verifizieren; driftende Stickys im selben Edit korrigieren/entfernen. `n8n-workflow-reviewer` Kategorie 4 prueft Sticky-vs-Config-Drift jetzt verpflichtend (Drift = BLOCKER).
+- **CLAUDE.md Section 7**: vier neue Hard-Earned Lessons (dateTime-TZ, Upsert-Silent-Insert, Concurrency-Limit, NoOp-Lookup).
+
+### Changed
+
+- **`scripts/lib/config.mjs`** — js-yaml auf Named-Import umgestellt (kompatibel mit v4 UND v5; js-yaml 5 hat den Default-Export entfernt). Macht den Dependabot-PR #32 (prod-deps) mergebar, dessen CI daran scheiterte.
+- **`.n8n-template/protection-rules.json`** (#35) — 18 tote golden-dev-Regeln entfernt (84 -> 66; jede einzeln gegen Repo-Baum, Lazy-Create-Referenzen und `git log --all` verifiziert; Lazy-Create-Ziele wie `skills-context.md`, `.claude/memory/**` bewusst behalten).
+- **`UPDATING.md` / `.claude/commands/template-update.md`** (#35) — golden-dev-Versions-Beispiele (v1.5/v1.6/v1.7, "1b-v17") auf die reale n8n-Template-Historie umgestellt; keine Mechanik-Aenderung.
+- **`.template-version.json`** (#35) — `schema_version` 1.1 -> 1.2 (Felder `installed_via`, `manifest_path`, `last_update_at`, `last_update_from_version` — Commands beschrieben Schema 1.2 bereits seit v0.6.0); `version` 1.2.0.
+- **`package.json`** — Version 1.2.0.
+- **`.n8n-template/manifest.json`** — regeneriert (LF-normalisierte Hashes, s.u.).
+- **Delivery-Luecke geschlossen** — `protection-rules.json` +7 Regeln: `scripts/lib/**`, `tests/**`, `schemas/**`, `package.json`, `package-lock.json`, `.env.example` -> UPDATABLE-WITH-DIFF, `tests/pins/**` -> USER-GENERATED. Vorher waren Validator/CLI-Lib/Tests fuer `/template-update` unsichtbar — Bestandsprojekte haetten den Versions-Stempel 1.2.0 ohne die Features bekommen.
+- **`onboard.md`** — schreibt jetzt alle Schema-1.2-Felder (`installed_via: "onboard"` etc.); tote Referenzen bereinigt (`01-bug.yml` -> 02-workflow-bug.yml, Hook-Erwaehnungen in `03-template-bug.yml`/`qa-workflow`, v1.7.0-Platzhalter).
+
+### Fixed
+
+- **CRLF-abhaengige Manifest-Hashes** — `Generate-Manifest.ps1` + `Compute-Update-Plan.ps1` hashen jetzt line-ending-normalisiert (CRLF -> LF vor SHA-256, byte-identische Zwillings-Funktion in beiden Skripten). Vorher hingen die Hashes vom `core.autocrlf`-Setting des Checkouts ab — LF-Checkouts (Linux-CI, WSL) haetten bei `/template-update` flaechendeckend falsche Konflikte gesehen.
+- **`version-merge` war deklariert, aber nie implementiert** — `.template-version.json` lief als plain FROZEN: der Auto-Upgrade 1.1 -> 1.2 haette den befuellten Kunden-Stempel mit dem `{{PLACEHOLDER}}`-File ueberschrieben. `Compute-Update-Plan.ps1` setzt `special: version-merge`-Eintraege jetzt fix auf KEEP-LOCAL (Versions-Felder pflegt der `/template-update`-Command in Schritt 1a/8).
+- **Pre-Commit-Hook rief `normalize --in/--out` auf** (Flags existieren nicht — jeder Commit mit staged Workflow-JSON brach ab; gleiche Drift-Klasse wie das in v0.6.1 gefixte #22, der Hook wurde damals uebersehen). Jetzt `normalize "<file>"` gemaess echter CLI-Signatur. `refs #22`.
+
+### Notes
+
+- Kein neues Hard-Gate; der Upsert-Validator laeuft im bestehenden `validate`-Gate (5 Pflicht-Pre-Checks vor Deploy).
+- Verhaltensaenderung: `npm run validate` schlaegt jetzt auch bei schema-validen Workflows mit Upsert-Fehlkonfiguration fehl — gewollt (genau der Silent-Bloat-Fall).
+- **Reichweite fuer Bestandsprojekte** via `/template-update`: Validator + CLI-Lib + Tests, Skill-Updates, Rules und Update-Mechanik kommen an; die Doku-Nachtraege in `docs/**` und die CLAUDE.md-Lessons (User-Land bzw. ausserhalb der Marker-Bloecke) erreichen nur Neu-Installationen — bei Bedarf manuell uebernehmen.
+
 ## 2026-07-31 — v1.1.0 (Prozess-Skills: mattpocock/skills adaptiert + Workflow-Verdrahtung)
 
 Sieben Prozess-Skills aus [mattpocock/skills](https://github.com/mattpocock/skills) (MIT, Upstream-Commit `2ab9580` vom 2026-07-28) projekt-lokal vendored, fuer n8n adaptiert und an die bestehenden Pipeline-Gates verdrahtet.

@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Danke fuer den Bug-Report. Fuelle die Felder so konkret wie moeglich.
-        Tipp: Wenn du den Bug aus einem `/qa`-Run kennst, nutze stattdessen `02-qa-finding.yml`.
+        Tipp: Wenn du den Bug aus einem `/qa`-Run kennst, nutze stattdessen `02-workflow-bug.yml`.
 
   - type: input
     id: summary

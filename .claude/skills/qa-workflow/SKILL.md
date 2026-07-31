@@ -93,7 +93,7 @@ AskUserQuestion. Bei `[a]nlegen`: analog zu P0/P1.
 
 ## Routing-Heuristik (Template-Bug-Erkennung)
 
-Wenn ein Finding auf bundled n8n-template-Files deutet (`.claude/hooks/*.ps1`, `.claude/skills/*/SKILL.md`, `.claude/commands/<bundled>.md`, `.n8n-template/*`, `scripts/n8n-cli.mjs`):
+Wenn ein Finding auf bundled n8n-template-Files deutet (`.claude/skills/*/SKILL.md`, `.claude/commands/<bundled>.md`, `.n8n-template/*`, `scripts/n8n-cli.mjs`):
 
 - AskUserQuestion "Finding deutet auf Template-Bug (Pfad: `<file>`). `/template-bugreport` aufrufen (sanitiert ins n8n-project-template Source-Repo)?"
 - Bei Ja: keinen Project-Issue, stattdessen `/template-bugreport`

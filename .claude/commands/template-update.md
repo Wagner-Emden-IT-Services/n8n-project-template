@@ -52,13 +52,13 @@ Wenn Schema 1.1 erkannt:
   ```
 - Audit-Log: `<ts> SCHEMA_UPGRADE 1.1 1.2 - - - -`
 
-### Schritt 1b-v17: Bug-Migration v1.6.x → v1.7.x (one-shot, automatisch)
+### Schritt 1b-v06: Bug-Migration v0.5.x → v0.6.x (one-shot, automatisch)
 
-Aktiv wenn lokale Version `< 1.7.0` UND REMOTE-Version `>= 1.7.0`. Konvention seit v1.7.0: Bugs ausschliesslich in GitHub-Issues. Dieser Schritt migriert die Legacy-Bug-Pflegestellen einmalig.
+Aktiv wenn lokale Version `< 0.6.0` UND REMOTE-Version `>= 0.6.0`. Konvention seit v0.6.0: Bugs ausschliesslich in GitHub-Issues. Dieser Schritt migriert die Legacy-Bug-Pflegestellen einmalig.
 
 **Voraussetzungen:**
 - `gh auth status` OK (sonst STOPP: User soll `gh auth login` durchlaufen)
-- `.template-version.json` `target_repo` muss befuellt sein (sonst STOPP: "Kein Repo — GitHub-Setup via /onboard (Phase 2/6) nachholen bevor v1.7-Migration moeglich ist. Alternative: `/template-update --skip-bug-migration` ueberspringt nur diesen Schritt mit Warnung im Audit-Log.")
+- `.template-version.json` `target_repo` muss befuellt sein (sonst STOPP: "Kein Repo — GitHub-Setup via /onboard (Phase 2/6) nachholen bevor v0.6-Migration moeglich ist. Alternative: `/template-update --skip-bug-migration` ueberspringt nur diesen Schritt mit Warnung im Audit-Log.")
 
 **Ablauf:**
 
@@ -73,7 +73,7 @@ Aktiv wenn lokale Version `< 1.7.0` UND REMOTE-Version `>= 1.7.0`. Konvention se
 
 4. **Bei N Funden:** Tabelle praesentieren:
    ```
-   v1.6→v1.7 BUG-MIGRATION — N Findings
+   v0.5→v0.6 BUG-MIGRATION — N Findings
 
    | # | Datei                  | Kind          | Vorschlag-Titel                       |
    |---|------------------------|---------------|---------------------------------------|
@@ -97,7 +97,7 @@ Aktiv wenn lokale Version `< 1.7.0` UND REMOTE-Version `>= 1.7.0`. Konvention se
 
 7. **Audit-Eintrag** in `.n8n-template/audit.log`:
    ```
-   <ts>\tBUG_MIGRATION\tv1.6.x\tv1.7.x\t<created-count>\t0\t<skipped-count>\t0
+   <ts>\tBUG_MIGRATION\tv0.5.x\tv0.6.x\t<created-count>\t0\t<skipped-count>\t0
    ```
 
 8. **Cleanup** — `_bug-migration-scan.json` darf liegen bleiben (wird beim naechsten Lauf ueberschrieben).
@@ -117,7 +117,7 @@ git clone --depth 1 --branch main $source $tmp
 
 Falls `--from <commit>`: `git checkout $commit` im `$tmp`.
 
-**Wenn REMOTE kein `.n8n-template/manifest.json` hat:** Das REMOTE-Template ist aelter als v1.6.0. STOPP — "Remote-Template noch nicht auf manifest-basiertem Update. Bitte zuerst `/template-check` auf dem REMOTE pushen oder Template-Maintainer kontaktieren."
+**Wenn REMOTE kein `.n8n-template/manifest.json` hat:** Das REMOTE-Template ist aelter als v0.6.0. STOPP — "Remote-Template noch nicht auf manifest-basiertem Update. Bitte zuerst `/template-check` auf dem REMOTE pushen oder Template-Maintainer kontaktieren."
 
 REMOTE-Version lesen aus `$tmp/.template-version.json` → `$newVersion`.
 LOCAL-Version aus `.template-version.json` → `$currentVersion`.

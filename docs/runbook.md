@@ -62,6 +62,39 @@ Kurzfassung (NUR mit verifiziertem Backup ausfuehren):
 7. Backup-Pfad in `credentials/secrets-vault-map.yaml` aktualisieren
 8. Alten Key in Vault rotieren/entfernen (frueheste 30 Tage spaeter — Rollback-Fenster)
 
+## Concurrency-Schutz: N8N_CONCURRENCY_PRODUCTION_LIMIT
+
+Globale Env-Var der n8n-Instanz, Default **unlimited**. Ohne Limit stapeln sich Schedule-Fires eines lang laufenden Workflows, bis Memory oder Backend kippt — ein einziger Amok-Workflow kann so alle anderen mit-killen.
+
+Was das Limit macht:
+
+- Limit erreicht → neue Production-Executions werden **gequeued** (FIFO), nicht geskippt
+- Zaehlt NICHT: manuelle Executions (UI), Sub-Workflows, Error-Workflows, CLI-Executions
+- Scope: pro n8n-Instanz, nicht pro Workflow (OSS-Limitation; per-Workflow-Concurrency nur Enterprise)
+- Nicht verwechseln mit `N8N_RUNNERS_MAX_CONCURRENCY` (Default 5) — das steuert Task-Parallelitaet **innerhalb** einer Execution, andere Achse, bleibt typisch unveraendert
+
+`N8N_CONCURRENCY_PRODUCTION_LIMIT=1` in der Production-Env setzen, wenn **eine** der folgenden Bedingungen zutrifft:
+
+- Ein Workflow laeuft regelmaessig > 5 Min
+- Schedule-Frequenz kuerzer als typische Laufzeit (z.B. `*/5 min`-Schedule, Workflow dauert 10 Min)
+- Workflow nutzt rate-limitiertes Backend → Overlap = doppelte API-Last
+- Workflow hat State (DataTable-Reads/Writes) → Overlap = Race-Conditions
+- Container-Memory ist knapp und ein einzelner Run schon nah am Limit
+
+Setup (generisches Docker-Setup; bei Managed-Hosting wie Coolify die Env-Var stattdessen ueber dessen Env-Verwaltung als Runtime-Variable setzen):
+
+```bash
+# docker-compose.yml (environment:) or .env of the n8n container
+N8N_CONCURRENCY_PRODUCTION_LIMIT=1
+```
+
+Die Variable greift erst nach Container-Restart. Danach verifizieren:
+
+```bash
+docker exec <n8n-container> env | grep N8N_CONCURRENCY
+# expected: N8N_CONCURRENCY_PRODUCTION_LIMIT=1
+```
+
 ## Incident: Workflow laeuft Amok / Endlosschleife
 
 1. n8n UI → Executions → Running → "Stop"

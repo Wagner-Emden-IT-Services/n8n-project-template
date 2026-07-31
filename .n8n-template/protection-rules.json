@@ -19,10 +19,6 @@
       "protection": "FROZEN"
     },
     {
-      "glob": ".n8n-template/Scan-Bugs-In-Project.ps1",
-      "protection": "FROZEN"
-    },
-    {
       "glob": ".n8n-template/protection-rules.json",
       "protection": "FROZEN"
     },
@@ -48,14 +44,6 @@
       "protection": "FROZEN"
     },
     {
-      "glob": ".claude/commands/change.md",
-      "protection": "FROZEN"
-    },
-    {
-      "glob": ".claude/commands/requirements.md",
-      "protection": "FROZEN"
-    },
-    {
       "glob": ".claude/commands/template-check.md",
       "protection": "FROZEN"
     },
@@ -76,36 +64,8 @@
       "protection": "FROZEN"
     },
     {
-      "glob": ".claude/hooks/**",
-      "protection": "FROZEN"
-    },
-    {
       "glob": ".claude/rules/general.md",
       "protection": "FROZEN"
-    },
-    {
-      "glob": ".claude/rules/security.md",
-      "protection": "FROZEN"
-    },
-    {
-      "glob": ".claude/rules/capability-map.md",
-      "protection": "FROZEN"
-    },
-    {
-      "glob": ".claude/rules/frontend.md",
-      "protection": "UPDATABLE-WITH-DIFF"
-    },
-    {
-      "glob": ".claude/rules/backend.md",
-      "protection": "UPDATABLE-WITH-DIFF"
-    },
-    {
-      "glob": ".claude/rules/environments.md",
-      "protection": "UPDATABLE-WITH-DIFF"
-    },
-    {
-      "glob": ".claude/rules/mcp-servers.md",
-      "protection": "UPDATABLE-WITH-DIFF"
     },
     {
       "glob": ".claude/rules/skills-context.md",
@@ -136,31 +96,11 @@
       "protection": "USER-GENERATED"
     },
     {
-      "glob": ".claude/memory/decisions/README.md",
-      "protection": "FROZEN"
-    },
-    {
-      "glob": ".claude/memory/domains/README.md",
-      "protection": "FROZEN"
-    },
-    {
-      "glob": ".claude/memory/programs/README.md",
-      "protection": "FROZEN"
-    },
-    {
-      "glob": ".claude/memory/tools/README.md",
-      "protection": "FROZEN"
-    },
-    {
       "glob": ".claude/memory/**",
       "protection": "USER-GENERATED"
     },
     {
       "glob": ".claude/settings.json",
-      "protection": "FROZEN"
-    },
-    {
-      "glob": ".claude/settings.local.json.example",
       "protection": "FROZEN"
     },
     {
@@ -170,10 +110,6 @@
     {
       "glob": ".claude/customer.json",
       "protection": "USER-GENERATED"
-    },
-    {
-      "glob": "docs/prompts/**",
-      "protection": "FROZEN"
     },
     {
       "glob": "docs/sessions/.gitkeep",
@@ -224,20 +160,12 @@
       "protection": "FROZEN"
     },
     {
-      "glob": ".github/ISSUE_TEMPLATE/02-qa-finding.yml",
-      "protection": "FROZEN"
-    },
-    {
       "glob": ".github/ISSUE_TEMPLATE/03-template-bug.yml",
       "protection": "FROZEN"
     },
     {
       "glob": ".github/ISSUE_TEMPLATE/config.yml",
       "protection": "FROZEN"
-    },
-    {
-      "glob": ".github/workflows/ci.yml",
-      "protection": "UPDATABLE-WITH-DIFF"
     },
     {
       "glob": ".github/workflows/issue-triage.yml",
@@ -343,6 +271,34 @@
     {
       "glob": ".claude/commands/**",
       "protection": "FROZEN"
+    },
+    {
+      "glob": "tests/pins/**",
+      "protection": "USER-GENERATED"
+    },
+    {
+      "glob": "tests/**",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": "scripts/lib/**",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": "schemas/**",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": "package.json",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": "package-lock.json",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": ".env.example",
+      "protection": "UPDATABLE-WITH-DIFF"
     }
   ]
 }

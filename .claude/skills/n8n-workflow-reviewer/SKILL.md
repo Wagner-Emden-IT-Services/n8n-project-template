@@ -96,10 +96,25 @@ Check for:
 Check for:
 - Nodes with default names ("HTTP Request1", "Set3") — should be descriptive
 - No sticky notes explaining complex logic
+- Sticky notes whose content has drifted from the actual node configuration (mandatory drift check below)
 - Business logic buried in expressions instead of extracted to Set/Function nodes
 - Giant single workflows that should be split into subworkflows
 - No clear "sections" (inputs → processing → outputs)
 - Missing version notes or environment variables for easy env-switching (prod/dev)
+
+**Sticky-vs-config drift check (mandatory):**
+For EVERY sticky note in the workflow, verify that the behavior it describes is actually
+configured in the nodes it refers to (match stickies to nodes via `position` proximity and
+node names mentioned in the sticky text). Sticky notes are embedded and unversioned — they
+silently drift with every edit, and misleading embedded docs are worse than no docs.
+Drift is NOT a cosmetic finding: report it as a **BLOCKER** under Category 1
+(🔴 ERRORS & BREAKS), not as a 🟢 suggestion. The fix is to correct the node config or
+correct/remove the sticky in the same edit (see `.claude/rules/general.md`,
+Sticky-Notes-Pflege Hard-Rule).
+
+Example: sticky says "Filter: exchange_contact_id", but the referenced Update node has
+`matchingColumns: []` and empty filter conditions — the documented upsert is really a
+silent insert. → ❌ BLOCKER.
 
 **Output format:**
 ```

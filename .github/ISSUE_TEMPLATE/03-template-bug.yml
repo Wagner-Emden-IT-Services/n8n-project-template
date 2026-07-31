@@ -1,5 +1,5 @@
 name: Template Bug (n8n-template internal)
-description: Bug im n8n-template-Template selbst (Skill, Hook, Command, Update-Mechanik). Sollte sanitiert per /template-bugreport gefiled werden.
+description: Bug im n8n-template-Template selbst (Skill, Command, Update-Mechanik). Sollte sanitiert per /template-bugreport gefiled werden.
 title: "[TEMPLATE-BUG] "
 labels: ["template-bug", "needs-triage", "source:ai-change"]
 body:
@@ -16,7 +16,6 @@ body:
       label: Betroffene Komponente
       options:
         - "Skill (.claude/skills/)"
-        - "Hook (.claude/hooks/)"
         - "Command (.claude/commands/)"
         - "Rule (.claude/rules/)"
         - "Update-Mechanik (.n8n-template/)"
@@ -32,7 +31,7 @@ body:
     attributes:
       label: Template-Version
       description: Aus .template-version.json → version
-      placeholder: "1.7.0"
+      placeholder: "1.2.0"
     validations:
       required: true
 
@@ -42,7 +41,7 @@ body:
       label: Minimal-Repro
       description: Wie minimal koennen wir das reproduzieren? Sanitisiert — keine Customer-Identifier.
       placeholder: |
-        1. /change in einem v1.7.0-Projekt aufrufen mit "..."
+        1. /change-workflow in einem v1.2.0-Projekt aufrufen mit "..."
         2. Beobachte: ...
     validations:
       required: true

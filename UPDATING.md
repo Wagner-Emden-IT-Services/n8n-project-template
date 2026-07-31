@@ -105,7 +105,7 @@ nur in markierten Bloecken. Beispiel `CLAUDE.md`:
 Hier steht freier projekt-eigener Text. Wird bei Update NIE angefasst.
 <!-- PROJECT:END -->
 
-<!-- N8N-TEMPLATE:START id="tech-stack-summary" version="1.6.0" -->
+<!-- N8N-TEMPLATE:START id="tech-stack-summary" version="1.2.0" -->
 ## Tech Stack
 
 | Layer | Technologie | Version |
@@ -133,9 +133,9 @@ Bei `UPDATABLE-WITH-DIFF` und `CONFLICT`-Aktion zeigt `/template-update --apply`
 
 ```
 [CONFLICT] scripts/n8n-cli.mjs
-  BASE   = abc123...   (lieferte v1.5.0)
+  BASE   = abc123...   (lieferte v1.1.0)
   LOCAL  = def456...   (du hast es im April geaendert)
-  REMOTE = ghi789...   (neuer Stand v1.6.0)
+  REMOTE = ghi789...   (neuer Stand v1.2.0)
 ```
 
 Wahlmoeglichkeit:
@@ -162,13 +162,15 @@ Wahlmoeglichkeit:
 ## 7. Schema-Migration 1.1 → 1.2
 
 Wenn ein Projekt von einer aelteren n8n-Template-Version kommt, wird `/template-update`
-das Schema automatisch hochziehen:
+das Schema automatisch hochziehen. Seit v1.2.0 liefert das Template den Stempel direkt
+mit Schema 1.2 aus — dieser Auto-Upgrade-Pfad bleibt fuer Bestandsprojekte mit
+1.1-Stempel (Installationen bis v1.1.0) bestehen:
 
 | Feld | Schema 1.1 | Schema 1.2 |
 |------|------------|------------|
 | `schema_version` | "1.1" | "1.2" |
 | `template` | "n8n-project" | "n8n-project" |
-| `version` | "1.5.0" | "1.5.0" |
+| `version` | "1.1.0" | "1.1.0" |
 | `installed_at` | Datum | Datum |
 | `source_repo` | URL | URL |
 | `target_repo` | URL/null | URL/null |
@@ -183,9 +185,9 @@ Beim Auto-Upgrade:
 - Falls `.n8n-template/manifest.json` fehlt: Pseudo-Manifest aus dem JETZT-Stand erzeugt — BASE wird gleich LOCAL. Beim **naechsten** Update gibt es dann sinnvolle BASE-Werte.
 - Audit-Log-Event: `SCHEMA_UPGRADE 1.1 1.2`.
 
-## 8. Issue-Workflow + Repo-Pflicht (seit v1.7.0)
+## 8. Issue-Workflow + Repo-Pflicht (seit v0.6.0)
 
-Seit v1.7.0 ist die **GitHub-Repo-Anlage Pflicht** (`/onboard` Phase 2/6). Bug-Tracking erfolgt **ausschliesslich ueber GitHub-Issues** — KEINE Bug-Sektionen in WF-X-Specs, KEIN Bug-Memory.
+Seit v0.6.0 ist die **GitHub-Repo-Anlage Pflicht** (`/onboard` Phase 2/6). Bug-Tracking erfolgt **ausschliesslich ueber GitHub-Issues** — KEINE Bug-Sektionen in WF-X-Specs, KEIN Bug-Memory.
 
 ### Bug-Workflows
 
@@ -219,9 +221,9 @@ pwsh .n8n-template/Deploy-Labels.ps1
 # (liest target_repo aus .template-version.json)
 ```
 
-### Migration v1.6.x → v1.7.x (Bug-Sammelstellen)
+### Migration v0.5.x → v0.6.x (Bug-Sammelstellen)
 
-Beim ersten `/template-update --apply` von v1.6.x auf v1.7.x scannt das System automatisch nach:
+Beim ersten `/template-update --apply` von v0.5.x auf v0.6.x scannt das System automatisch nach:
 - `docs/specs/*.md` Sektionen ("Known Bugs", "Bekannte Fehler", "Open Bugs", "TODO: Fix")
 - `docs/specs/*.md` Bullets (`BUG:`, `FIXME:`, `TODO: fix`)
 - `.claude/memory/**/*.md` mit `type: bug`-Frontmatter oder `**BUG:**`-Marker
@@ -242,7 +244,7 @@ Beide UPDATABLE-WITH-DIFF — koennen vom User erweitert werden.
 
 ### Was tun wenn das Repo doch fehlt
 
-Wenn `gh` nicht verfuegbar/authentifiziert ist, ueberspringt `/onboard` die GitHub-Schritte automatisch mit Warnung (Phase 2). In diesem Modus sind Issue-Workflows deaktiviert und die Bug-Migration v1.6→v1.7 wird verschoben (`BUG_MIGRATION_DEFERRED` im Audit). Beim ersten `/template-update` nach nachgeholtem GitHub-Setup (Phase 2/6) wird sie nachgeholt.
+Wenn `gh` nicht verfuegbar/authentifiziert ist, ueberspringt `/onboard` die GitHub-Schritte automatisch mit Warnung (Phase 2). In diesem Modus sind Issue-Workflows deaktiviert und die Bug-Migration v0.5→v0.6 wird verschoben (`BUG_MIGRATION_DEFERRED` im Audit). Beim ersten `/template-update` nach nachgeholtem GitHub-Setup (Phase 2/6) wird sie nachgeholt.
 
 ## 9. Bei Problemen
 

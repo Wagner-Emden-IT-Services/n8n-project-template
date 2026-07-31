@@ -1,12 +1,16 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "template": "n8n-project",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "installed_at": "{{INSTALLED_AT}}",
   "source_repo": "https://github.com/Wagner-Emden-IT-Services/n8n-project-template",
   "target_repo": "{{TARGET_REPO}}",
   "customer_slug": "{{CUSTOMER_SLUG}}",
   "project_slug": "{{PROJECT_SLUG}}",
+  "installed_via": "{{INSTALLED_VIA}}",
+  "manifest_path": ".n8n-template/manifest.json",
+  "last_update_at": null,
+  "last_update_from_version": null,
   "staging_profile": "{{STAGING_PROFILE}}",
   "hosting": "{{HOSTING}}",
   "options": {

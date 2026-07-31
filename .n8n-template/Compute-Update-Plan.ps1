@@ -32,6 +32,11 @@ The protection tier from the REMOTE manifest decides the action:
     LOCAL missing         → CREATE-FROM-REMOTE (initial stub)
     LOCAL exists          → KEEP-LOCAL (never touched)
 
+  special: version-merge (e.g. .template-version.json)
+    Always KEEP-LOCAL regardless of tier — version/update fields are
+    maintained by the /template-update command itself (step 1a schema
+    upgrade + step 8 version progression), never by file replacement.
+
 Files only in BASE (gone from REMOTE) → ORPHAN (user asked at apply time).
 
 .OUTPUTS
@@ -62,6 +67,26 @@ $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
+# Line-ending-agnostic SHA-256: all managed files are text, so decode as
+# UTF-8, normalize CRLF -> LF, and hash the resulting UTF-8 bytes. Raw-byte
+# hashing (Get-FileHash) would yield different hashes for identical content
+# on autocrlf=true (CRLF) vs. LF checkouts -> false conflicts everywhere.
+# Must stay byte-identical to the copy in Generate-Manifest.ps1.
+function Get-NormalizedFileHash {
+    param([string]$Path)
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    $text = [System.Text.Encoding]::UTF8.GetString($bytes)
+    $text = $text -replace "`r`n", "`n"
+    $normBytes = [System.Text.Encoding]::UTF8.GetBytes($text)
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $hashBytes = $sha.ComputeHash($normBytes)
+    } finally {
+        $sha.Dispose()
+    }
+    return ([System.BitConverter]::ToString($hashBytes) -replace '-', '').ToLower()
+}
+
 function Read-Manifest {
     param([string]$Root)
     $p = Join-Path $Root '.n8n-template/manifest.json'
@@ -75,7 +100,7 @@ function Get-LocalSha {
     param([string]$Root, [string]$RelPath)
     $abs = Join-Path $Root $RelPath
     if (-not (Test-Path $abs)) { return $null }
-    return (Get-FileHash -Path $abs -Algorithm SHA256).Hash.ToLower()
+    return Get-NormalizedFileHash -Path $abs
 }
 
 $localManifest  = Read-Manifest -Root $LocalRoot
@@ -108,7 +133,23 @@ foreach ($r in $remoteManifest.files) {
     $localSha = Get-LocalSha -Root $LocalRoot -RelPath $path
 
     $action = $null
+    $reason = $null
 
+    if ($r.special -eq 'version-merge') {
+        # version-merge files never go through plain tier logic: replacing the
+        # local file would stomp the filled customer stamp with the template's
+        # {{PLACEHOLDER}} copy. Version/update fields are maintained by the
+        # /template-update command itself (step 1a schema upgrade + step 8
+        # version progression), so the plan always keeps the local file.
+        if ($null -eq $localSha) {
+            $action = 'CREATE-FROM-REMOTE'
+            $stats.create++
+        } else {
+            $action = 'KEEP-LOCAL'
+            $stats.keep_local++
+        }
+        $reason = 'special=version-merge: version/update fields are maintained by /template-update (step 1a schema upgrade + step 8 progression), not by file replacement'
+    } else {
     switch ($tier) {
         'USER-GENERATED' {
             if ($null -eq $localSha) {
@@ -165,6 +206,7 @@ foreach ($r in $remoteManifest.files) {
             $action = 'UNKNOWN-TIER'
         }
     }
+    }
 
     $entry = [ordered]@{
         path       = $path
@@ -173,6 +215,9 @@ foreach ($r in $remoteManifest.files) {
         base_sha   = $baseSha
         local_sha  = $localSha
         remote_sha = $remoteSha
+    }
+    if ($reason) {
+        $entry.reason = $reason
     }
     if ($tier -eq 'MARKER-AWARE' -and $r.managed_blocks) {
         $entry.managed_blocks = $r.managed_blocks
