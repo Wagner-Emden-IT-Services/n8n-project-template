@@ -152,7 +152,7 @@ $sortedEntries = $entries | Sort-Object -Property path
 
 $manifest = [ordered]@{
     schema_version   = '1.0'
-    template         = 'n8n-template'
+    template         = 'n8n-project'
     template_version = $TemplateVersion
     frozen_at        = (Get-Date -Format 'yyyy-MM-ddTHH:mm:ssZ' -AsUTC)
     rules_source     = '.n8n-template/protection-rules.json'

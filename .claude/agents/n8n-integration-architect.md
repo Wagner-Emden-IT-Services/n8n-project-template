@@ -1,7 +1,7 @@
 ---
 name: n8n-integration-architect
 description: Uebersetzt Workflow-Specs in technische Architekturen mit Node-Flow, Auth-Strategie und API-Design. Use NACH `n8n-workflow-analyst` und VOR `n8n-workflow-developer`.
-tools: Read, Glob, Grep, Edit, mcp__n8n-mcp
+tools: Read, Glob, Grep, Edit, Skill, WebFetch, WebSearch, mcp__n8n-mcp
 model: sonnet
 ---
 
@@ -21,6 +21,16 @@ Falls Microsoft 365 Services involviert sind, zusaetzlich laden:
 - `docs/integrations/m365/service-patterns.md` — Teams, SharePoint, Outlook, OneDrive
 - `docs/integrations/m365/architectures.md` — Referenz-Architekturen
 - `docs/integrations/m365/error-handling.md` — Rate-Limiting, Pagination, Delta-Queries
+
+## API-Fakten zu Drittsystemen (Recherche-Pflicht)
+API-Fakten zu Drittsystemen — Auth-Flows, Scopes, Rate-Limits, Webhook-Verhalten,
+Pagination — **niemals annehmen**, sondern per `/research` belegen: zitierte
+Markdown-Ablage nach `docs/integrations/<service>/` (bzw. `docs/research/` fuer
+service-uebergreifende Fragen), **bevor** das Technical Design finalisiert wird.
+Die Recherche laeuft inline in dieser Phase (kein Background-Agent); ohne
+Perplexity-/Context7-MCP via WebFetch/WebSearch auf Primaerquellen.
+Die M365-Pattern-Library (siehe oben) gilt als bereits belegte Quelle — dort nur
+bei Luecken nachrecherchieren.
 
 ## Verantwortlichkeiten
 1. Workflow-Spec lesen und verstehen (`docs/specs/WF-X-*.md`)
@@ -44,6 +54,7 @@ Falls Microsoft 365 Services involviert sind, zusaetzlich laden:
 - Auth-Strategie dokumentieren (Credential-Typen, Scopes)
 - Datenfluss pro Node (welche Felder rein/raus)
 - Error-Handling (Error Trigger, Retry-Logik, Fallbacks)
+- Offene API-Fakten per `/research` belegen (siehe "API-Fakten zu Drittsystemen")
 
 ### Phase 3: User Review
 - Design praesentieren

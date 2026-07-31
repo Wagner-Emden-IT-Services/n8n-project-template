@@ -331,9 +331,9 @@ n8n execute:workflow --id=<ID> --testData=test-input.json
 
 ## 14. Memory-System
 
-Bei Session-Start wird `.claude/memory/MEMORY.md` automatisch geladen via SessionStart-Hook (falls eingerichtet).
+Bei Session-Start wird `.claude/memory/MEMORY.md` automatisch geladen via SessionStart-Hook (falls das Memory-System installiert ist — Installation: `/memory-install`).
 
-Lessons aus Sessions speichern: `/update-memory`. Wartung: `/reorganize-memory`.
+Lessons aus Sessions speichern: `/remember`. Wartung: `/memory-cleanup`. System-Update: `/memory-update`. (Plugin `memory-system`; ohne project-local Install: `/memory-system:remember` etc.)
 
 ---
 
@@ -395,13 +395,13 @@ Define success criteria. Loop until verified.
 Details: `.claude/rules/general.md` Sektion "Bug-Tracking-Konvention".
 <!-- N8N-TEMPLATE:END id="bug-tracking" -->
 
-<!-- N8N-TEMPLATE:START id="n8n-pipeline" version="0.6.0" -->
+<!-- N8N-TEMPLATE:START id="n8n-pipeline" version="1.1.0" -->
 ## n8n-Pipeline (Sub-Agents je Phase)
 
 | Phase | Sub-Agent (`.claude/agents/`) | Auto-loaded Skills |
 |---|---|---|
-| Spec | `n8n-workflow-analyst` | `n8n-prd-generator` |
-| Architecture | `n8n-integration-architect` | `n8n-workflow-patterns`, `n8n-mcp-tools-expert` |
+| Spec | `n8n-workflow-analyst` | `n8n-prd-generator`, `grill-with-docs` (Anforderungen schaerfen) |
+| Architecture | `n8n-integration-architect` | `n8n-workflow-patterns`, `n8n-mcp-tools-expert`, `research` (API-Fakten belegen) |
 | Build | `n8n-workflow-developer` | `n8n-mcp-tools-expert`, `n8n-node-configuration`, `n8n-code-javascript`, `n8n-code-python`, `n8n-expression-syntax`, `n8n-workflow-reviewer` (Post-Build-Review) |
 | Test | `n8n-qa-engineer` | `n8n-validation-expert`, `n8n-mcp-tools-expert` |
 | Security | `n8n-security-reviewer` | (`/security-review-workflow` Hard-Gate) |
@@ -410,4 +410,17 @@ Details: `.claude/rules/general.md` Sektion "Bug-Tracking-Konvention".
 Hard-Gates vor Deploy: `onboard-required`, `prd-required`, `wf-x-spec-required`, `security-audit-required`, `normalize-on-commit`. Bypass nur via expliziter `--bypass-<gate>`-Flag mit Audit-Log.
 
 Orchestrator: `/change-workflow` (Hybrid Pipeline + Issue-Mode + Multi-Workflow-Batch).
+
+### Prozess-Skills (seit v1.1.0)
+
+Adaptiert aus [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), projekt-lokal in `.claude/skills/` gebuendelt — Details und Attribution: `.claude/skills/_README.md`.
+
+| Skill | Einsatzpunkt |
+|---|---|
+| `/grilling` / `/grill-me` | Plan-/Entscheidungs-Stress-Test (eine Frage pro Turn, mit Empfehlung). Standard-Pass in `/prd-generate` vor `Status: APPROVED` |
+| `/grill-with-docs` | Spec-Phase: Anforderungen schaerfen + nebenbei `CONTEXT.md`/ADRs aufbauen |
+| `/domain-modeling` | Ubiquitous Language pflegen (`CONTEXT.md`, `docs/adr/`) — speist WF-X-Specs + PRD |
+| `/research` | Architecture-Phase: API-Fakten (Scopes, Rate-Limits, Webhooks, Pagination) belegt statt geraten — Ablage `docs/research/` bzw. `docs/integrations/<service>/` |
+| `/diagnosing-bugs` | Pflicht-Diagnose vor Bug-Fix-Builds (`/change-workflow --issue N`): Feedback-Loop zuerst, dann Fix |
+| `/handoff` | Session-Uebergabe an Phasen-Gates + Session-Ende: `docs/sessions/` + `docs/STATE.md`-Update |
 <!-- N8N-TEMPLATE:END id="n8n-pipeline" -->

@@ -101,13 +101,27 @@ Pro Eingabe (Issue-Body / WF-X-Spec / User-Text) bestimme **Phase**:
 | **Test** | Workflow-JSON existiert, kein QA-Result | `n8n-qa-engineer` | `n8n-validation-expert`, `n8n-mcp-tools-expert` |
 | **Security** | Vor Production-Deploy | `n8n-security-reviewer` | `/security-review-workflow` |
 | **Deploy** | Security gruen, ready zum Activate | `n8n-deployment-engineer` | `n8n-mcp-tools-expert` |
-| **Bug-Fix** | Issue mit `bug`-Label, oder QA-Failure | je nach betroffener Phase | je nach Phase |
+| **Bug-Fix** | Issue mit `bug`-Label, oder QA-Failure | je nach betroffener Phase | `/diagnosing-bugs` (Pflicht, Schritt 1.6), dann je nach Phase |
 
 Mit `--phase <name>`: direkt zur angegebenen Phase springen.
 
-**Bei Bug-Fix-Phase**: Skip Spec + Architecture wenn der Workflow schon existiert. Direkt zur Build- oder Test-Phase mit Bug-Beschreibung als Context.
+**Bei Bug-Fix-Phase**: Skip Spec + Architecture wenn der Workflow schon existiert. VOR Build greift die Pflicht-Diagnose (Schritt 1.6), danach direkt zur Build- oder Test-Phase mit Bug-Beschreibung als Context.
 
 **Post-Build-Review**: Am Ende jeder Build-Phase (auch bei Bug-Fix) laeuft `n8n-workflow-reviewer` ueber den gebauten/geaenderten Workflow, bevor die Test-Phase startet — siehe `.claude/rules/general.md` "Post-Build-Review".
+
+## Schritt 1.6: Pflicht-Diagnose (nur Issue-/Bug-Fix-Modus)
+
+Bei Bug-Fix-Phase (`--issue <N>` / `--issues` mit `bug`-Label, oder QA-Failure): VOR dem Sprung in die Build-Phase laeuft der Skill `/diagnosing-bugs` als Pflicht-Diagnose-Phase:
+
+1. **Feedback-Loop zuerst**: reproduzierbaren Check aufbauen, der den Bug sichtbar macht (Test-Run, Webhook-Call, Execution-Replay)
+2. **Repro**: Bug nachstellen — `/qa-workflow`-Findings (repro/expected/actual/execution_id) sind der Diagnose-Input
+3. **Gerankte Hypothesen** an den User praesentieren
+4. Erst nach bestaetigter Root-Cause in die Fix-Phase (Build) wechseln — kein Fix auf Verdacht
+5. **Direkteinstieg** `--phase build` ueberspringt die Diagnose nur mit explizitem Vermerk im
+   PR-Body (`Diagnose uebersprungen: <grund>`)
+6. **Multi-Issue-Batch**: jeder Sub-Agent durchlaeuft die Diagnose fuer sein Issue selbst;
+   "bestaetigte Root-Cause" heisst dort empirisch belegt via Feedback-Loop (Punkt 1) — die
+   Hypothesen-Praesentation an den User erfolgt gesammelt am Orchestrator-Gate
 
 ## Schritt 1.7: PR-Linking-Konvention (cross-cutting, ab v0.6.0)
 
@@ -153,7 +167,8 @@ Max parallel: `$maxParallel` (Default 2, ueber `--max-parallel 3` bis 3).
 
 Sequenziell durch die Phasen mit User-Gates zwischen jeder Phase:
 - Spec → User-Bestaetigung → Architecture → ... → Deploy
-- Bei Bug-Fix: direkt zur betroffenen Phase
+- Bei Bug-Fix: direkt zur betroffenen Phase (nach Pflicht-Diagnose, Schritt 1.6)
+- **Session-Wechsel am Gate**: soll die naechste Phase in einer frischen Session laufen, vorher `/handoff` ausfuehren (kompaktiert den Kontext nach `docs/sessions/` + aktualisiert `docs/STATE.md`)
 
 ### Multi-Workflow-Batch / Multi-Issue
 

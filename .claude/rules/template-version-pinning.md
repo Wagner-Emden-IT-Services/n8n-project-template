@@ -4,6 +4,11 @@
 > welche Files vom Template-Update-Mechanismus (`/template-update` ab v0.6.0)
 > ohne Rueckfrage ueberschrieben werden duerfen und welche nicht.
 
+> **Hinweis (seit v0.6.0):** Verbindlich ist das 4-Tier-Modell aus
+> `.n8n-template/protection-rules.json` + `UPDATING.md` (FROZEN /
+> UPDATABLE-WITH-DIFF / MARKER-AWARE / USER-GENERATED). Die drei Klassen
+> unten sind die historische Kurzfassung — im Konflikt gewinnt das Manifest.
+
 ## Hintergrund
 
 `.template-version.json` markiert das Projekt als Instanz von

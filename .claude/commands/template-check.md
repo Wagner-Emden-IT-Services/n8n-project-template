@@ -1,7 +1,7 @@
 <!-- Copyright (c) 2025-2026 Wagner-Emden IT Services. All rights reserved. -->
 ---
 user-invocable: true
-description: Prueft ob das Golden-Dev-Template aktuell ist. Read-only, kein Schreiben.
+description: Prueft ob das n8n Project Template aktuell ist. Read-only, kein Schreiben.
 argument-hint: ""
 allowed-tools: Bash(git:*), Bash(rm:*), Bash(mkdir:*), Read
 ---

@@ -59,6 +59,12 @@ gh issue list --state open --json number,title,labels,assignees,createdAt --limi
 | 9 | P2-Issue offen | `/change-workflow --issue <N>` (geringer Druck) |
 | 10 | Keine pending Items | "Alles aktuell. /change-workflow fuer neues Feature, oder /next-recommend --explain." |
 
+**Zusatz-Heuristiken** (ergaenzen die Empfehlung, keine eigene Prio-Stufe):
+
+- Empfohlenes Issue traegt `bug`-Label → vor dem Fix `/diagnosing-bugs` empfehlen (Root-Cause zuerst, siehe /change-workflow Schritt 1.6)
+- Anforderung unklar/frisch ohne Spec (keine WF-X, PRD-Luecken) → `/grill-with-docs` zum Schaerfen empfehlen
+- Session-Ende bzw. grosser Kontext bei offener Arbeit → `/handoff` empfehlen (docs/sessions/-Protokoll + STATE.md-Update)
+
 ### Schritt 5: Output
 
 ```

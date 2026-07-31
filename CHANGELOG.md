@@ -2,6 +2,40 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-07-31 — v1.1.0 (Prozess-Skills: mattpocock/skills adaptiert + Workflow-Verdrahtung)
+
+Sieben Prozess-Skills aus [mattpocock/skills](https://github.com/mattpocock/skills) (MIT, Upstream-Commit `2ab9580` vom 2026-07-28) projekt-lokal vendored, fuer n8n adaptiert und an die bestehenden Pipeline-Gates verdrahtet.
+
+### Added
+
+- **`.claude/skills/{grilling,grill-me,grill-with-docs,domain-modeling,handoff,diagnosing-bugs,research}/`** — adaptierte Prozess-Skills (Details + Attribution: `.claude/skills/_README.md`, Lizenz: `.claude/skills/_LICENSE-mattpocock.md`). Kern-Adaptionen: `handoff` schreibt nach `docs/sessions/` + aktualisiert `docs/STATE.md` (statt OS-Temp) mit verschaerfter Secret-Redaktion; `diagnosing-bugs` mit n8n-Feedback-Loops (curl-gegen-Webhook, Execution-Replay, Pin-Daten) und Post-Mortem als GitHub-Issue; `research` mit Perplexity/Context7-Backends, Inline-Fallback fuer Sub-Agent-Kontexte und Zitierpflicht nach `docs/research/` bzw. `docs/integrations/<service>/`; `domain-modeling` auf `CONTEXT.md` + `docs/adr/` gemappt; `grill-with-docs` + `handoff` model-invoked gestellt (upstream user-only), damit Pipeline und Session-Ende-Check sie laden koennen.
+
+### Changed
+
+- **`.claude/commands/prd-generate.md`** — Standard-Schritt "Grilling-Pass" zwischen PRD-Generierung und `Status: APPROVED` (per `/grilling`, ueberspringbar nur durch aktive Owner-Entscheidung mit Vermerk).
+- **`.claude/agents/n8n-workflow-analyst.md`** — Spec-Phase schaerft unklare Anforderungen via `/grill-with-docs` vor dem Schreiben der WF-X-Spec; `Skill` in die Tool-Whitelist aufgenommen.
+- **`.claude/agents/n8n-integration-architect.md`** — API-Fakten zu Drittsystemen werden via `/research` belegt statt angenommen (inline, mit WebFetch/WebSearch-Fallback), bevor das Technical Design finalisiert wird; `Skill`, `WebFetch`, `WebSearch` in die Tool-Whitelist aufgenommen.
+- **`.claude/commands/change-workflow.md`** — Issue-/Bug-Fix-Modus: Pflicht-Diagnose-Phase via `/diagnosing-bugs` vor der Build-Phase; Phasen-Gates empfehlen `/handoff` bei Session-Wechsel.
+- **`.claude/rules/general.md`** — Session-Ende-Check um `/handoff` ergaenzt.
+- **`.claude/commands/help-workflow.md` / `.claude/commands/next-recommend.md`** — Prozess-Skills in `--first-steps` bzw. Empfehlungs-Heuristik aufgenommen.
+- **`CLAUDE.md`** — Marker-Block `n8n-pipeline` (v1.1.0): Prozess-Skills-Tabelle + Auto-loaded Skills der Spec-/Architecture-Phase erweitert. Section 14 Memory-System auf aktuelle Commands (`/remember`, `/memory-cleanup`, `/memory-install`) korrigiert.
+- **`.claude/commands/template-{check,update,migrate}.md`, `UPDATING.md`** — golden-dev Copy-Drift bereinigt (Naming + Referenzen auf nicht-existente Dateien). Darunter zwei Verhaltens-Fixes: der Bereits-installiert-Guard in `/template-migrate` prueft jetzt `template == "n8n-project"` (der alte Wert `"n8n-template"` konnte nie matchen — Erkennung war tot) und der Inventar-Scan nutzt `workflows/` statt des nicht-existenten `prompts/`. UPDATING.md-Klassen-Listen mit `protection-rules.json` abgeglichen (Phantom-Referenz `skills-context.md` entfernt, MARKER-AWARE auf die real existierenden Bloecke `bug-tracking` + `n8n-pipeline` reduziert).
+- **`.claude/rules/prd-required.md`** — widerspruechliche Bug-Fix-Ausnahme eindeutig formuliert: Bug-Fix an bestehendem Workflow = echte Ausnahme ohne Flag; `--bypass-prd` nur fuer neue Workflows ohne approved PRD.
+- **`.claude/rules/template-version-pinning.md`** — Hinweis ergaenzt, dass das 4-Tier-Modell (protection-rules.json + UPDATING.md) verbindlich ist; die 3-Klassen-Beschreibung ist historisch.
+- **`.n8n-template/Generate-Manifest.ps1`** — Manifest-Header `template` von `n8n-template` auf `n8n-project` korrigiert (matcht `.template-version.json`).
+- **`README.md`** — Feature-Bullet fuer die Prozess-Skills.
+- **`.n8n-template/protection-rules.json`** — Luecken geschlossen: Catch-all `.claude/commands/**` -> FROZEN (bisher fielen Commands ohne Einzel-Regel — u.a. das v1.0.0-`prd-generate.md` und alle Lint-/Deploy-Commands — still aus dem Manifest und wurden von `/template-update` NIE ausgeliefert; Doktrin lt. `template-version-pinning.md` ist Always-Overwrite fuer Commands). Zusaetzlich `.claude/rules/{prd-required,onboard-required,template-version-pinning}.md` -> FROZEN, `.claude/skills/_README.md` + `_LICENSE-mattpocock.md` + Companion-Dateien der Prozess-Skills (`domain-modeling/*`, `diagnosing-bugs/scripts/*`) -> UPDATABLE-WITH-DIFF. Tote Regel `.claude/skills/qa-workflow/SKILL.md -> FROZEN` entfernt (wurde von `.claude/skills/**/SKILL.md -> UPDATABLE-WITH-DIFF` bei first-match immer verdeckt; Manifest-Verhalten unveraendert). `managed_blocks` der CLAUDE.md auf die real existierenden Bloecke reduziert.
+- **`.n8n-template/manifest.json`** — regeneriert; war seit v0.6.0 stale (v0.7.0-/v1.0.0-/v1.1.0-Dateien fehlten). Neue Skills als UPDATABLE-WITH-DIFF.
+- **`docs/sessions/.gitkeep`** — Verzeichnis fuer `/handoff`-Session-Protokolle liegt jetzt im Template (Regel existierte bereits).
+- **`package.json` / `.template-version.json`** — Version auf `1.1.0`.
+
+### Notes
+
+- Kein neues Hard-Gate. Grilling-Pass und Diagnose-Phase sind Standard-Schritte der jeweiligen Commands, Bypass-Semantik unveraendert.
+- Doppel-Trigger-Hinweis: Plugin `mattpocock-skills` nicht parallel in Template-Projekten aktivieren (siehe `_README.md`).
+
+Konsumenten-Projekte ziehen v1.1.0 via `/template-update` (neue Skill-Ordner kommen als UPDATABLE-WITH-DIFF; der CLAUDE.md-Marker-Block `n8n-pipeline` wird ersetzt, Rest der CLAUDE.md bleibt User-Land).
+
 ## 2026-07-21 — v1.0.0 (PRD-First: /prd-generate + prd-required Hard-Gate)
 
 Loest das seit v0.5.0 als Roadmap gefuehrte PRD-First-Feature ein. `fixes #30`.

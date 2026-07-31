@@ -1,16 +1,16 @@
 <!-- Copyright (c) 2025-2026 Wagner-Emden IT Services. All rights reserved. -->
 ---
 user-invocable: true
-description: Migriert ein Projekt mit FREMDEM oder KEINEM Template auf das Golden-Dev-Template. Inventarisiert Bestand, schlaegt Mapping vor, schreibt nach Freigabe.
+description: Migriert ein Projekt mit FREMDEM oder KEINEM Template auf das n8n Project Template. Inventarisiert Bestand, schlaegt Mapping vor, schreibt nach Freigabe.
 argument-hint: "[--dry-run] (Default) | [--apply] | [--from <commit>] | [--source <repo-url>]"
 allowed-tools: Bash(git:*), Bash(rm:*), Bash(mkdir:*), Bash(cp:*), Bash(mv:*), Bash(ls:*), Bash(find:*), PowerShell, Read, Write, Edit, Glob, Grep, AskUserQuestion
 ---
 
-# /template-migrate — Projekt auf Golden-Dev-Template heben
+# /template-migrate — Projekt auf n8n Project Template heben
 
 Hebt ein bestehendes Projekt (kein Template oder Fremd-Template) auf das
-Golden-Dev-Template. Inventarisiert vorhandene Dev-Infrastruktur, mappt
-auf Golden-Dev-Aequivalente, fragt bei jedem Konflikt nach.
+n8n Project Template. Inventarisiert vorhandene Dev-Infrastruktur, mappt
+auf n8n-Template-Aequivalente, fragt bei jedem Konflikt nach.
 
 **Wann verwenden:**
 - Projekt hat kein `.template-version.json` und kein `.n8n-template/manifest.json`
@@ -31,8 +31,8 @@ auf Golden-Dev-Aequivalente, fragt bei jedem Konflikt nach.
 
 ### Schritt 1: Vorbedingungen
 
-1. Pruefe: ist das Projekt bereits Golden-Dev?
-   - `.template-version.json` mit `template == "n8n-template"` → STOPP, "Projekt ist bereits Golden-Dev. Fuer Updates: `/template-update`."
+1. Pruefe: ist das Projekt bereits auf dem n8n Project Template?
+   - `.template-version.json` mit `template == "n8n-project"` → STOPP, "Projekt basiert bereits auf dem n8n Project Template. Fuer Updates: `/template-update`."
 2. Git-Status sauber? Falls uncommitted Aenderungen: User-Frage "Migration mit uncommitted Changes durchfuehren? Empfehlung: erst committen oder stashen."
 3. Ist `gh` verfuegbar und `git` initialisiert? Falls nicht initialisiert: User-Frage "git-init durchfuehren?"
 
@@ -55,7 +55,7 @@ Scanne folgende Bereiche und sammele Befunde in `_migration-inventory.json` (tem
 - `.gitignore`
 - `docs/` (Files-Liste)
 - `docs/specs/INDEX.md` + Specs
-- `prompts/` (templates + sessions)
+- `workflows/` (n8n-Workflow-JSONs, falls vorhanden)
 - `.github/workflows/*`
 
 **Template-Marker (anderer Templates)**
@@ -76,7 +76,7 @@ git clone --depth 1 --branch main <source> $tmp
 
 Falls `--from`: `git checkout` im `$tmp`.
 
-REMOTE-Manifest in `$tmp/.n8n-template/manifest.json` lesen → liste aller Golden-Dev-Pflicht-Files.
+REMOTE-Manifest in `$tmp/.n8n-template/manifest.json` lesen → liste aller n8n-Template-Pflicht-Files.
 
 ### Schritt 4: Mapping-Vorschlag erstellen
 
@@ -98,7 +98,7 @@ Erzeuge eine Mapping-Tabelle. Pro Eintrag eine Decision-Klasse:
 **Inhalts-Mapping fuer geteilte Files:**
 - `CLAUDE.md` lokal hat z.B. eine "Tech Stack"-Sektion → wird in den REMOTE-MARKER-Block `tech-stack-summary` portiert. Andere lokale Inhalte → `<!-- PROJECT:START/END -->`-Block.
 - `.claude/rules/general.md` lokal hat eigene Sektionen → User-Frage pro Sektion: in REMOTE-`general.md` mergen oder als eigene Rule `.claude/rules/local-conventions.md`?
-- `.claude/rules/{frontend,backend,...}.md` lokal befuellt → bleibt drin (UPDATABLE-WITH-DIFF im Manifest, bei `/template-update` later mit Diff-Check).
+- `.claude/skills/<name>/SKILL.md` der bundled Skills lokal angepasst → bleibt drin (UPDATABLE-WITH-DIFF im Manifest, bei `/template-update` later mit Diff-Check).
 
 Schreibe Plan nach `.n8n-template/_migration-plan.md` (Markdown, lesbar fuer User).
 
@@ -113,7 +113,7 @@ Aktionen (Vorschau):
 
 AUTO-ADOPT (X)         — REMOTE installieren, lokal nach docs/legacy/
   ~ .claude/commands/onboard.md
-  ~ .claude/commands/change.md
+  ~ .claude/commands/change-workflow.md
   ...
 
 MAP-AND-PRESERVE (Y)   — lokaler Inhalt in MARKER-Block portieren
@@ -130,10 +130,10 @@ DROP (D)               — Anti-Pattern, wird archiviert
   ✗ .mcp.json mit hardcoded Token → docs/legacy/<datum>/.mcp.json, REMOTE-Stub installieren
   ...
 
-NEU (N)                — Golden-Dev-Files die lokal noch nicht existieren
+NEU (N)                — n8n-Template-Files die lokal noch nicht existieren
   + .n8n-template/manifest.json
-  + .claude/hooks/inject-memory.ps1
-  + .claude/memory/{decisions,domains,programs,tools}/README.md
+  + scripts/n8n-cli.mjs
+  + .github/workflows/validate-workflows.yml
   ...
 
 Versions-Stempel: .template-version.json wird mit version=v<VERSION>, installed_via="migrate" angelegt.
@@ -189,12 +189,12 @@ Erzeuge `_migration-overrides.json` aus den User-Entscheidungen und rufe `Apply-
 .template-version.json:
 {
   "schema_version": "1.2",
-  "template": "n8n-template",
+  "template": "n8n-project",
   "version": "<REMOTE-VERSION>",
   "installed_at": "<heute>",
   "installed_via": "migrate",
   "source_repo": "<source>",
-  "target_repo": null,         // wird von /onboard Phase 5.7 befuellt
+  "target_repo": null,         // wird von /onboard (Phase 2/6 GitHub-Setup) befuellt
   "customer_slug": null,
   "project_slug": null,
   "manifest_path": ".n8n-template/manifest.json",
@@ -226,7 +226,7 @@ Wenn REMOTE-Version `>= 1.7.0`: nach erfolgreicher 8d (Manifest-Init) folgt auto
 
 Voraussetzungen:
 - `gh auth status` OK
-- `.template-version.json` `target_repo` muss bereits gesetzt sein. Bei `/template-migrate` ist das typischerweise noch null — in diesem Fall wird die Bug-Migration **verschoben**: User bekommt Hinweis "Bug-Migration uebersprungen — wird beim naechsten `/template-update` nach erfolgreichem `/onboard` Phase 5.7 nachgeholt." Audit-Eintrag `BUG_MIGRATION_DEFERRED`.
+- `.template-version.json` `target_repo` muss bereits gesetzt sein. Bei `/template-migrate` ist das typischerweise noch null — in diesem Fall wird die Bug-Migration **verschoben**: User bekommt Hinweis "Bug-Migration uebersprungen — wird beim naechsten `/template-update` nach erfolgreichem GitHub-Setup via `/onboard` (Phase 2/6) nachgeholt." Audit-Eintrag `BUG_MIGRATION_DEFERRED`.
 
 Bei vorhandenem target_repo: Ablauf identisch zu /template-update Schritt 1b-v17 (Scan, User-Choice, gh issue create, Source-File-Cross-Reference, Audit-Log).
 
@@ -244,7 +244,7 @@ Bei vorhandenem target_repo: Ablauf identisch zu /template-update Schritt 1b-v17
   Migration abgeschlossen — n8n-template v<VERSION> installiert.
   
   Verifikations-Schritte:
-    1. /onboard durchlaufen — Phasen 0.5-5.7 (Customer-Identity, PRD, Stack, Skills, Bootstrap, GitHub).
+    1. /onboard durchlaufen — Phasen 0-7 (Project Identity, Staging, GitHub, Hosting, Credentials, Optionen, Bootstrap, PRD).
     2. /template-check — sollte "aktuell" melden.
     3. /template-update --apply (Dry-Run) — sollte 0 Konflikte und 0 Updates zeigen.
     4. docs/legacy/<datum>/MIGRATION_REPORT.md durchlesen + bestaetigen.

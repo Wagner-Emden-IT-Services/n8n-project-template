@@ -112,7 +112,23 @@
       "protection": "UPDATABLE-WITH-DIFF"
     },
     {
+      "glob": ".claude/skills/_README.md",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": ".claude/skills/_LICENSE-mattpocock.md",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
       "glob": ".claude/skills/**/SKILL.md",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": ".claude/skills/domain-modeling/*",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": ".claude/skills/diagnosing-bugs/scripts/*",
       "protection": "UPDATABLE-WITH-DIFF"
     },
     {
@@ -273,10 +289,6 @@
       "protection": "FROZEN"
     },
     {
-      "glob": ".claude/skills/qa-workflow/SKILL.md",
-      "protection": "FROZEN"
-    },
-    {
       "glob": ".git-hooks/pre-commit",
       "protection": "FROZEN"
     },
@@ -312,12 +324,25 @@
       "glob": "CLAUDE.md",
       "protection": "MARKER-AWARE",
       "managed_blocks": [
-        "tech-stack-summary",
-        "memory-loading",
-        "mcp-servers",
         "bug-tracking",
         "n8n-pipeline"
       ]
+    },
+    {
+      "glob": ".claude/rules/prd-required.md",
+      "protection": "FROZEN"
+    },
+    {
+      "glob": ".claude/rules/onboard-required.md",
+      "protection": "FROZEN"
+    },
+    {
+      "glob": ".claude/rules/template-version-pinning.md",
+      "protection": "FROZEN"
+    },
+    {
+      "glob": ".claude/commands/**",
+      "protection": "FROZEN"
     }
   ]
 }

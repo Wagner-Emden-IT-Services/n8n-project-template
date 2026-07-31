@@ -1,6 +1,6 @@
-# UPDATING — n8n-Template-Template lebenszyklus
+# UPDATING — n8n-Project-Template-Lebenszyklus
 
-Wie das n8n-Template-Template in einem Projekt installiert, aktualisiert und
+Wie das n8n Project Template in einem Projekt installiert, aktualisiert und
 migriert wird. Geschrieben fuer die Person, die ein Projekt betreut (du,
 spaeter ggf. neuer Kollege).
 
@@ -17,7 +17,8 @@ Wird durch den Wizard gefuehrt (Customer-Identity, PRD, Deep Research, Skills, R
 **Option B — leeres Projekt manuell:**
 ```bash
 git clone --depth 1 https://github.com/Wagner-Emden-IT-Services/n8n-project-template /tmp/n8n-template
-cp -r /tmp/n8n-template/files/. .
+rm -rf /tmp/n8n-template/.git
+cp -r /tmp/n8n-template/. .
 pwsh .n8n-template/Generate-Manifest.ps1 -Root . -TemplateVersion <version>
 ```
 Danach `.template-version.json` bearbeiten (`installed_at`, `customer_slug`, `project_slug`).
@@ -46,7 +47,7 @@ Was `/template-update` macht:
 7. Aktualisiert Manifest + `.template-version.json`, schreibt `.n8n-template/audit.log`.
 
 **Was wird nicht angefasst:**
-- Alles unter `docs/` (PRD, PROJECT_CONTEXT, ONBOARD_LOG, RESEARCH, STACK-DECISIONS)
+- Alles unter `docs/` (PRD, ONBOARD_LOG, STATE, Integrations-Doku)
 - `docs/specs/` komplett (Specs + INDEX)
 - `docs/sessions/`
 - `.claude/customer.json`
@@ -56,19 +57,21 @@ Was `/template-update` macht:
 **Was kann mit Backup ueberschrieben werden (FROZEN):**
 - `.claude/commands/*.md` (Template-Code)
 - `.claude/agents/*.md`
-- `.claude/hooks/*.ps1`
-- `.claude/rules/general.md`, `security.md`, `capability-map.md`
-- `prompts/templates/*.md`
+- `.n8n-template/*.ps1` (Update-/Manifest-Skripte)
+- `.claude/rules/general.md`, `prd-required.md`, `onboard-required.md`, `template-version-pinning.md`
+- `.git-hooks/pre-commit`
 - `.claude/settings.json`
 - `.gitignore`, `UPDATING.md`
 
 **Wo Konflikte gefragt werden (UPDATABLE-WITH-DIFF):**
-- `.claude/rules/frontend.md`, `backend.md`, `environments.md`, `mcp-servers.md`, `skills-context.md` (Stack-spezifisch, Onboarding-befuellt)
 - `.claude/skills/<name>/SKILL.md` der bundled Skill-Stubs
-- `.github/workflows/ci.yml`
+- `.claude/skills/_README.md`, `_LICENSE-mattpocock.md` sowie die Companion-Dateien der
+  Prozess-Skills (`domain-modeling/*`, `diagnosing-bugs/scripts/*`)
+- `scripts/n8n-cli.mjs`, `config/staging-profiles/*.yaml`
+- `.github/workflows/validate-workflows.yml`, `normalize-check.yml`, `issue-triage.yml`, `pr-issue-link-check.yml`
 
 **Wo Block-fuer-Block gemergt wird (MARKER-AWARE):**
-- `CLAUDE.md` (Bloecke `tech-stack-summary`, `active-skills`, `mcp-servers`, `memory-loading`)
+- `CLAUDE.md` (Bloecke `bug-tracking`, `n8n-pipeline`)
 
 ## 3. Migration aus Fremd-Template
 
@@ -129,7 +132,7 @@ Hier steht freier projekt-eigener Text. Wird bei Update NIE angefasst.
 Bei `UPDATABLE-WITH-DIFF` und `CONFLICT`-Aktion zeigt `/template-update --apply` pro File:
 
 ```
-[CONFLICT] .claude/rules/frontend.md
+[CONFLICT] scripts/n8n-cli.mjs
   BASE   = abc123...   (lieferte v1.5.0)
   LOCAL  = def456...   (du hast es im April geaendert)
   REMOTE = ghi789...   (neuer Stand v1.6.0)
@@ -164,7 +167,7 @@ das Schema automatisch hochziehen:
 | Feld | Schema 1.1 | Schema 1.2 |
 |------|------------|------------|
 | `schema_version` | "1.1" | "1.2" |
-| `template` | "n8n-template" | "n8n-template" |
+| `template` | "n8n-project" | "n8n-project" |
 | `version` | "1.5.0" | "1.5.0" |
 | `installed_at` | Datum | Datum |
 | `source_repo` | URL | URL |
@@ -182,26 +185,26 @@ Beim Auto-Upgrade:
 
 ## 8. Issue-Workflow + Repo-Pflicht (seit v1.7.0)
 
-Seit v1.7.0 ist die **GitHub-Repo-Anlage Pflicht** (`/onboard` Phase 5.7). Bug-Tracking erfolgt **ausschliesslich ueber GitHub-Issues** — KEINE Bug-Sektionen in PROJ-X-Specs, KEIN Bug-Memory.
+Seit v1.7.0 ist die **GitHub-Repo-Anlage Pflicht** (`/onboard` Phase 2/6). Bug-Tracking erfolgt **ausschliesslich ueber GitHub-Issues** — KEINE Bug-Sektionen in WF-X-Specs, KEIN Bug-Memory.
 
 ### Bug-Workflows
 
 | Wer | Wie |
 |---|---|
 | Mensch direkt | `gh issue create` (Template-Picker zeigt `01-bug.yml`) |
-| /change-Klassifizierung erkennt Bug | AskUserQuestion ob Issue anlegen, dann Branch `fix/issue-N-<slug>` |
-| /qa-Skill bei FAIL | Auto-File bei P0/P1 (mit `priority:P0`/`P1`-Label), User-Choice-Liste bei P2/P3 |
+| /change-workflow-Klassifizierung erkennt Bug | AskUserQuestion ob Issue anlegen, dann Branch `fix/issue-<N>-<slug>` |
+| /qa-workflow-Skill bei FAIL | Auto-File bei P0/P1 (mit `priority:P0`/`P1`-Label), User-Choice-Liste bei P2/P3 |
 | Template-Bug (Skill/Hook/Command) | `/template-bugreport` — Sanitisiert + Privacy-Hard-Gate ins n8n-template-Source-Repo |
 
 ### Issue-Abarbeitung
 
-- **Einzeln:** `/change --issue <N>` → Branch `fix/issue-N-<slug>` → PR-Body `Closes #N` → Auto-Close beim Merge
-- **Multi-Batch (parallel):** `/change --issues [--priority P0,P1] [--milestone <name>] [--max-parallel 3]` → bis zu 3 Worktrees parallel via Fall G (Multi-Agent-Teams)
+- **Einzeln:** `/change-workflow --issue <N>` → Branch `fix/issue-<N>-<slug>` → PR-Body `Closes #N` → Auto-Close beim Merge
+- **Multi-Batch (parallel):** `/change-workflow --issues [--priority P0,P1] [--milestone <name>] [--max-parallel 3]` → bis zu 3 Worktrees parallel via Multi-Agent-Teams
 - **Konflikt-Detection:** Orchestrator-Agent erkennt File-Overlap zwischen Issues → ueberlappende Issues sequenziell statt parallel
 
 ### Default-Label-Set
 
-15 Labels werden bei `/onboard` Phase 5.7.5b auto-deployt (via `Deploy-Labels.ps1`):
+15 Labels werden via `Deploy-Labels.ps1` deployt:
 
 - `bug` `enhancement` `feature` `qa-found`
 - `origin:template` `origin:project`
@@ -232,14 +235,14 @@ Bei `/template-migrate` analog (Sub-Phase 8f).
 
 ### CI-Workflows (committet, GitHub aktiviert automatisch)
 
-- `.github/workflows/issue-triage.yml` — Auto-Label nach Title-Pattern (`[BUG]` → `bug`, `[QA]` → `qa-found`, `[FEAT]` → `feature`, `[TEMPLATE-BUG]` → `template-bug`)
+- `.github/workflows/issue-triage.yml` — Auto-Label nach Title-Pattern (`[BUG]` → `bug`, `[QA]` → `workflow-bug`, `[FEAT]` → `feature`, `[TEMPLATE-BUG]` → `template-bug`)
 - `.github/workflows/pr-issue-link-check.yml` — Informativer Comment wenn PR-Body kein `Closes #N` enthaelt (nicht-blocking)
 
 Beide UPDATABLE-WITH-DIFF — koennen vom User erweitert werden.
 
 ### Was tun wenn das Repo doch fehlt
 
-`/onboard --no-repo` ist die einzige offizielle Skip-Option. In diesem Modus sind Issue-Workflows deaktiviert und die Bug-Migration v1.6→v1.7 wird verschoben (`BUG_MIGRATION_DEFERRED` im Audit). Beim ersten `/template-update` nach nachgeholter Phase 5.7 wird sie nachgeholt.
+Wenn `gh` nicht verfuegbar/authentifiziert ist, ueberspringt `/onboard` die GitHub-Schritte automatisch mit Warnung (Phase 2). In diesem Modus sind Issue-Workflows deaktiviert und die Bug-Migration v1.6→v1.7 wird verschoben (`BUG_MIGRATION_DEFERRED` im Audit). Beim ersten `/template-update` nach nachgeholtem GitHub-Setup (Phase 2/6) wird sie nachgeholt.
 
 ## 9. Bei Problemen
 

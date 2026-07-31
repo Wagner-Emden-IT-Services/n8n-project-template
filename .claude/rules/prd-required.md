@@ -56,8 +56,9 @@ Begruendung. Nur fuer Hotfixes gedacht — Default-Bypass ist ein Anti-Pattern.
 - Template-Lifecycle: `/template-check`, `/template-update`, `/template-migrate`,
   `/template-bugreport`.
 - Bug-Fix-Phase mit `--issue <N>` an einem **bestehenden** Workflow (kein neuer Build):
-  Gate greift nur fuer neu gebaute Workflows; Hotfixes an Live-Workflows laufen mit
-  `--bypass-prd` + Audit-Log.
+  echte Ausnahme, kein Flag noetig — das Gate greift nur fuer neu gebaute Workflows.
+  `--bypass-prd` + Audit-Log ist ausschliesslich fuer neue Workflows / Feature-Aenderungen
+  ohne approved PRD gedacht (Hotfix-Sonderfall, siehe oben).
 
 ## Bezug PRD vs. WF-X-Spec
 

@@ -102,6 +102,9 @@ Nach Abschluss einer Pipeline-Phase MUSS:
 ## Session-Ende Check
 
 Bevor eine Session endet:
-- `git diff --name-only` — keine uncommitted Aenderungen darf uebrig sein
+- Bei weiterlaufender Arbeit (naechste Session geplant): zuerst `/handoff` ausfuehren — schreibt
+  ein Session-Protokoll nach `docs/sessions/` und aktualisiert `docs/STATE.md` (Write-Then-Verify).
+  Die Handoff-Artefakte danach mit User-OK committen (Human-in-the-Loop, kein Auto-Commit)
+- Dann `git diff --name-only` — keine uncommitted Aenderungen darf uebrig sein
 - Falls doch: User informieren + klaeren (commit / stash / verwerfen)
 - Niemals Session beenden mit uncommitteten Aenderungen ohne explizites OK

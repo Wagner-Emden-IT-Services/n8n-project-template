@@ -1,12 +1,12 @@
 <!-- Copyright (c) 2025-2026 Wagner-Emden IT Services. All rights reserved. -->
 ---
 user-invocable: true
-description: Aktualisiert das Golden-Dev-Template aus GitHub mit Hash-Manifest, 3-Wege-Diff und 4-Tier-Schutz. Default Dry-Run.
+description: Aktualisiert das n8n Project Template aus GitHub mit Hash-Manifest, 3-Wege-Diff und 4-Tier-Schutz. Default Dry-Run.
 argument-hint: "[--apply] um wirklich zu schreiben. [--force-frozen] ueberschreibt geaenderte FROZEN-Files ohne Backup-Bestaetigung."
 allowed-tools: Bash(git:*), Bash(rm:*), Bash(mkdir:*), Bash(mv:*), Bash(ls:*), PowerShell, Read, Write, Edit, AskUserQuestion
 ---
 
-# /template-update — Golden-Dev-Template aktualisieren
+# /template-update — n8n Project Template aktualisieren
 
 Aktualisiert das Template auf die neueste Version von GitHub. Sicher dank
 **4-Tier-Schutz** und **3-Wege-Diff** ueber `.n8n-template/manifest.json`.
@@ -58,7 +58,7 @@ Aktiv wenn lokale Version `< 1.7.0` UND REMOTE-Version `>= 1.7.0`. Konvention se
 
 **Voraussetzungen:**
 - `gh auth status` OK (sonst STOPP: User soll `gh auth login` durchlaufen)
-- `.template-version.json` `target_repo` muss befuellt sein (sonst STOPP: "Kein Repo — /onboard Phase 5.7 nachholen bevor v1.7-Migration moeglich ist. Alternative: `/template-update --skip-bug-migration` ueberspringt nur diesen Schritt mit Warnung im Audit-Log.")
+- `.template-version.json` `target_repo` muss befuellt sein (sonst STOPP: "Kein Repo — GitHub-Setup via /onboard (Phase 2/6) nachholen bevor v1.7-Migration moeglich ist. Alternative: `/template-update --skip-bug-migration` ueberspringt nur diesen Schritt mit Warnung im Audit-Log.")
 
 **Ablauf:**
 
@@ -77,13 +77,13 @@ Aktiv wenn lokale Version `< 1.7.0` UND REMOTE-Version `>= 1.7.0`. Konvention se
 
    | # | Datei                  | Kind          | Vorschlag-Titel                       |
    |---|------------------------|---------------|---------------------------------------|
-   | 1 | docs/specs/PROJ-13-...   | spec-section  | [BUG] PROJ-13: Known Bugs (...)       |
+   | 1 | docs/specs/WF-13-...   | spec-section  | [BUG] WF-13: Known Bugs (...)         |
    | 2 | .claude/memory/...     | memory-marker | [BUG] Memory: Login bricht bei Safari |
    | 3 | docs/QA-FINDINGS.md    | docs-bullet   | [BUG] Doc-Migration: Timeout in cron  |
    ```
 
 5. **Pro Finding User-Choice** (AskUserQuestion in Batch oder einzeln):
-   - `[a]nlegen` — Issue im target_repo via `gh issue create --template 02-qa-finding.yml` mit `body_draft` als Body
+   - `[a]nlegen` — Issue im target_repo via `gh issue create --template 02-workflow-bug.yml` mit `body_draft` als Body
    - `[s]kippen` — Finding bleibt unangetastet, aber NICHT als Issue
    - `[r]edraft` — User editiert title + body inline
    - `[d]rop` — Finding ist nicht relevant (z.B. False-Positive), wird nicht angefasst
@@ -156,25 +156,25 @@ Template-Update: n8n-template v{from} -> v{to}
 
 Sichere Updates (X)
   ~ .claude/commands/onboard.md
-  ~ .claude/commands/change.md
+  ~ .claude/commands/change-workflow.md
   ...
 
 Neue Dateien (Y)
-  + .claude/skills/architecture/SKILL.md
+  + .claude/skills/qa-workflow/SKILL.md
   ...
 
 MARKER-MERGE (Z)
   ⬚ CLAUDE.md (Bloecke: tech-stack-summary, memory-loading, ...)
 
 Konflikte (UPDATABLE-WITH-DIFF, A)
-  ! .claude/rules/frontend.md — lokal angepasst und REMOTE geaendert
-  ! .claude/rules/backend.md — lokal angepasst und REMOTE geaendert
+  ! scripts/n8n-cli.mjs — lokal angepasst und REMOTE geaendert
+  ! .github/workflows/validate-workflows.yml — lokal angepasst und REMOTE geaendert
 
 FROZEN-Overwrite-Warnungen (B)
   ⚠ .claude/settings.json — lokal angepasst, Update wuerde mit Backup ueberschreiben
 
 Orphans (C — in BASE aber nicht mehr in REMOTE)
-  ? prompts/templates/feature-old-template.md
+  ? .claude/commands/change.md
 
 Unveraendert (D), KEEP-LOCAL (E)   [Details auf Anfrage]
 ```

@@ -1,7 +1,7 @@
 ---
 name: n8n-workflow-analyst
 description: Uebersetzt Business-Prozesse in strukturierte Workflow-Specifications (WF-X.md). Use proaktiv beim Anfangen eines neuen n8n-Workflows, bevor irgendetwas gebaut wird.
-tools: Read, Glob, Grep, Write, Edit, AskUserQuestion
+tools: Read, Glob, Grep, Write, Edit, AskUserQuestion, Skill
 model: sonnet
 ---
 
@@ -57,6 +57,9 @@ Nutze AskUserQuestion fuer interaktive Fragen:
 - Was sind die Sonderfaelle / Fehlersituationen?
 
 ### Phase 3: Spec schreiben
+Vor dem Schreiben: unklare oder mehrdeutige Anforderungen per `/grill-with-docs`
+schaerfen (grilling + domain-modeling — baut nebenbei `CONTEXT.md`/ADRs auf).
+Primaeres Grilling-Material sind die Acceptance Criteria und Error Scenarios der Spec.
 Erstelle vollstaendige Spec nach `docs/specs/spec-template.md`.
 
 ### Phase 4: User Review
