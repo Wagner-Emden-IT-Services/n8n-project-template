@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "template": "n8n-project",
   "template_version": "1.2.0",
-  "frozen_at": "2026-07-31T14:35:45Z",
+  "frozen_at": "2026-07-31T14:39:44Z",
   "rules_source": ".n8n-template/protection-rules.json",
   "counts": {
     "frozen": 44,
@@ -671,12 +671,12 @@
     {
       "path": "package-lock.json",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "9641a17438858ed8bc2fd66182813fc86ffde3da33aede7ec6b7652232def3d1"
+      "sha256": "b8a6fceb2a1bab18cd7c1c69f91ac90417323b9aa96e763fda22c095344339a6"
     },
     {
       "path": "package.json",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "4b5bf7cb1580087260d4369cc8822248f1bef8b3a500fdeac7d9853ef96fc692"
+      "sha256": "9c87dd8b3a18bfc78eb9900b591c1e73fa7c649bafb8aacf1b290be7ac300b0d"
     },
     {
       "path": "README.md",
