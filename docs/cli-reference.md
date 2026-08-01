@@ -115,6 +115,41 @@ Vergleicht Repo-Workflows mit Live-Instanz. Exit 1 bei Drift, optional Markdown-
 node scripts/n8n-cli.mjs drift-check --env=prod --output=drift-report.md
 ```
 
+### `env-sync`
+
+Generiert bzw. aktualisiert `.claude/settings.local.json` (env-Block) aus der Projekt-`.env`.
+
+**Zweck:** Claude Code laedt die Projekt-`.env` fuer die `${VAR}`-Expansion in `.mcp.json`
+**NICHT** — die MCP-Server sehen nur die Shell-Umgebung und die `env`-Bloecke der
+Settings-Dateien. Ohne Sync starten die MCP-Server mit Literal-`${VAR}`-Werten
+(Fehlerbild: `'url' is not a valid URL` bzw. stiller Teilausfall des stdio-Servers).
+`env-sync` liest die `.env` (nur Datei-Inhalt, nie `process.env`), extrahiert alle
+`N8N_ACTIVE_*`-Variablen (exakt das Set, das `.mcp.json` referenziert — PROD-/STAGING-/DEV-Secrets bleiben bewusst draussen) und merged sie in den `env`-Block — bestehende andere Keys
+und andere Top-Level-Settings (z.B. `permissions`) bleiben unangetastet (relates to #39).
+
+| Flag | Pflicht | Default | Beschreibung |
+|---|---|---|---|
+| `--dry-run` | nein | `false` | Nur Plan anzeigen (Werte maskiert, nie Klartext-Secrets), nichts schreiben |
+| `--prune` | nein | `false` | `N8N_ACTIVE_*`-Keys entfernen, die nicht mehr in `.env` stehen |
+
+**Verhalten:**
+
+- Ohne `.env` im Projekt-Root: sprechender Fehler (zuerst `.env` aus `.env.example` anlegen).
+- Write ist atomar (Temp-File + Rename), UTF-8 ohne BOM, 2-space-indent.
+- Nach dem Sync: **Claude Code neu starten**, damit die MCP-Server die Werte sehen.
+- Bei Key-Rotation: `.env` aendern, dann `env-sync` erneut ausfuehren (eine Quelle, zwei Konsumenten).
+
+```bash
+# Plan anzeigen (maskiert)
+node scripts/n8n-cli.mjs env-sync --dry-run
+
+# Sync ausfuehren
+node scripts/n8n-cli.mjs env-sync
+
+# Sync inkl. Entfernen nicht mehr vorhandener N8N_*-Keys
+node scripts/n8n-cli.mjs env-sync --prune
+```
+
 ## CI-Workflow-Cheatsheet
 
 Korrekte CLI-Aufrufe in `.github/workflows/*.yml`:

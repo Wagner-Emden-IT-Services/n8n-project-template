@@ -43,3 +43,4 @@ drift-report.md
 # Test-Outputs
 tests/output/
 *.test.local.json
+.claude/settings.local.json.tmp

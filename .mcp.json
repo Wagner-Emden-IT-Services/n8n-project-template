@@ -6,7 +6,7 @@
       "headers": {
         "Authorization": "Bearer ${N8N_ACTIVE_MCP_TOKEN}"
       },
-      "_comment": "Built-in n8n-MCP-Server (Instance-level MCP, seit n8n 2.x). Default-Endpoint ist <base>/mcp-server/http — bei Bedarf in der n8n-UI verifizieren (Settings -> Instance-level MCP -> Connection details -> Access Token). Token ebenfalls dort generieren. Vor jedem Switch nach staging/prod: .env anpassen UND Claude Code neu starten."
+      "_comment": "Built-in n8n-MCP-Server (Instance-level MCP, seit n8n 2.x). Default-Endpoint ist <base>/mcp-server/http — bei Bedarf in der n8n-UI verifizieren (Settings -> Instance-level MCP -> Connection details -> Access Token). Token ebenfalls dort generieren. Vor jedem Switch nach staging/prod: .env anpassen, node scripts/n8n-cli.mjs env-sync ausfuehren (schreibt den env-Block in .claude/settings.local.json — Claude Code laedt die Projekt-.env NICHT) UND Claude Code neu starten."
     },
     "n8n-mcp": {
       "type": "stdio",

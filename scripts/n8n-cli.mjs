@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // n8n-CLI — Cross-Platform-Ersatz fuer alle scripts/*.sh und *.ps1.
-// Subcommands: deploy, backup, export, validate, normalize, drift-check.
+// Subcommands: deploy, backup, export, validate, normalize, drift-check, env-sync.
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { resolve, join, basename, relative, dirname } from 'node:path';
@@ -13,12 +13,15 @@ import { sanitizeForWrite } from './lib/sanitize.mjs';
 import { normalizeWorkflow, stringifyWorkflow } from './lib/normalize.mjs';
 import { validateWorkflow, formatErrors } from './lib/validate.mjs';
 import { applyEnvMapping } from './lib/env-mapper.mjs';
+import { runEnvSync } from './lib/env-sync.mjs';
 
 const program = new Command();
 program
   .name('n8n-cli')
-  .description('n8n-Workflow-Operations: deploy, backup, export, validate, normalize, drift-check')
-  .version('0.2.0');
+  .description(
+    'n8n-Workflow-Operations: deploy, backup, export, validate, normalize, drift-check, env-sync',
+  )
+  .version('0.3.0');
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'));
@@ -114,6 +117,11 @@ program
       const created = await client.createWorkflow(body);
       const newId = created.id || created?.data?.id || '<unknown>';
       console.log(chalk.green(`  ✓ Created workflow ${newId}`));
+      if (raw.active === true) {
+        // 'active' is read-only in write bodies since n8n 2.x (#41) — the intent
+        // in the repo JSON would otherwise get lost silently.
+        console.log(chalk.yellow(`  ! Workflow inaktiv erstellt — Aktivierung laeuft separat (n8n-UI oder MCP activate_workflow)`));
+      }
     }
     console.log(chalk.green('OK Deploy fertig'));
   });
@@ -314,6 +322,18 @@ program
       console.log(md);
       process.exit(1);
     }
+  });
+
+// ---------------- env-sync ----------------
+program
+  .command('env-sync')
+  .description(
+    'Synct N8N_*-Variablen aus .env in den env-Block von .claude/settings.local.json (Claude Code laedt die Projekt-.env fuer .mcp.json NICHT).',
+  )
+  .option('--dry-run', 'Nur Plan anzeigen (Werte maskiert), nichts schreiben', false)
+  .option('--prune', 'N8N_*-Keys entfernen, die nicht mehr in .env stehen', false)
+  .action((opts) => {
+    runEnvSync({ dryRun: opts.dryRun, prune: opts.prune });
   });
 
 program.parseAsync(process.argv).catch((err) => {
