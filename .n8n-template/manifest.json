@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "template": "n8n-project",
   "template_version": "1.3.0",
-  "frozen_at": "2026-08-01T12:15:18Z",
+  "frozen_at": "2026-08-01T12:16:45Z",
   "rules_source": ".n8n-template/protection-rules.json",
   "counts": {
     "frozen": 44,
