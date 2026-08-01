@@ -1,5 +1,33 @@
 # Troubleshooting
 
+## MCP-Server ohne API-Anbindung / "Failed to reconnect to n8n: 'url' is not a valid URL"
+
+Symptome:
+
+- Der http-Server `n8n` (Built-in-MCP) verbindet nicht: **"Failed to reconnect to n8n: 'url' is not a valid URL"** — Claude Code hat den literalen Text `${N8N_ACTIVE_MCP_URL}` als URL verwendet.
+- Der stdio-Server `n8n-mcp` startet scheinbar normal, läuft aber ohne API-Anbindung (leere env-Werte) — stiller Teilausfall.
+
+Root Cause: **Claude Code lädt die Projekt-`.env` nicht.** Die `${VAR}`-Expansion in `.mcp.json` zieht ausschließlich aus (1) der Shell-Umgebung und (2) den `env`-Blöcken der settings-Dateien (`settings.local.json` > `settings.json` > user-global). Ist eine Variable ungesetzt, lädt die Config trotzdem — der Literal-Text `${VAR}` wird as-is verwendet. Die `.env` versorgt nur die Node-CLI (dotenv).
+
+Fix: `node scripts/n8n-cli.mjs env-sync` ausführen — generiert `.claude/settings.local.json` (auto-gitignored) aus der `.env`. Alternativ manuell anlegen:
+
+```json
+{
+  "env": {
+    "N8N_ACTIVE_BASE_URL": "...",
+    "N8N_ACTIVE_API_URL": "...",
+    "N8N_ACTIVE_API_KEY": "...",
+    "N8N_ACTIVE_MCP_URL": "...",
+    "N8N_ACTIVE_MCP_TOKEN": "...",
+    "N8N_ACTIVE_ENV": "prod"
+  }
+}
+```
+
+**Nach jeder Änderung Claude Code neu starten** — auch nach Env-Wechseln (dev/staging/prod).
+
+Quellen: [code.claude.com/docs/en/mcp.md](https://code.claude.com/docs/en/mcp.md) (Environment variable expansion + missing-variable-Verhalten), [code.claude.com/docs/en/settings.md](https://code.claude.com/docs/en/settings.md) (`env`-Block, `settings.local.json` auto-gitignored).
+
 ## "Nur Batch 1 wird verarbeitet" bei Pagination
 
 Symptom: HTTP-Pagination liefert mehrere Batches, aber nachfolgende Code-Node sieht nur den ersten.

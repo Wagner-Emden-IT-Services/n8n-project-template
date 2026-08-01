@@ -2,6 +2,36 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-08-01 — v1.3.0 (Produktiv-Feedback-Batch: Deploy-Blocker, 2.x-Drift, MCP-Env, In-place-Installation)
+
+Reaktion auf das erste Produktiv-Feedback zu v1.1.0/v1.2.0 aus einem Customer-Projekt (n8n 2.31.5, via `/template-bugreport`). `fixes #37, #39, #40, #41`.
+
+### Added
+
+- **`/onboard --into-existing`** (#37) — In-place-Installation in ein bestehendes, nicht-leeres Projektverzeichnis. Auto-Detection (Verzeichnis nicht leer + keine Template-Marker) bietet den Modus an; Kollisions-Report VOR jedem Schreiben; 5 erprobte Strategien: bestehende `CLAUDE.md` -> `docs/PROJECT_CONTEXT.md` + `@`-Import, `docs/`-Merge (STOPP bei Namenskonflikt), `settings.json`-JSON-Merge, `.mcp.json`-Klartext-Secrets -> `.env`-Migration (nur nach Secret-Gate-Bestaetigung pro Datei), Git-Scope-Frage -> `.gitignore`. ONBOARD_LOG dokumentiert alle Entscheidungen; `installed_via: "onboard-into-existing"`.
+- **`node scripts/n8n-cli.mjs env-sync`** (#39) — generiert/merged den `env`-Block von `.claude/settings.local.json` aus der `.env`. Bewusst NUR die `N8N_ACTIVE_*`-Variablen (exakt das Set, das `.mcp.json` referenziert — PROD-/STAGING-/DEV-Secrets aus Full-Profil-`.env`s landen nicht in der Subprozess-Umgebung). `--dry-run` (maskierte Werte), `--prune`; inhaltsfreier Fehler bei kaputtem `settings.local.json` (kein Secret-Fragment im Terminal), Temp-File wird im Fehlerpfad geloescht + ist gitignored. 11 neue Tests. CLI-Version 0.3.0.
+- **`docs/troubleshooting.md`**: Sektion zum MCP-Env-Fehlerbild ("Failed to reconnect to n8n: 'url' is not a valid URL" / stiller stdio-Teilausfall) mit Fix + Quellen.
+
+### Fixed
+
+- **#41 (Deploy-Blocker):** `active` in `READONLY_FIELDS` von `sanitize.mjs` — n8n 2.x lehnt das Feld im Request-Body mit `400 request/body/active is read-only` ab; jeder Neu-Deploy via CLI scheiterte. Aktivierung laeuft ohnehin separat via `POST /workflows/{id}/activate`. `docs/sanitize-fields.md` nachgezogen.
+- **#40 (Drift-Check-False-Positive):** `normalize.mjs` strippt jetzt die n8n-2.x-Versioning-Felder (`activeVersion`, `activeVersionId`, `versionCounter`, `workflowPublishHistory`, `sourceWorkflowId`, `nodeGroups`) sowie top-level `id`/`staticData`/`tags`/`active` (instanz-managed bzw. seit #41 via CLI nicht schreibbar — reines Diff-Rauschen; Aktivierung laeuft separat via `/activate`), `meta: null` und node-level `webhookId` (auto-assigned). `description` bleibt diff-relevant (legitimes Repo-Feld; nur `null`/`''` wird entfernt). Test mit realer 2.x-Live-Payload-Fixture (Live `active: true` vs. Repo `active: false` -> kein Drift). Deploy-Create gibt bei `active: true` im Repo-JSON jetzt einen Aktivierungs-Hinweis aus (Absicht geht nicht mehr still verloren).
+- **#39 (falsche Template-Annahme):** `.env.example`-Kopf, README-Schnellstart und `docs/ONBOARDING.md` korrigiert; `/onboard` Phase 3 schreibt die `N8N_ACTIVE_*`-Werte jetzt in `.env` UND `.claude/settings.local.json` (Merge, auto-gitignored).
+
+### Changed
+
+- **`package.json` / `package-lock.json` / `.template-version.json`** — Version 1.3.0.
+- **`.mcp.json`** — `_comment` zum Env-Switch nennt jetzt den `env-sync`-Schritt (die alte Anweisung ".env anpassen + Neustart" war genau die widerlegte #39-Annahme).
+- **`docs/sanitize-fields.md` + `docs/cli-reference.md`** — jetzt UPDATABLE-WITH-DIFF (spiegeln Code-Verhalten 1:1; als USER-GENERATED waeren sie in Bestandsprojekten nach diesem Release aktiv falsch geworden).
+- **`.n8n-template/manifest.json`** — regeneriert.
+
+### Notes
+
+- Verhaltensaenderung `normalize`: Repo-JSONs verlieren beim naechsten Normalize-Lauf top-level `id`/`staticData`/`tags` (Pre-Commit-Hook re-staged automatisch). Gewollt — `sanitize` strippte sie beim Deploy ohnehin.
+- Randnotiz aus #40 (`waitBetweenTries` werde bei `POST /workflows` silent verworfen) wird nicht adressiert — #41-Befund auf n8n 2.31.5 widerspricht der Beobachtung (Feld ueberlebt den POST).
+
+Konsumenten-Projekte ziehen v1.3.0 via `/template-update` (CLI-Lib + Tests kommen seit v1.2.0 als UPDATABLE-WITH-DIFF an; die Doku-Aenderungen in `docs/**` erreichen nur Neu-Installationen).
+
 ## 2026-07-31 — v1.2.0 (Issue-Batch: Praxis-Lessons, Sticky-Notes-Hard-Rule, DataTable-Upsert-Validator)
 
 Leert den kompletten Issue-Backlog (fixes #15, #16, #17, #18, #19, #20, #35; relates to #32). Alle Wissens-Items stammen aus dem produktiven Hoheisen-Incident 2026-05-17 (DataTable-Bloat 2.608 -> 144.049 Rows, Host-OOM, TZ-Drift).

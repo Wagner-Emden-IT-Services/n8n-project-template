@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { sanitizeForWrite, READONLY_FIELDS } from '../../scripts/lib/sanitize.mjs';
 
 describe('sanitizeForWrite', () => {
-  it('strippt alle 11 read-only Felder', () => {
+  it('strippt alle 12 read-only Felder', () => {
     const input = {
       name: 'wf',
       active: true,
@@ -30,7 +30,6 @@ describe('sanitizeForWrite', () => {
   it('laesst Pflichtfelder durch', () => {
     const input = {
       name: 'wf',
-      active: true,
       nodes: [{ id: '1', name: 'X', type: 't', typeVersion: 1 }],
       connections: { X: { main: [[]] } },
       settings: { errorWorkflow: 'shared' },
@@ -38,10 +37,21 @@ describe('sanitizeForWrite', () => {
     };
     const out = sanitizeForWrite(input);
     expect(out.name).toBe('wf');
-    expect(out.active).toBe(true);
     expect(out.nodes).toHaveLength(1);
     expect(out.connections).toEqual({ X: { main: [[]] } });
     expect(out.settings).toEqual({ errorWorkflow: 'shared' });
+  });
+
+  it("entfernt 'active' (read-only bei POST /workflows, Aktivierung via /activate) — #41", () => {
+    const input = {
+      name: 'wf',
+      active: false,
+      nodes: [{ id: '1', name: 'X', type: 't', typeVersion: 1 }],
+      connections: {},
+      settings: {},
+    };
+    const out = sanitizeForWrite(input);
+    expect(out).not.toHaveProperty('active');
   });
 
   it('mutiert Input nicht', () => {
@@ -51,8 +61,8 @@ describe('sanitizeForWrite', () => {
     expect(JSON.stringify(input)).toBe(before);
   });
 
-  it('READONLY_FIELDS enthaelt erwartete 11 Eintraege', () => {
-    expect(READONLY_FIELDS).toHaveLength(11);
+  it('READONLY_FIELDS enthaelt erwartete 12 Eintraege', () => {
+    expect(READONLY_FIELDS).toHaveLength(12);
     expect(READONLY_FIELDS).toEqual(
       expect.arrayContaining([
         'id',
@@ -66,6 +76,7 @@ describe('sanitizeForWrite', () => {
         'isArchived',
         'staticData',
         'tags',
+        'active',
       ]),
     );
   });

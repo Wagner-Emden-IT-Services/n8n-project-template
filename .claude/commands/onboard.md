@@ -1,6 +1,6 @@
 ---
 description: Onboarding-Wizard fuer ein neues n8n-Projekt. 8 Phasen. PFLICHT vor /deploy-workflow.
-argument-hint: "[optionale Kurzbeschreibung des Projekts]"
+argument-hint: "[--into-existing] [optionale Kurzbeschreibung des Projekts]"
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep, AskUserQuestion, Agent, WebFetch
 ---
 
@@ -8,17 +8,20 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep, AskUserQuestion, Agent, WebF
 
 Fuehrt durch 8 Phasen, an deren Ende ein vollstaendig konfiguriertes n8n-Projekt mit `.template-version.json`-Stempel, gewaehltem Staging-Profil, GitHub-Remote, Credentials-Plan und PRD-Skeleton steht.
 
-**Argument (optional):** Kurzbeschreibung des Projekts (eine Zeile). Wenn weggelassen, fragt Phase 0 nach.
+**Argumente (optional):**
+- `--into-existing` — erzwingt den In-place-Modus (Template-Installation in ein bestehendes, nicht-leeres Projektverzeichnis, siehe Abschnitt "In-place-Modus").
+- Kurzbeschreibung des Projekts (eine Zeile). Wenn weggelassen, fragt Phase 0 nach.
 
 ## Vorbedingungen
 
-- Repo aus `Wagner-Emden-IT-Services/n8n-project-template` via "Use this template" oder `gh repo create --template ...` erzeugt.
+- Repo aus `Wagner-Emden-IT-Services/n8n-project-template` via "Use this template" oder `gh repo create --template ...` erzeugt. **Entfaellt im In-place-Modus** — dort ist das Working Directory ein bestehendes Projektverzeichnis ohne Template-Klon.
 - Working Directory = Repo-Root.
 - `gh` CLI authentifiziert (`gh auth status`) — falls nicht: Phase 2 skipped GitHub-Schritte mit Warnung.
 - Node.js 20+ installiert (`node --version`) — sonst Abort.
 
 ## Verhalten
 
+- **Modus-Erkennung (vor Phase 0):** Ist das Working Directory nicht leer und KEIN Template-Klon (Marker: `.template-version.json` und `scripts/n8n-cli.mjs` fehlen beide), bietet der Wizard via AskUserQuestion den In-place-Modus an ("In bestehendes Projekt installieren / Abbrechen"). Expliziter Aufruf `/onboard --into-existing` erzwingt den Modus ohne Rueckfrage. Details: Abschnitt "In-place-Modus".
 - **Re-run-sicher:** Wenn `.template-version.json` mit `installed_at` existiert, fragt der Wizard zuerst, ob er die bestehende Konfiguration neu durchlaufen soll (Backup nach `.template-backup/<ts>/` vor Reset).
 - **Idempotenz:** Jede Phase prueft, ob ihre Files schon vorhanden sind. Wenn ja: User entscheidet "ueberspringen | Backup+ueberschreiben".
 - **Abbruch-sicher:** Phase 6 schreibt erst, nachdem User die Plan-Anzeige bestaetigt hat. Vor Phase 6 sind alle gesammelten Werte nur in Memory + `docs/ONBOARD_LOG.md` (append-only Log).
@@ -124,9 +127,12 @@ AskUserQuestion:
 
 Files schreiben (Memory):
 - `.env` mit Hosts/Keys pro Env
+- `.claude/settings.local.json` — `env`-Block mit den `N8N_ACTIVE_*`-Werten aus `.env` (`N8N_ACTIVE_BASE_URL`, `N8N_ACTIVE_API_URL`, `N8N_ACTIVE_API_KEY`, `N8N_ACTIVE_MCP_URL`, `N8N_ACTIVE_MCP_TOKEN`, `N8N_ACTIVE_ENV`). Existiert die Datei schon: JSON-Merge — bestehende Keys ausserhalb `env` bleiben unangetastet, `env`-Keys werden ergaenzt/aktualisiert. Die Datei ist von Claude Code auto-gitignored.
 - `.env.example` (committed) mit gleichen Keys, Werte = Platzhalter
 - Optional `docker-compose.dev.yml`
 - `docs/integrations/n8n-hosting.md` — generierte Doku der Instanz-URLs (KEINE API-Keys, nur URLs)
+
+**Warum `.env` UND `.claude/settings.local.json`?** Claude Code laedt die Projekt-`.env` NICHT fuer die `${VAR}`-Expansion in `.mcp.json` — die Expansion zieht nur aus der Shell-Umgebung und den `env`-Bloecken der Settings-Dateien. `.env` versorgt ausschliesslich die Node-CLI (dotenv). Ohne den `env`-Block starten die MCP-Server mit dem Literal-Text `${VAR}` (Fehlerbild: `'url' is not a valid URL` beim http-Server bzw. stiller Teilausfall des stdio-Servers). Bei spaeterer Key-Rotation: `.env` aendern, dann `node scripts/n8n-cli.mjs env-sync` ausfuehren (regeneriert den `env`-Block aus `.env`) und Claude Code neu starten.
 
 `hosting` in `.template-version.json` festhalten.
 
@@ -183,8 +189,9 @@ Plan-Anzeige (Read-only) aller zu erzeugenden / aendernden / loeschenden Files m
 ZU ERZEUGEN / AENDERN / LOESCHEN
 ================================
 + .env (gitignored)
++ .claude/settings.local.json (env-Block N8N_ACTIVE_*, auto-gitignored)
 + .claude/customer.json (gitignored, DSGVO)
-+ .template-version.json (v1.2.0, customer=engel, project=voice-rezeptionist, staging_profile=simple)
++ .template-version.json (version = aktuelle Template-Version, customer=engel, project=voice-rezeptionist, staging_profile=simple)
 + config/env-mapping.yaml (simple-Profil, slug=voice-rezeptionist)
 + config/secrets-vault-map.json
 + docs/integrations/credentials-setup.md
@@ -197,7 +204,7 @@ ZU ERZEUGEN / AENDERN / LOESCHEN
 
 **`.template-version.json`-Stempel (Schema 1.2):** Neben den in Phase 0-5 gesammelten Feldern (`customer_slug`, `project_slug`, `staging_profile`, `hosting`, `options.*`) setzt Phase 6 zusaetzlich:
 
-- `installed_via: "onboard"`
+- `installed_via: "onboard"` (im In-place-Modus: `"onboard-into-existing"`)
 - `manifest_path: ".n8n-template/manifest.json"`
 - `last_update_at: null` (wird von /template-update gepflegt)
 - `last_update_from_version: null` (wird von /template-update gepflegt)
@@ -208,7 +215,7 @@ Bei ja:
 1. Alle Files schreiben
 2. `npm install`
 3. `git init` (falls neu) oder Remote anlegen (`gh repo create`)
-4. Initial-Commit: `feat: project initialized via n8n-project-template v1.2.0`
+4. Initial-Commit: `feat: project initialized via n8n-project-template v<version>`
 5. Push zum Remote
 6. Branch-Protection setzen (Solo-User-Warnung wenn API failt)
 7. `.template-version.json.target_repo` mit der finalen URL befuellen
@@ -240,6 +247,39 @@ Naechste Schritte:
   4. Deployen:            /deploy-workflow (erst nach Schema-Check + PRD APPROVED)
 ```
 
+## In-place-Modus (`/onboard --into-existing`)
+
+Installiert das Template nachtraeglich in ein bestehendes, nicht-leeres Projektverzeichnis — ein Projekt, ein Ort, eine Claude-Session — statt einen separaten Template-Klon zu erzwingen.
+
+### Aktivierung
+
+1. **Auto-Detection:** Modus-Erkennung vor Phase 0 (siehe "Verhalten") erkennt "Verzeichnis nicht leer und kein Template-Klon" und bietet den Modus an.
+2. **Expliziter Aufruf:** `/onboard --into-existing` erzwingt den Modus ohne Rueckfrage.
+
+### Ablauf
+
+1. **Inventar:** Template-Payload (aus `Wagner-Emden-IT-Services/n8n-project-template`, aktuelle Version) gegen die Bestandsdateien matchen. Ergebnis: Liste "neu / identisch / Kollision".
+2. **Kollisions-Report VOR jedem Schreiben:** Plan-Anzeige im Phase-6-Muster (`+` / `~` / `-`), Kollisionen zusaetzlich mit `!`-Marker. Pro Kollision Strategie aus dem Katalog unten waehlbar (Default = Standard-Strategie). Ohne Bestaetigung wird nichts geschrieben.
+3. Danach laufen die Phasen 0-7 normal weiter (Abweichungen siehe unten).
+
+### Kollisions-Katalog (5 Strategien, real erprobt 2026-07-31)
+
+| # | Kollision | Standard-Strategie |
+|---|-----------|--------------------|
+| 1 | Bestehende Projekt-`CLAUDE.md` vs. Template-`CLAUDE.md` | Bestehenden Inhalt nach `docs/PROJECT_CONTEXT.md` verschieben (ist als USER-GENERATED/Protected vorgesehen) + `@docs/PROJECT_CONTEXT.md`-Import am Kopf der Template-CLAUDE.md — beide Kontexte laden, Template-Updates bleiben diffbar |
+| 2 | Bestehendes `docs/` | Merge; Namenskonflikt-Check pro Datei. Bei Namenskonflikt: **STOPP + Einzelentscheidung** durch den User, kein Auto-Overwrite |
+| 3 | Bestehende `.claude/settings.json` (z.B. `enabledPlugins`) | JSON-Merge statt Ueberschreiben — bestehende Keys bleiben erhalten, Template-Keys werden ergaenzt |
+| 4 | Bestehende `.mcp.json` mit Klartext-Secrets | Werte nach `.env` migrieren (+ `env`-Block in `.claude/settings.local.json`, siehe Phase 3), variablenbasierte Template-`.mcp.json` uebernehmen. **Secret-Gate:** NUR nach expliziter Plan-Anzeige + User-Bestaetigung pro Datei — der Wizard fasst Secrets nie ungefragt an. Nebeneffekt: verhindert den gitleaks-Blocker beim ersten Commit |
+| 5 | Bestandsdateien, die nicht ins (Kunden-)Remote duerfen (interne Kalkulationen etc.) | Wizard-Frage "Git-Scope fuer Bestandsdateien" -> `.gitignore`-Eintraege generieren |
+
+### Abweichungen in den Phasen
+
+Die uebrigen Phasen (Staging, GitHub, Hosting, Credentials, Optionen, PRD) laufen nach dem Kollisions-Report normal weiter. Unterschiede im In-place-Fall:
+
+- **Phase 2:** Ist das Verzeichnis bereits ein Git-Repo mit Remote, Default = "existierendes Repo verwenden" (kein `gh repo create`).
+- **Phase 6:** Plan-Anzeige enthaelt zusaetzlich den Kollisions-Report mit den gewaehlten Strategien. `git init` nur, falls noch kein Git-Repo existiert. `.template-version.json` erhaelt `installed_via: "onboard-into-existing"`.
+- **ONBOARD_LOG:** `docs/ONBOARD_LOG.md` bekommt eine Sektion "In-place-Installation" mit Inventar-Ergebnis, Kollisions-Report und **jeder getroffenen Einzelentscheidung** (Audit-Trail — insbesondere die Secret-Gate-Bestaetigungen aus Strategie 4).
+
 ## Fehlerbehandlung
 
 - **`gh` fehlt** -> Phase 2 GitHub-Schritte ueberspringen, Hinweis in ONBOARD_LOG, Onboard laeuft trotzdem zu Ende
@@ -248,11 +288,13 @@ Naechste Schritte:
 - **Branch-Protection-API failt (Solo-User-Edge-Case)** -> WARN ausgeben, Repo bleibt ohne Protection, Onboard laeuft weiter
 - **`.template-version.json` existiert schon** -> Wizard fragt am Anfang: "Bestehendes Setup neu durchlaufen? Backup nach .template-backup/<ts>/"
 - **gitleaks fehlt auf Windows** -> Phase 6 markiert Pre-Commit-Hook als "manuelle Nacharbeit" und schreibt Hinweis in ONBOARD_LOG
+- **Namenskonflikt in `docs/` im In-place-Modus** -> STOPP, Einzelentscheidung pro Datei (behalten / Template-Version / umbenennen), Entscheidung in ONBOARD_LOG dokumentieren
 
 ## Output
 
-- `.template-version.json` mit vollstaendigem Stempel (Schema 1.2, `installed_via: "onboard"`)
+- `.template-version.json` mit vollstaendigem Stempel (Schema 1.2, `installed_via: "onboard"` bzw. `"onboard-into-existing"`)
 - `.claude/customer.json` (gitignored)
+- `.claude/settings.local.json` mit `env`-Block der `N8N_ACTIVE_*`-Werte (auto-gitignored)
 - `docs/ONBOARD_LOG.md` mit allen Phasen + Zeitstempeln
 - `docs/PRD.md` (Status: NOT_STARTED)
 - `config/env-mapping.yaml` aus gewaehltem Profil

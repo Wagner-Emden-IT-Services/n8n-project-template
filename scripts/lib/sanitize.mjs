@@ -13,6 +13,9 @@ export const READONLY_FIELDS = [
   'isArchived',
   'staticData',
   'tags',
+  // 'active' is rejected as read-only on POST /workflows (n8n 2.x) —
+  // activation runs separately via POST /workflows/{id}/activate (fixes #41)
+  'active',
 ];
 
 export function sanitizeForWrite(workflow) {

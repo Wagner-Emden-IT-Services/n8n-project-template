@@ -152,6 +152,14 @@
       "protection": "USER-GENERATED"
     },
     {
+      "glob": "docs/sanitize-fields.md",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": "docs/cli-reference.md",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
       "glob": "docs/**",
       "protection": "USER-GENERATED"
     },

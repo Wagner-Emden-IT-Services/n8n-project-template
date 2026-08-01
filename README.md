@@ -67,6 +67,10 @@ cp .env.example .env
 # Werte ausfuellen — mindestens N8N_ACTIVE_* (Default: dev/localhost:5678)
 # WICHTIG: N8N_ACTIVE_MCP_URL aus n8n-UI kopieren (Settings -> Instance-level MCP)
 
+# 2b. MCP-Env bereitstellen — .env versorgt NUR die Node-CLI; die MCP-Server
+# lesen .claude/settings.local.json: `node scripts/n8n-cli.mjs env-sync`
+# ausfuehren (Details: docs/ONBOARDING.md)
+
 # 3. Env-Mapping aus Vorlage
 cp config/env-mapping.yaml.example config/env-mapping.yaml
 # Pro Workflow Credentials/Webhook-Suffix/Tags pro Env eintragen

@@ -9,7 +9,8 @@
 in einen produktionsfaehigen Zustand bringt. Ergebnis:
 
 - `.template-version.json` mit Customer-Slug, Project-Slug, Staging-Profil
-- Konfigurierte `.env`, `config/env-mapping.yaml`, `config/secrets-vault-map.json`
+- Konfigurierte `.env` + `.claude/settings.local.json` (env-Block fuer die
+  MCP-Server), `config/env-mapping.yaml`, `config/secrets-vault-map.json`
 - GitHub-Remote (optional) inkl. Branch-Protection, PR-/Issue-Templates
 - CI/CD-Workflows passend zum gewaehlten Staging-Profil
 - `docs/ONBOARD_LOG.md` mit nachvollziehbarem Audit-Trail
@@ -19,7 +20,9 @@ in einen produktionsfaehigen Zustand bringt. Ergebnis:
 ## Voraussetzungen
 
 - Repo aus `Wagner-Emden-IT-Services/n8n-project-template` via "Use this
-  template" oder `gh repo create --template ...` erzeugt
+  template" oder `gh repo create --template ...` erzeugt — ODER ein
+  bestehendes Projektverzeichnis, in das in-place installiert wird
+  (siehe Abschnitt "In-place-Installation")
 - Working Directory ist Repo-Root
 - Node.js 20+ installiert (`node --version`)
 - `gh` CLI authentifiziert (`gh auth status`) — falls fehlt, ueberspringt
@@ -40,7 +43,7 @@ in einen produktionsfaehigen Zustand bringt. Ergebnis:
 | 0 | Project Identity (Slugs, Verantwortliche, Zielsysteme) | `.claude/customer.json`, `.template-version.json`, ONBOARD_LOG |
 | 1 | Staging-Auswahl (none / simple / full / custom) | `config/env-mapping.yaml`, `.template-version.json.staging_profile` |
 | 2 | GitHub-Integration (Repo, Branch-Protection, Templates) | `.github/`, gh repo create |
-| 3 | n8n-Hosting (Cloud / Docker / K8s / Desktop) | `.env`, `.env.example`, `docs/integrations/n8n-hosting.md` |
+| 3 | n8n-Hosting (Cloud / Docker / K8s / Desktop) | `.env`, `.claude/settings.local.json` (env-Block), `.env.example`, `docs/integrations/n8n-hosting.md` |
 | 4 | Credentials + Secrets-Strategie | `config/secrets-vault-map.json`, `docs/integrations/credentials-setup.md`, `.github/secrets-required.md` |
 | 5 | Optionen (hello-world, M365, Multi-Agent, Backup, Logging) | `workflows/`, `.template-version.json.options` |
 | 6 | Plan-Anzeige + Erzeugung + Initial-Commit + Push | alle gesammelten Files, `git init`/`gh repo create`, Branch-Protection |
@@ -57,6 +60,62 @@ in einen produktionsfaehigen Zustand bringt. Ergebnis:
 
 Source: `config/staging-profiles/{none,simple,full}.yaml`.
 Wechsel nach Onboard: manuell — siehe `docs/UPDATE.md` (ab v0.6.0).
+
+## MCP-Server: warum `.env` UND `.claude/settings.local.json`?
+
+Phase 3 schreibt die `N8N_ACTIVE_*`-Werte an ZWEI Stellen. Das ist kein
+Versehen, sondern noetig, weil beide Konsumenten unterschiedliche Quellen
+lesen:
+
+- **`.env`** versorgt ausschliesslich die Node-CLI (`scripts/n8n-cli.mjs`
+  via dotenv).
+- **`.claude/settings.local.json`** (`env`-Block, von Claude Code
+  auto-gitignored) versorgt die `${VAR}`-Expansion in `.mcp.json`.
+  Claude Code laedt die Projekt-`.env` dafuer NICHT — die Expansion zieht
+  nur aus der Shell-Umgebung und den `env`-Bloecken der Settings-Dateien.
+
+Fehlt der `env`-Block, starten die MCP-Server mit dem Literal-Text
+`${VAR}`: der http-Server (`n8n`) meldet `'url' is not a valid URL`, der
+stdio-Server (`n8n-mcp`) laeuft scheinbar normal, aber ohne API-Anbindung
+(stiller Teilausfall).
+
+**Key-Rotation:** Werte nur in `.env` aendern, dann
+`node scripts/n8n-cli.mjs env-sync` ausfuehren — das regeneriert den
+`env`-Block aus `.env` und verhindert Drift. Danach Claude Code neu
+starten.
+
+## In-place-Installation (`/onboard --into-existing`)
+
+Fuer den Fall, dass ein Projekt bereits als Verzeichnis mit Inhalt
+existiert (CLAUDE.md, docs/, .claude/settings.json, .mcp.json) und das
+Template IN dieses Projekt soll — ein Projekt, ein Ort, eine
+Claude-Session, statt eines separaten Template-Klons.
+
+Aktivierung auf zwei Wegen:
+
+1. **Auto-Detection:** `/onboard` erkennt "Verzeichnis nicht leer und
+   kein Template-Klon" und bietet den In-place-Modus an.
+2. **Explizit:** `/onboard --into-existing` erzwingt ihn.
+
+Der Wizard scannt zuerst den Bestand, zeigt einen **Kollisions-Report
+VOR jedem Schreiben** (Plan-Anzeige wie in Phase 6) und loest Konflikte
+kontrolliert nach diesem Katalog auf:
+
+| Kollision | Strategie |
+|-----------|-----------|
+| Bestehende `CLAUDE.md` | Inhalt nach `docs/PROJECT_CONTEXT.md` verschieben + `@docs/PROJECT_CONTEXT.md`-Import am Kopf der Template-CLAUDE.md — beide Kontexte laden, Template-Updates bleiben diffbar |
+| Bestehendes `docs/` | Merge mit Namenskonflikt-Check; bei Konflikt STOPP + Einzelentscheidung pro Datei |
+| Bestehende `.claude/settings.json` | JSON-Merge — bestehende Keys (z.B. `enabledPlugins`) bleiben erhalten |
+| Bestehende `.mcp.json` mit Klartext-Secrets | Werte nach `.env` + `settings.local.json` migrieren, variablenbasierte Template-`.mcp.json` uebernehmen — NUR nach Plan-Anzeige + Bestaetigung pro Datei (Secret-Gate: der Wizard fasst Secrets nie ungefragt an) |
+| Bestandsdateien, die nicht ins Remote duerfen | Wizard-Frage "Git-Scope fuer Bestandsdateien" -> `.gitignore`-Eintraege |
+
+Danach laufen die uebrigen Phasen (Staging, GitHub, Hosting,
+Credentials, PRD) normal weiter. Unterschiede: `git init` nur, falls
+noch kein Git-Repo existiert; bestehende Remotes werden verwendet statt
+neu angelegt; `.template-version.json` traegt
+`installed_via: "onboard-into-existing"`. `docs/ONBOARD_LOG.md`
+dokumentiert den In-place-Lauf inklusive aller Kollisions-Entscheidungen
+als Audit-Trail.
 
 ## DSGVO / Kontaktdaten
 

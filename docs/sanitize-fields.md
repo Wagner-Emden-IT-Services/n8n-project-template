@@ -17,6 +17,7 @@
 | `isArchived`   | Archivierungs-Status, instanz-spezifisch                                                      |
 | `staticData`   | Persistente Trigger-State (z.B. last-cursor); gehoert nicht ins Repo                          |
 | `tags`         | n8n-API liefert tags read-only zurueck; setzen via separate `/tags`-API                       |
+| `active`       | Seit n8n 2.x read-only im Request-Body — Aktivierung laeuft separat via `POST /workflows/:id/activate` |
 
 ## Wann erweitern
 
@@ -25,7 +26,7 @@
 
 ## Wann NICHT entfernen
 
-- `name`, `nodes`, `connections`, `settings`, `active` — Pflicht fuer Create/Update.
+- `name`, `nodes`, `connections`, `settings` — Pflicht fuer Create/Update.
 - Keine Felder aus `nodes[]` oder `connections{}` anfassen (kein Sanitize auf Knoten-Ebene).
 
 ## Geschichte
@@ -33,3 +34,4 @@
 | Datum      | Aenderung                                                                                                        |
 | ---------- | ---------------------------------------------------------------------------------------------------------------- |
 | 2026-05-07 | Initial — id, versionId, createdAt, updatedAt, triggerCount, pinData, meta, shared, isArchived, staticData, tags |
+| 2026-08-01 | `active` ergaenzt — n8n 2.x lehnt es mit `request/body/active is read-only` ab (fixes #41)                        |
