@@ -1,16 +1,16 @@
 {
   "schema_version": "1.0",
   "template": "n8n-project",
-  "template_version": "1.3.0",
-  "frozen_at": "2026-08-01T12:16:45Z",
+  "template_version": "1.4.0",
+  "frozen_at": "2026-08-03T10:08:09Z",
   "rules_source": ".n8n-template/protection-rules.json",
   "counts": {
-    "frozen": 44,
-    "updatable_with_diff": 47,
+    "frozen": 45,
+    "updatable_with_diff": 49,
     "marker_aware": 1,
     "user_generated": 61,
-    "skipped": 19,
-    "total": 153
+    "skipped": 18,
+    "total": 156
   },
   "files": [
     {
@@ -56,7 +56,7 @@
     {
       "path": ".claude/commands/change-workflow.md",
       "protection": "FROZEN",
-      "sha256": "dcc5eb6eb6d30874bd650f0ae1c563bc26396407056d22d7952222aaa98f3eee"
+      "sha256": "31d11e8d8a1c7eef57d91532a58f0bef09a7bf4dd598c754face5660c77c585a"
     },
     {
       "path": ".claude/commands/check-idempotency.md",
@@ -91,7 +91,7 @@
     {
       "path": ".claude/commands/onboard.md",
       "protection": "FROZEN",
-      "sha256": "52e3b74ef84a822faacb47a7a37c8c58334d18c850d1b9c096ce6be51384f073"
+      "sha256": "13dfdae6a69cbf2677c82fff1e13ab7dab94469c68d67eda5230588ff398649a"
     },
     {
       "path": ".claude/commands/prd-generate.md",
@@ -129,9 +129,14 @@
       "sha256": "3657e128e69fb08c8be4aa6a79138d7490592f835ff403f14e60e7c791b33f73"
     },
     {
+      "path": ".claude/hooks/graphify-preflight.ps1",
+      "protection": "FROZEN",
+      "sha256": "255b6bdefe27b6cf34d951987cc9e983caa8c9c8a9cb7f8845b3a609dac9a239"
+    },
+    {
       "path": ".claude/rules/general.md",
       "protection": "FROZEN",
-      "sha256": "4059982b46588f2ed393b8d3f687e3e9535a3afee2315cdbbc71e2ec12afe642"
+      "sha256": "9d63ff2a464e190745049538fc626ab8bcd7add065eb1e399a78d82ce63bf5c5"
     },
     {
       "path": ".claude/rules/onboard-required.md",
@@ -151,7 +156,7 @@
     {
       "path": ".claude/settings.json",
       "protection": "FROZEN",
-      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+      "sha256": "b6f430107d04c695f5f943c84623cc54c0f4e62a1e60e6af4e9598e1e8a042ef"
     },
     {
       "path": ".claude/skills/_LICENSE-mattpocock.md",
@@ -504,6 +509,11 @@
       "sha256": "88d0e18d03350c25b3cea7e40bae8b4bd1a1b63a6e85fa2415231b2e96383832"
     },
     {
+      "path": ".graphifyignore",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "1e29b1e65a87f80edf4395727a55250010de274be1b2c12bc7b52a35ace1ac63"
+    },
+    {
       "path": ".mcp.json",
       "protection": "USER-GENERATED",
       "sha256": null
@@ -531,7 +541,7 @@
     {
       "path": ".n8n-template/protection-rules.json",
       "protection": "FROZEN",
-      "sha256": "8c9bd5c6eccd73445f40563b7a0eb3e4444d9404b10adcbcda68d4a55766e2e1"
+      "sha256": "9ef25c5be8495778dedf6aa8f5242b83c46f086abc970faa20b64f6b50313f76"
     },
     {
       "path": ".n8n-template/README.md",
@@ -544,18 +554,24 @@
       "sha256": "2d37303b070b2f0b621db8f2fcf292f145ec82bcf817304be9f34b8c65cd72a2"
     },
     {
+      "path": ".prettierignore",
+      "protection": "UPDATABLE-WITH-DIFF",
+      "sha256": "76a3641612d4156edc08ec8a4642c4601309c338e77dbb162480e5782e54bb11"
+    },
+    {
       "path": ".template-version.json",
       "protection": "FROZEN",
-      "sha256": "7e83dbb9dbb3fe1d7ae577a739ca825608eb64662303421c31cf624cd7d85754",
+      "sha256": "cd2cf34cda68356d70fbad433603cac39da1ef4c33230582cc3fcfe8e4d967ff",
       "special": "version-merge"
     },
     {
       "path": "CLAUDE.md",
       "protection": "MARKER-AWARE",
-      "sha256": "f081fde8a719e28df5b9c546f2ccbb15885bf8424766937673de6aabf786723a",
+      "sha256": "86e447ff852ea4d63f08fa1c86e5ff2e372e1ad97d027c4178434f0bde5445a9",
       "managed_blocks": [
         "bug-tracking",
-        "n8n-pipeline"
+        "n8n-pipeline",
+        "graphify"
       ]
     },
     {
@@ -676,7 +692,7 @@
     {
       "path": "package.json",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "b41663adc5ace40a0ccb2aa28a517fb91d0feaa001714b13eebacbcfb4edba61"
+      "sha256": "74ba1ff8d6e3fd6ff1b4bf29e799bda2189890d0440031b316e1fc119b3449a4"
     },
     {
       "path": "README.md",

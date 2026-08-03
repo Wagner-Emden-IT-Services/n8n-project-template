@@ -45,8 +45,8 @@ in einen produktionsfaehigen Zustand bringt. Ergebnis:
 | 2 | GitHub-Integration (Repo, Branch-Protection, Templates) | `.github/`, gh repo create |
 | 3 | n8n-Hosting (Cloud / Docker / K8s / Desktop) | `.env`, `.claude/settings.local.json` (env-Block), `.env.example`, `docs/integrations/n8n-hosting.md` |
 | 4 | Credentials + Secrets-Strategie | `config/secrets-vault-map.json`, `docs/integrations/credentials-setup.md`, `.github/secrets-required.md` |
-| 5 | Optionen (hello-world, M365, Multi-Agent, Backup, Logging) | `workflows/`, `.template-version.json.options` |
-| 6 | Plan-Anzeige + Erzeugung + Initial-Commit + Push | alle gesammelten Files, `git init`/`gh repo create`, Branch-Protection |
+| 5 | Optionen (hello-world, M365, Multi-Agent, Backup, Logging, graphify Knowledge-Graph) | `workflows/`, `.template-version.json.options` |
+| 6 | Plan-Anzeige + Erzeugung (inkl. graphify-Install + Erst-Build, best-effort) + Initial-Commit + Push | alle gesammelten Files, `.claude/skills/graphify/`, `graphify-out/`, `git init`/`gh repo create`, Branch-Protection |
 | 7 | PRD-Pflicht-Schritt | `docs/PRD.md` |
 
 ## Staging-Profile

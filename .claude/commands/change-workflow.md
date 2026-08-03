@@ -88,6 +88,10 @@ Lade `docs/specs/WF-N.md` Frontmatter (`status`, `phase`). Bei `--workflows WF-1
 - `docs/STATE.md` (aktuelle Position, aktive Phase, Open Loops)
 - Plan-Dokument aus Schritt 0.3 (falls vorhanden)
 - `.template-version.json` (Schema-Version, Hosting, Staging-Profile)
+- **Wenn `graphify-out/graph.json` existiert und CLI-/Script-/Test-Code betroffen ist:**
+  Kontext-Query gegen den Code-Graphen VOR Glob+Grep (`graphify query/explain/affected`,
+  siehe CLAUDE.md Sektion "Graphify Knowledge Graph"). Gilt NICHT fuer reine
+  Workflow-JSON-Fragen — dafuer n8n-MCP (seit v1.4.0)
 
 ## Schritt 1.5: Klassifizierung (n8n-spezifisch)
 
@@ -115,7 +119,9 @@ Bei Bug-Fix-Phase (`--issue <N>` / `--issues` mit `bug`-Label, oder QA-Failure):
 
 1. **Feedback-Loop zuerst**: reproduzierbaren Check aufbauen, der den Bug sichtbar macht (Test-Run, Webhook-Call, Execution-Replay)
 2. **Repro**: Bug nachstellen — `/qa-workflow`-Findings (repro/expected/actual/execution_id) sind der Diagnose-Input
-3. **Gerankte Hypothesen** an den User praesentieren
+3. **Gerankte Hypothesen** an den User praesentieren. Betrifft der Bug CLI-/Script-Code
+   (scripts/, tests/) und existiert `graphify-out/graph.json`: Blast-Radius pro Hypothese
+   via `graphify affected "<funktion/modul>"` belegen statt schaetzen (seit v1.4.0)
 4. Erst nach bestaetigter Root-Cause in die Fix-Phase (Build) wechseln — kein Fix auf Verdacht
 5. **Direkteinstieg** `--phase build` ueberspringt die Diagnose nur mit explizitem Vermerk im
    PR-Body (`Diagnose uebersprungen: <grund>`)
@@ -151,6 +157,11 @@ Lade automatisch die Skills aus der Tabelle in Schritt 1.5. Bei Build-Phase werd
 Pruefe **vor Spawn** ob mehrere Workflows auf den gleichen Ressourcen arbeiten:
 
 1. Liste `docs/specs/WF-X.md` Frontmatter `credentials:` und `webhook_paths:`
+1b. **Plausibilitaets-Check gegen die Artefakte (seit v1.4.0):** Frontmatter ist
+    hand-gepflegt und kann driften — Stichprobe der `credentials:`-Angaben gegen die
+    tatsaechlichen `workflows/*.json` (grep auf Credential-Namen; Workflow-Semantik via
+    n8n-MCP, NICHT via graphify — workflows/ sind bewusst nicht im Code-Graphen).
+    Bei Abweichung: Frontmatter korrigieren BEVOR der Parallel-Plan entsteht
 2. Bei Overlap (gleiche Credential / gleicher Webhook-Path): markiere Workflows als "sequenziell statt parallel"
 3. Ausgabe-Plan zeigen:
    ```

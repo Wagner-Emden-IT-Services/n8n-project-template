@@ -445,3 +445,36 @@ Adaptiert aus [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), p
 | `/diagnosing-bugs` | Pflicht-Diagnose vor Bug-Fix-Builds (`/change-workflow --issue N`): Feedback-Loop zuerst, dann Fix |
 | `/handoff` | Session-Uebergabe an Phasen-Gates + Session-Ende: `docs/sessions/` + `docs/STATE.md`-Update |
 <!-- N8N-TEMPLATE:END id="n8n-pipeline" -->
+
+<!-- N8N-TEMPLATE:START id="graphify" version="1.4.0" -->
+## Graphify Knowledge Graph (verbindlich seit n8n-template v1.4.0)
+
+Fuer Code-Struktur- und Impact-Fragen zur Projekt-Codebasis (scripts/ CLI + lib, tests/,
+hooks/, .n8n-template-Engine) existiert ein lokaler Knowledge-Graph: tree-sitter-AST
+(deterministisch, **kein LLM, nichts verlaesst den Rechner**) -> `graphify-out/graph.json`.
+
+**Directive:** Bei "was ruft X auf / was haengt an Y / was bricht wenn ich Z aendere"
+im CLI-/Script-/Test-Code **zuerst den Graphen fragen** statt breit zu greppen:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"   # graphify liegt in ~/.local/bin
+graphify query "<frage>"     # BFS-Kontext zu einem Thema
+graphify path "A" "B"        # kuerzester Pfad zwischen zwei Konzepten
+graphify explain "X"         # woran haengt X (Nachbarschaft + Quellzeilen)
+graphify affected "X"        # Reverse-Impact: was wird von X beeinflusst
+```
+
+- **Scope (bewusste Abgrenzung):** NUR Code (`.graphifyignore`). `workflows/*.json` sind
+  NICHT im Graphen — Workflow-Semantik (Nodes, Connections, Credentials, Webhooks)
+  beantwortet der n8n-MCP (`n8n_get_workflow`, `validate_workflow`), nicht der AST-Graph.
+- **Setup:** automatisiert via `/onboard` Phase 6 (Schritte 2b/2c). Manuelle Nachinstallation:
+  `uv tool install "graphifyy[sql]"` (Fallback pipx/pip) -> `graphify install --project`
+  -> `graphify update .` (Erst-Build) -> `graphify hook install` (Post-Commit-Auto-Rebuild).
+  PyPI-Paket `graphifyy` (Doppel-y), CLI `graphify`.
+- **Frische:** `graphify-out/` ist **committed** (geteilte Map; nur `cost.json`/`cache/`
+  bleiben lokal). Post-Commit-Hook rebuildet; bei uncommitteten Code-Aenderungen vorab
+  `graphify update .`.
+- In PowerShell `graphify .` nutzen (nicht `/graphify .` — fuehrender Slash = Pfadtrenner).
+- Ein `UserPromptSubmit`-Hook (`.claude/hooks/graphify-preflight.ps1`) erinnert bei
+  `/change-workflow`, `/next-recommend` und `/diagnosing-bugs` automatisch daran.
+<!-- N8N-TEMPLATE:END id="graphify" -->
