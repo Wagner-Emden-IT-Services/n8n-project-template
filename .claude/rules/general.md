@@ -23,6 +23,10 @@ Siehe `.claude/rules/onboard-required.md`. Slash-Commands brechen ab wenn `.temp
 - **Bugs** landen nicht in WF-X-Specs, sondern als GitHub-Issue (siehe Bug-Tracking-Konvention unten).
 - **In der Pipeline (`/change-workflow`):** Reviewer laeuft am Ende der Build-Phase, bevor
   `n8n-qa-engineer` (Test-Phase) uebernimmt.
+- **Graph-Frische (seit v1.4.0, nur bei Aenderungen an scripts/, tests/, hooks/):** Der
+  Post-Commit-Hook rebuildet `graphify-out/` automatisch; bei uncommitteten
+  Code-Aenderungen vor Graph-Queries einmal `graphify update .` laufen lassen.
+  Workflow-JSON-Edits beruehren den Graphen nicht (Scope: `.graphifyignore`).
 
 **Sticky-Notes-Pflege Hard-Rule (#19):** Nach JEDEM Workflow-Edit alle Sticky-Notes des
 Workflows gegen die tatsaechliche Node-Konfiguration verifizieren. Beschreibt eine Sticky

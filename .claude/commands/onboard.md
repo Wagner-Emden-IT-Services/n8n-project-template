@@ -173,13 +173,18 @@ AskUserQuestion (jeweils ja/nein, Defaults wie unten):
 4. Nightly Backup + Drift-Check via Cron (Default ja bei Phase 1 = C, sonst nein)
 5. Health-Check-Workflow im Repo (Default nein)
 6. Logging-Level: minimal / standard (Default) / verbose
+7. Knowledge-Graph (graphify) aktivieren (Default ja) — lokaler tree-sitter-AST-Graph
+   ueber den Code-Anteil des Projekts (scripts/, tests/, hooks/; KEINE workflows/*.json,
+   siehe `.graphifyignore`). Installation erfolgt in Phase 6 (Schritte 2b/2c), best-effort.
 
 Files schreiben (Memory):
 - `workflows/hello-world.json` kopieren oder loeschen
 - `.claude/rules/skills-context.md` passt zu Phase 5 Auswahl
 - `.github/workflows/drift-check.yml` Cron passt (default `0 3 * * *` nightly)
 - Optional `docs/integrations/m365/` behalten oder entfernen
-- `options.*` in `.template-version.json` festhalten
+- Bei Option 7 = nein: `.graphifyignore` bleibt liegen (harmlos), Phase 6 Schritte 2b/2c
+  werden uebersprungen
+- `options.*` in `.template-version.json` festhalten (inkl. `options.graphify`)
 
 ### Phase 6 — Erzeugung + Bootstrap
 
@@ -197,6 +202,8 @@ ZU ERZEUGEN / AENDERN / LOESCHEN
 + docs/integrations/credentials-setup.md
 + docs/integrations/n8n-hosting.md
 + docs/PRD.md (Status: NOT_STARTED, aus PRD.template.md)
++ .claude/skills/graphify/ (Option 7, via graphify install --project in Schritt 2c)
++ graphify-out/ (Option 7, Erst-Build in Schritt 2c — committed)
 ~ CLAUDE.md (Project-Identity-Block angereichert)
 ~ README.md (Customer-Slug + Project-Slug)
 - .github/workflows/deploy-staging.yml (Phase 1 = simple -> nicht benoetigt)
@@ -214,6 +221,17 @@ AskUserQuestion: "Plan ausfuehren?" (ja / abbrechen).
 Bei ja:
 1. Alle Files schreiben
 2. `npm install`
+2b. **graphify installieren (nur bei `options.graphify=true`, best-effort):**
+    `uv tool install --upgrade "graphifyy[sql]"` (Fallback: pipx, dann pip). Schlaegt die
+    Installation fehl (kein Python/uv): WARN + ONBOARD_LOG-Eintrag, Wizard laeuft weiter —
+    NIEMALS das Onboarding blockieren.
+2c. **graphify einrichten (nur wenn 2b erfolgreich):**
+    `graphify install --project` (projekt-lokaler Skill) -> `graphify update .` (Erst-Build,
+    Scope via `.graphifyignore`) -> `graphify hook install` (Post-Commit-Auto-Rebuild).
+    Danach pruefen, ob der Installer CLAUDE.md oder `.claude/settings.json` mutiert hat —
+    falls ja: `git checkout -- CLAUDE.md .claude/settings.json` (das Template liefert
+    Directive-Block + Preflight-Hook selbst; wir wollen nur den Skill + graphify-out/).
+    Ergebnis: `graphify-out/` geht mit in den Initial-Commit (Schritt 4).
 3. `git init` (falls neu) oder Remote anlegen (`gh repo create`)
 4. Initial-Commit: `feat: project initialized via n8n-project-template v<version>`
 5. Push zum Remote
@@ -288,6 +306,7 @@ Die uebrigen Phasen (Staging, GitHub, Hosting, Credentials, Optionen, PRD) laufe
 - **Branch-Protection-API failt (Solo-User-Edge-Case)** -> WARN ausgeben, Repo bleibt ohne Protection, Onboard laeuft weiter
 - **`.template-version.json` existiert schon** -> Wizard fragt am Anfang: "Bestehendes Setup neu durchlaufen? Backup nach .template-backup/<ts>/"
 - **gitleaks fehlt auf Windows** -> Phase 6 markiert Pre-Commit-Hook als "manuelle Nacharbeit" und schreibt Hinweis in ONBOARD_LOG
+- **graphify-Installation schlaegt fehl (kein Python/uv/pipx)** -> Schritte 2b/2c ueberspringen, `options.graphify=false` zuruecksetzen, Hinweis in ONBOARD_LOG ("manuelle Nachinstallation: siehe CLAUDE.md Sektion Graphify"), Onboard laeuft weiter
 - **Namenskonflikt in `docs/` im In-place-Modus** -> STOPP, Einzelentscheidung pro Datei (behalten / Template-Version / umbenennen), Entscheidung in ONBOARD_LOG dokumentieren
 
 ## Output
@@ -301,4 +320,5 @@ Die uebrigen Phasen (Staging, GitHub, Hosting, Credentials, Optionen, PRD) laufe
 - `config/secrets-vault-map.json`
 - `docs/integrations/credentials-setup.md`
 - Optional `docs/integrations/n8n-hosting.md`, `docker-compose.dev.yml`, GitHub-Templates
+- Bei `options.graphify=true`: `.claude/skills/graphify/` + committed `graphify-out/` (Erst-Build)
 - Aktualisierte CLAUDE.md / README.md / .env.example / .gitignore

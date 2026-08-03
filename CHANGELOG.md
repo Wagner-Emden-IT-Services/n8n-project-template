@@ -2,6 +2,51 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-08-03 — v1.4.0 (graphify Knowledge-Graph-Integration)
+
+Voll-Integration analog golden-dev v1.14, an den n8n-Kontext angepasst. `fixes #43`.
+
+### Added
+
+- **`.graphifyignore`** — Scope-Definition: NUR Code (scripts/, tests/, hooks/,
+  .n8n-template-Engine). `workflows/*.json` sind BEWUSST ausgeschlossen: ein
+  tree-sitter-AST liefert keine n8n-Semantik (Nodes/Connections/Credentials) — dafuer
+  ist der n8n-MCP zustaendig; ausserdem bleibt der committed Graph gitleaks-sicher.
+- **`/onboard` Phase 5 Option 7 + Phase 6 Schritte 2b/2c** — graphify-Auto-Install
+  (Default ja, best-effort, non-fatal): `uv tool install "graphifyy[sql]"` (Fallback
+  pipx/pip) -> `graphify install --project` -> `graphify update .` (Erst-Build) ->
+  `graphify hook install` (Post-Commit-Auto-Rebuild). `graphify-out/` geht mit in den
+  Initial-Commit. Installer-Mutationen an CLAUDE.md/settings.json werden zurueckgesetzt
+  (Template liefert Block + Hook selbst). Fehlerbehandlung: Skip + ONBOARD_LOG,
+  `options.graphify=false`, Wizard laeuft weiter.
+- **`.claude/hooks/graphify-preflight.ps1` + `.claude/settings.json` hooks-Block**
+  (erste Claude-Code-Hook-Infrastruktur im Template): UserPromptSubmit-Reminder bei
+  `/change-workflow`, `/next-recommend`, `/diagnosing-bugs` — "Graph zuerst fragen",
+  nur wenn `graphify-out/graph.json` existiert.
+- **CLAUDE.md Managed-Block `id="graphify"`** — Directive, Scope-Abgrenzung (Code vs.
+  Workflow-Semantik), Setup, Frische-Regeln. `protection-rules.json` `managed_blocks`
+  += `graphify` (propagiert via `/template-update`).
+- **`/change-workflow`:** Schritt 1 Graph-Query vor Glob+Grep (bei CLI-/Script-Bezug);
+  Schritt 1.6 Blast-Radius pro Hypothese via `graphify affected`; Schritt 2.5 neuer
+  Plausibilitaets-Check 1b (Frontmatter-Angaben gegen workflows/*.json — via grep/n8n-MCP,
+  nicht via graphify).
+- **`.claude/rules/general.md`:** Graph-Frische-Regel im Post-Build-Review.
+- **protection-rules:** `.claude/hooks/**` FROZEN, `.claude/skills/graphify/**`
+  USER-GENERATED (Carve-out vor der SKILL.md-Regel — Dritt-Skill wird nicht
+  manifest-gehasht), `.graphifyignore` UPDATABLE-WITH-DIFF, `graphify-out/**`
+  USER-GENERATED, `.prettierignore` UPDATABLE-WITH-DIFF (war bisher ungeschuetzt/
+  unmanaged — Propagations-Luecke geschlossen).
+- **`.prettierignore`:** `graphify-out/` (Prettier wuerde den Tool-Output zerstoeren).
+
+### Notes
+
+- Kein `graphify-out/` im Template-Repo selbst — der Graph entsteht pro Projekt beim
+  Onboard-Erst-Build (Schritt 2c).
+- Bestehende Projekte: `/template-update` bringt Ignore-File, Hook, settings-Block,
+  CLAUDE.md-Block und Command-Aenderungen; die Installation selbst ist manuell
+  nachholbar (CLAUDE.md Sektion "Graphify Knowledge Graph") oder via
+  `/onboard --into-existing`.
+
 ## 2026-08-01 — v1.3.0 (Produktiv-Feedback-Batch: Deploy-Blocker, 2.x-Drift, MCP-Env, In-place-Installation)
 
 Reaktion auf das erste Produktiv-Feedback zu v1.1.0/v1.2.0 aus einem Customer-Projekt (n8n 2.31.5, via `/template-bugreport`). `fixes #37, #39, #40, #41`.

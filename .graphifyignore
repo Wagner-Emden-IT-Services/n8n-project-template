@@ -1,0 +1,44 @@
+# graphify scope — NUR Code (scripts/, tests/, hooks/, .n8n-template-Engine).
+# workflows/*.json sind BEWUSST ausgeschlossen: ein tree-sitter-AST ueber Workflow-JSON
+# liefert keine n8n-Semantik (Nodes, Connections, Credentials) — dafuer ist der n8n-MCP
+# zustaendig (n8n_get_workflow, validate_workflow). Ausserdem: committed Graph ohne
+# Workflow-Snippets = kein gitleaks-Konflikt. Code = 100% lokaler AST, kein LLM.
+#
+# HINWEIS: Exclude-Liste, KEINE `/*`+`!`-Allowlist — graphifys Ignore-Parser honoriert die
+# `!`-Negation nicht (Allowlist -> 0 Files). .gitignore wird automatisch mit-respektiert.
+# Pro Projekt anpassbar (Protection UPDATABLE-WITH-DIFF).
+
+# --- n8n-Artefakte / Config / Credentials (keine Code-Semantik im AST) ---
+workflows/
+schemas/
+config/
+credentials/
+tests/pins/
+tests/output/
+backups/
+
+# --- Doku / Specs / Template-Interna ---
+docs/
+.claude/
+.github/
+.git-hooks/
+.template-backup/
+.n8n-template/manifest.json
+.n8n-template/protection-rules.json
+
+# --- Build-/Test-Artefakte ---
+node_modules/
+coverage/
+graphify-out/
+package-lock.json
+
+# --- Globale Typ-Excludes: Doku/Daten nie in den Code-Graphen ---
+# (jedes erkannte "document" wuerde sonst den LLM-Semantik-Pass ausloesen)
+*.md
+*.yaml
+*.yml
+*.txt
+*.html
+*.png
+*.jpg
+*.pdf

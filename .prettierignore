@@ -7,6 +7,10 @@ node_modules/
 backups/
 package-lock.json
 
+# graphify Knowledge-Graph-Output (committed, aber Tool-generiert — Prettier wuerde
+# die Hashes/Format des Graphen zerstoeren)
+graphify-out/
+
 # Doku-Snapshot-Files
 CHANGELOG.md
 

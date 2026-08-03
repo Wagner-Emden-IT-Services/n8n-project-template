@@ -80,6 +80,10 @@
       "protection": "UPDATABLE-WITH-DIFF"
     },
     {
+      "glob": ".claude/skills/graphify/**",
+      "protection": "USER-GENERATED"
+    },
+    {
       "glob": ".claude/skills/**/SKILL.md",
       "protection": "UPDATABLE-WITH-DIFF"
     },
@@ -101,6 +105,10 @@
     },
     {
       "glob": ".claude/settings.json",
+      "protection": "FROZEN"
+    },
+    {
+      "glob": ".claude/hooks/**",
       "protection": "FROZEN"
     },
     {
@@ -196,6 +204,18 @@
       "protection": "FROZEN"
     },
     {
+      "glob": ".graphifyignore",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
+      "glob": "graphify-out/**",
+      "protection": "USER-GENERATED"
+    },
+    {
+      "glob": ".prettierignore",
+      "protection": "UPDATABLE-WITH-DIFF"
+    },
+    {
       "glob": ".template-version.json",
       "protection": "FROZEN",
       "special": "version-merge"
@@ -261,7 +281,8 @@
       "protection": "MARKER-AWARE",
       "managed_blocks": [
         "bug-tracking",
-        "n8n-pipeline"
+        "n8n-pipeline",
+        "graphify"
       ]
     },
     {
