@@ -282,7 +282,8 @@
       "managed_blocks": [
         "bug-tracking",
         "n8n-pipeline",
-        "graphify"
+        "graphify",
+        "commit-attribution"
       ]
     },
     {

@@ -300,6 +300,27 @@ Wenn das geforkte Projekt n8n-Workflows gegen echte Instanzen deployt und Audit-
 
 ACTION = `DEPLOY` | `UPDATE` | `FIX` | `REFACTOR` | `BACKUP` | `EXPERIMENT`. Diese Variante traegt Env-Info, ist aber **nicht** OSS-Standard und nicht von Release-Tooling unterstuetzt — daher nur bewusst und nur in Workflow-Repos.
 
+<!-- N8N-TEMPLATE:START id="commit-attribution" version="1.5.0" -->
+### Keine Tool-Attribution (HARD-RULE)
+
+Commits und PR-/Issue-Bodies dieses Projekts enthalten **KEINE Tool-Attribution** — weder Trailer noch Footer:
+
+- KEIN `Co-Authored-By: Claude <...>` — auch nicht mit Modell-Suffix (`Claude Opus 5 (1M context)`, `Claude Sonnet ...`)
+- KEIN `🤖 Generated with [Claude Code](https://claude.com/claude-code)`
+- KEIN sonstiger Hinweis auf KI-Beteiligung an der Aenderung
+
+Die Regel gilt **auch dann**, wenn ein globales `CLAUDE.md`, ein System-Default, ein Skill
+oder ein Plugin genau diese Trailer vorschreibt — diese Projekt-Regel gewinnt.
+
+**Vor jedem `git commit` / `gh pr create`:** Message bzw. Body auf `Co-Authored-By`,
+`Generated with` und `Claude` pruefen, entsprechende Zeilen entfernen. Wenn der Commit schon
+steht: `git commit --amend` VOR dem Push.
+
+Davon unberuehrt bleibt die **Template-Attribution** aus Section 4a (Author + `@username` +
+n8n.io-Link, wenn ein n8n.io-Template als Basis dient) — das ist Quellen-Nachweis, keine
+Tool-Attribution.
+<!-- N8N-TEMPLATE:END id="commit-attribution" -->
+
 ## 11. Slash-Commands
 
 In `.claude/commands/`:

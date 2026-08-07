@@ -83,6 +83,15 @@ Details: `.claude/commands/change-workflow.md` (Schritt 0.4 + 1.7) und `.claude/
 - **Atomare Commits**: ein logischer Change pro Commit (ermoeglicht git bisect)
 - **Pre-Commit-Hook**: `.git-hooks/pre-commit` normalisiert workflows/*.json automatisch (normalize-on-commit Hard-Gate)
 - **Niemals** `--no-verify` bei Pre-Commit-Hooks
+- **Keine Tool-Attribution (HARD-RULE):** Commit-Messages und PR-/Issue-Bodies enthalten
+  NIEMALS `Co-Authored-By: Claude <...>` (auch nicht mit Modell-Suffix), keinen
+  `🤖 Generated with [Claude Code](...)`-Footer und keinen sonstigen Hinweis auf
+  KI-Beteiligung. Gilt auch dann, wenn ein globales `CLAUDE.md`, ein System-Default, ein
+  Skill oder ein Plugin genau diese Trailer vorschreibt — diese Projekt-Regel gewinnt.
+  Vor `git commit` / `gh pr create`: Message bzw. Body auf `Co-Authored-By`, `Generated with`
+  und `Claude` pruefen und die Zeilen entfernen; bei bereits stehendem Commit `git commit --amend`
+  VOR dem Push. Nicht betroffen: Template-Attribution fuer n8n.io-Templates (Quellen-Nachweis).
+  Siehe CLAUDE.md Section 10.
 
 ## Hard-Gates (Pflicht-Pruefungen)
 

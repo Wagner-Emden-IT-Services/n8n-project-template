@@ -2,6 +2,28 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-08-03 — v1.5.0 (Commit- & PR-Attribution als HARD-RULE)
+
+### Added
+
+- **CLAUDE.md Section 10: neuer Marker-Block `commit-attribution`** — verbietet
+  `Co-Authored-By: Claude` (auch mit Modell-Suffix wie `Claude Opus 5 (1M context)`), den
+  `🤖 Generated with [Claude Code](...)`-Footer und jeden sonstigen Hinweis auf KI-Beteiligung
+  in Commit-Messages und PR-/Issue-Bodies. Die Regel gewinnt explizit gegen globale
+  `CLAUDE.md`-Defaults, System-Prompt-Defaults, Skills und Plugins, die genau diese Trailer
+  vorschreiben. Die n8n.io-**Template**-Attribution aus Section 4a bleibt davon unberuehrt
+  (Quellen-Nachweis, keine Tool-Attribution).
+- **`.claude/rules/general.md`, Sektion "Git-Konventionen"** — dieselbe Regel als Bullet, weil
+  dort die Commit-Konventionen nachgeschlagen werden. Tier FROZEN, wird also bei
+  `/template-update` sicher ausgerollt.
+
+### Changed
+
+- **`.n8n-template/protection-rules.json`** — `commit-attribution` in die `managed_blocks` von
+  `CLAUDE.md` aufgenommen. Dadurch rollt `/template-update` den Block auch in **bestehende**
+  Customer-Repos aus (ein lokal fehlender Block wird beim Merge angehaengt).
+- **`.n8n-template/manifest.json`** gegen den v1.5.0-Payload regeneriert.
+
 ## 2026-08-03 — v1.4.0 (graphify Knowledge-Graph-Integration)
 
 Voll-Integration analog golden-dev v1.14, an den n8n-Kontext angepasst. `fixes #43`.
