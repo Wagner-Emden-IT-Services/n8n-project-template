@@ -78,7 +78,7 @@ if (-not (Test-Path (Join-Path $projectDir 'graphify-out/graph.json'))) {
     exit 0
 }
 
-$reminder = @"
+$reminder = @'
 === graphify Graph-Pre-Flight (Code-/Struktur-/Impact-Fragen) ===
 
 Es existiert ein lokaler Code-Knowledge-Graph (graphify-out/graph.json, Scope via
@@ -92,7 +92,7 @@ den Graphen fragen statt breit zu greppen:
   graphify affected "X"           Reverse-Impact: welche Nodes werden von X beeinflusst
 
 - PATH: `graphify` liegt in ~/.local/bin (nicht auf Git-Bash-PATH). Im Bash-Tool voranstellen:
-    export PATH="`$HOME/.local/bin:`$PATH"; graphify ...
+    export PATH="$HOME/.local/bin:$PATH"; graphify ...
   Alternative ohne PATH: `uv tool run --from graphifyy graphify ...`
 - SCOPE: NUR Code (scripts/, tests/, hooks/, .n8n-template-Engine). workflows/*.json sind
   NICHT im Graphen — Workflow-Semantik (Nodes, Connections, Credentials, Webhooks)
@@ -104,7 +104,7 @@ den Graphen fragen statt breit zu greppen:
 Kein Zwang: Ist die Frage reine Workflow-/Doku-Sache oder trivial, ueberspringen —
 eine Zeile Begruendung genuegt.
 === Ende graphify Pre-Flight ===
-"@
+'@
 
 $output = @{
     hookSpecificOutput = @{
