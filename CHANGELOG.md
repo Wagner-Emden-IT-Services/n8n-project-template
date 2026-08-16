@@ -2,6 +2,26 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-08-16 — v1.5.1 (graphify-preflight ParserError-Fix)
+
+### Fixed
+
+- **`.claude/hooks/graphify-preflight.ps1`: ParserError unter pwsh 7 — Hook fiel still komplett
+  aus (`fixes #49`).** Der Reminder-Text war als expandierender Here-String (`@"`) angelegt; die
+  als Markdown-Code-Ticks gemeinten Backticks wurden als PowerShell-Escapes gelesen. `` `uv `` in
+  Zeile 96 ist seit PS 6 eine (ungueltige) Unicode-Escape-Sequenz — harter Parse-Fehler, Exit 1,
+  kein JSON: Der Graph-Pre-Flight-Reminder erreichte das Modell nie (die ausgelieferte
+  settings.json registriert den Hook mit `pwsh`; UserPromptSubmit-Fehlschlag blockiert den Prompt
+  nicht). Defekt bestand seit Einfuehrung der Datei in v1.4.0. Fix: literaler Here-String
+  (`@'`/`'@`), die beiden `` `$ ``-Escapes in der PATH-Zeile entfernt — Code-Ticks und
+  `$HOME`/`$PATH` stehen jetzt literal im Reminder. Gleiche Fehlerklasse wie
+  cc-template-golden-dev#26 (dort mit v1.25.1 gefixt).
+
+### Changed
+
+- **`.n8n-template/manifest.json`** gegen den v1.5.1-Payload regeneriert; `package.json` und
+  `.template-version.json` auf 1.5.1.
+
 ## 2026-08-03 — v1.5.0 (Commit- & PR-Attribution als HARD-RULE)
 
 ### Added

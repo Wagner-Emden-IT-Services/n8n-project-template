@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "template": "n8n-project",
-  "template_version": "1.5.0",
-  "frozen_at": "2026-08-03T10:38:03Z",
+  "template_version": "1.5.1",
+  "frozen_at": "2026-08-16T15:39:39Z",
   "rules_source": ".n8n-template/protection-rules.json",
   "counts": {
     "frozen": 45,
@@ -131,7 +131,7 @@
     {
       "path": ".claude/hooks/graphify-preflight.ps1",
       "protection": "FROZEN",
-      "sha256": "255b6bdefe27b6cf34d951987cc9e983caa8c9c8a9cb7f8845b3a609dac9a239"
+      "sha256": "05d11bebb109d79ade6907e605e993f27e197501a7559e453c2f65a2ba8206d7"
     },
     {
       "path": ".claude/rules/general.md",
@@ -561,7 +561,7 @@
     {
       "path": ".template-version.json",
       "protection": "FROZEN",
-      "sha256": "80fad410d656bb11847e8fb6d746393b4725f8d9d64a157507629a752f09c3cb",
+      "sha256": "9dc55a132e856d9d83871c614521cf886e23a51e359495d7c84306dde386dfe4",
       "special": "version-merge"
     },
     {
@@ -693,7 +693,7 @@
     {
       "path": "package.json",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "c8cb1852ebf63aa6a2b75dfd0e4751b1f83f9cf13f04a5df9a31d35364c59a47"
+      "sha256": "928832c33032855df6a66cf16cf34fe7c5afdeb17587996fabc973c0bae0811a"
     },
     {
       "path": "README.md",
