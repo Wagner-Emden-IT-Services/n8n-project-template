@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "template": "n8n-project",
   "template_version": "1.5.2",
-  "frozen_at": "2026-08-19T11:28:35Z",
+  "frozen_at": "2026-08-19T11:34:41Z",
   "rules_source": ".n8n-template/protection-rules.json",
   "counts": {
     "frozen": 45,
@@ -491,7 +491,7 @@
     {
       "path": ".github/workflows/pr-issue-link-check.yml",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "55e5a23ad7d5490be125a5e6ba695cb2d28922b0007d13150292f5a34603023a"
+      "sha256": "e5296736bbb3631a1cb8ee068506534160e582dd0afd9cec2e39d75da79f8124"
     },
     {
       "path": ".github/workflows/validate-on-pr.yml",

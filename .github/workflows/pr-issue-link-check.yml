@@ -45,21 +45,28 @@ jobs:
             const marker = '<!-- n8n-template-pr-link-check -->';
             const existing = comments.data.find(c => c.body && c.body.includes(marker));
 
-            const commentBody = `${marker}
-
-ℹ️  **PR-Issue-Link-Konvention (n8n-template v1.7.0)**
-
-Dieser PR scheint kein `Closes #N` / `Fixes #N` zu enthalten. Dadurch greift die GitHub-Auto-Close-Mechanik beim Merge NICHT.
-
-**Empfehlung:** PR-Body ergaenzen mit:
-
-\`\`\`
-Closes #<issue-number>
-\`\`\`
-
-Bei mehreren Issues: \`Closes #N, Closes #M, Closes #O\`.
-
-(Nicht-blocking — falls dieser PR bewusst ohne Issue ist: ignorieren.)`;
+            // Array-of-lines + join statt mehrzeiligem Template-Literal:
+            // Ein Block-Scalar (script: |) endet an der ersten Zeile mit geringerer
+            // Einrueckung — ein Template-Literal mit Folgezeilen auf Spalte 1 bricht
+            // also das YAML. Quoted Strings pro Zeile sind robust und halten zugleich
+            // die YAML-Einrueckung aus dem finalen Kommentartext heraus.
+            const commentBody = [
+              marker,
+              '',
+              'ℹ️  **PR-Issue-Link-Konvention (n8n-template v1.7.0)**',
+              '',
+              'Dieser PR scheint kein `Closes #N` / `Fixes #N` zu enthalten. Dadurch greift die GitHub-Auto-Close-Mechanik beim Merge NICHT.',
+              '',
+              '**Empfehlung:** PR-Body ergaenzen mit:',
+              '',
+              '```',
+              'Closes #<issue-number>',
+              '```',
+              '',
+              'Bei mehreren Issues: `Closes #N, Closes #M, Closes #O`.',
+              '',
+              '(Nicht-blocking — falls dieser PR bewusst ohne Issue ist: ignorieren.)'
+            ].join('\n');
 
             if (existing) {
               await github.rest.issues.updateComment({

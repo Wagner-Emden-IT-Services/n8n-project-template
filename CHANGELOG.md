@@ -22,6 +22,15 @@ Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionie
     damit unveraendert lauffaehig. Der Warnkommentar ueber dem Step haelt das fuer
     kuenftige Erweiterungen fest (Muster aus cc-template-golden-dev v1.30.1).
 
+- **`pr-issue-link-check.yml` war fuer GitHub nicht ladbar und lief nie (`fixes #53`).** Der
+  Kommentartext lag als mehrzeiliges JS-Template-Literal im Block-Scalar `script: |`; ein
+  Block-Scalar endet an der ersten Zeile mit geringerer Einrueckung, die Folgezeilen standen
+  aber auf Spalte 1 — damit war die Datei kein gueltiges YAML. Jeder Push erzeugte einen
+  Startup-Failure-Run unter dem Dateipfad statt unter dem Workflow-Namen, auf PRs erschien der
+  Check gar nicht. Ersetzt durch Array-of-lines + `join`, wie in cc-template-golden-dev;
+  Text, Marker und das nicht-blockierende Verhalten bleiben unveraendert. Der Defekt ist aelter
+  als der Action-Bump und unabhaengig davon.
+
 ### Hinweis fuer bestehende Projekte
 
 `issue-triage.yml` und `pr-issue-link-check.yml` sind UPDATABLE-WITH-DIFF und kommen ueber
