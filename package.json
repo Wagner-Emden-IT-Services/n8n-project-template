@@ -1,6 +1,6 @@
 {
   "name": "n8n-project-template",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "private": true,
   "description": "n8n-Workflow-Automation-Template mit Node-CLI fuer Deploy/Backup/Export/Validate/Normalize/Drift-Check.",
   "type": "module",

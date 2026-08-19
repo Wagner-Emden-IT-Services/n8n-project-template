@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "template": "n8n-project",
-  "template_version": "1.5.1",
-  "frozen_at": "2026-08-16T15:39:39Z",
+  "template_version": "1.5.2",
+  "frozen_at": "2026-08-19T11:28:35Z",
   "rules_source": ".n8n-template/protection-rules.json",
   "counts": {
     "frozen": 45,
@@ -481,7 +481,7 @@
     {
       "path": ".github/workflows/issue-triage.yml",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "4873f49c2758185951db0c56cc2e2912518e6b2f1642d358ca5949542b0728c4"
+      "sha256": "c5b5a0821eecbd389e44f54b8fb919441f71b97aafac756165f6926ef191dd68"
     },
     {
       "path": ".github/workflows/normalize-check.yml",
@@ -491,7 +491,7 @@
     {
       "path": ".github/workflows/pr-issue-link-check.yml",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "0704771b70dce24bce53cd074eff20f6a7360df275d39c2eb89b75d6b157d4fc"
+      "sha256": "55e5a23ad7d5490be125a5e6ba695cb2d28922b0007d13150292f5a34603023a"
     },
     {
       "path": ".github/workflows/validate-on-pr.yml",
@@ -561,7 +561,7 @@
     {
       "path": ".template-version.json",
       "protection": "FROZEN",
-      "sha256": "9dc55a132e856d9d83871c614521cf886e23a51e359495d7c84306dde386dfe4",
+      "sha256": "fe5183e8002ca6e8c42abbbc61502d310d6bc51afafda0fd1ef506a9a5157cc3",
       "special": "version-merge"
     },
     {
@@ -693,7 +693,7 @@
     {
       "path": "package.json",
       "protection": "UPDATABLE-WITH-DIFF",
-      "sha256": "928832c33032855df6a66cf16cf34fe7c5afdeb17587996fabc973c0bae0811a"
+      "sha256": "843f01d67f7749b0de17025b8cc2351653ca99549c0e22b2dfc77af21fb37b58"
     },
     {
       "path": "README.md",

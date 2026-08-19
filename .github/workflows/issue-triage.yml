@@ -16,8 +16,12 @@ jobs:
   auto-label:
     runs-on: ubuntu-latest
     steps:
+      # github-script@v9 (node24) ist ESM-only: require('@actions/github') bricht,
+      # und getOctokit kommt als injizierter Parameter — eine const/let-Deklaration
+      # gleichen Namens im Script wirft SyntaxError. Das Script unten nutzt nur
+      # context, github.rest.*, core und console; beim Erweitern darauf achten.
       - name: Title-Pattern → Labels
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const issue = context.payload.issue;

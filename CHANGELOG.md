@@ -2,6 +2,32 @@
 
 Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), Versionierung nach [Semantic Versioning](https://semver.org/lang/de/).
 
+## 2026-08-19 — v1.5.2 (node24-Actions in den vier Nachzueglern)
+
+### Fixed
+
+- **Vier Workflows liefen noch auf der abgekuendigten node20-Runtime (`fixes #51`).**
+  Das Repo stand auf zwei Action-Generationen gleichzeitig: `deploy-prod`, `deploy-staging`,
+  `drift-check` und `validate-on-pr` waren bereits auf node24, waehrend
+  `normalize-check.yml`, `validate-workflows.yml`, `issue-triage.yml` und
+  `pr-issue-link-check.yml` zurueckhingen. GitHub forciert die Ausfuehrung derzeit still
+  auf node24 (nur Runner-Annotation); nach der angekuendigten Abschaltung waeren genau
+  diese vier rot gelaufen.
+  - `normalize-check.yml`, `validate-workflows.yml`: `actions/checkout@v4` -> `@v7`,
+    `actions/setup-node@v4` -> `@v7`, dazu `persist-credentials: false` (kein Step braucht
+    authentifiziertes Git, `npm ci` zieht aber Fremdcode in denselben Job).
+  - `issue-triage.yml`, `pr-issue-link-check.yml`: `actions/github-script@v7` -> `@v9`.
+    v9 ist ESM-only und uebergibt `getOctokit` als injizierten Parameter; beide
+    Inline-Scripts nutzen ausschliesslich `context`, `github.rest.*` und `console` und sind
+    damit unveraendert lauffaehig. Der Warnkommentar ueber dem Step haelt das fuer
+    kuenftige Erweiterungen fest (Muster aus cc-template-golden-dev v1.30.1).
+
+### Hinweis fuer bestehende Projekte
+
+`issue-triage.yml` und `pr-issue-link-check.yml` sind UPDATABLE-WITH-DIFF und kommen ueber
+`/template-update` an. `normalize-check.yml` und `validate-workflows.yml` sind
+USER-GENERATED — bestehende Projekte muessen den Bump dort selbst nachziehen.
+
 ## 2026-08-16 — v1.5.1 (graphify-preflight ParserError-Fix)
 
 ### Fixed
