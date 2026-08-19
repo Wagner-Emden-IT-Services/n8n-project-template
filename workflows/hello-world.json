@@ -42,7 +42,7 @@
               "id": "a1",
               "name": "message",
               "type": "string",
-              "value": "Hello from hello-world (node24-probe)"
+              "value": "Hello from hello-world"
             },
             {
               "id": "a2",
